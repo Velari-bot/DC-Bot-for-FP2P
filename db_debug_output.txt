@@ -1,0 +1,21 @@
+Found 4 courses
+ID: P2HYKXsPngTDxPyidPzs
+Title: Advanced Masterclass
+MarketingURL: https://www.fortnitepathtopro.com/advanced-masterclass
+PriceID: price_1SZJrnENRiU5OaK0BgO94m0m
+---
+ID: YptLrG7dRXf5As19GEks
+Title: Intermediate Masterclass
+MarketingURL: https://www.fortnitepathtopro.com/intermediate-masterclass
+PriceID: price_1SZJlyENRiU5OaK0xnQG2wXQ
+---
+ID: bs64jytqsop75zzV5FKr
+Title: Beginner Masterclass
+MarketingURL: https://www.fortnitepathtopro.com/beginner-masterclass
+PriceID: price_1SZJJXENRiU5OaK0PKduPinv
+---
+ID: tO4MriPtFjmoksUbpXdQ
+Title: Fighting Masterclass
+MarketingURL: 
+PriceID: 
+---

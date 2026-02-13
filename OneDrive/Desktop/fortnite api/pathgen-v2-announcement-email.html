@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>PathGen v2 is Here!</title>
+    <!-- Preheader text (shows in email preview) -->
+    <style>
+        .preheader {
+            display: none !important;
+            visibility: hidden;
+            opacity: 0;
+            color: transparent;
+            height: 0;
+            width: 0;
+            font-size: 1px;
+            line-height: 1px;
+            max-height: 0;
+            max-width: 0;
+        }
+    </style>
+    <!--[if mso]>
+    <style type="text/css">
+        .preheader {
+            mso-hide: all;
+        }
+    </style>
+    <![endif]-->
+    <!--[if mso]>
+    <style type="text/css">
+        body, table, td {font-family: Arial, sans-serif !important;}
+        table, td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+    </style>
+    <![endif]-->
+    <style>
+        /* Reset styles */
+        body, table, td, p, a, li, blockquote {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        img {
+            -ms-interpolation-mode: bicubic;
+            border: 0;
+            outline: none;
+            text-decoration: none;
+        }
+        
+        /* Main styles */
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: #0A0A0A;
+            background-image: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 30%, transparent 60%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+        }
+        
+        .email-wrapper {
+            width: 100%;
+            background-color: #0A0A0A;
+            background-image: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 30%, transparent 60%);
+            padding: 30px 20px;
+            position: relative;
+        }
+        
+        /* Purple-blue gradient glow effect (like homepage) */
+        .email-wrapper::before {
+            content: '';
+            position: absolute;
+            bottom: -150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1200px;
+            height: 1200px;
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.2) 0%, rgba(59, 130, 246, 0.12) 25%, transparent 65%);
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(60px);
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: transparent;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header with logo */
+        .header {
+            padding: 20px 0 16px;
+            text-align: left;
+        }
+        
+        /* Logo container - removed flex for email compatibility */
+        
+        .logo-text {
+            color: #FFFFFF;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .header h1 {
+            color: #FFFFFF;
+            font-size: 42px;
+            font-weight: 800;
+            margin: 0 0 12px;
+            line-height: 1.1;
+            letter-spacing: -1.2px;
+        }
+        
+        .release-date {
+            display: inline-block;
+            color: #A78BFA;
+            font-size: 15px;
+            font-weight: 600;
+            margin: 0 0 16px;
+            letter-spacing: -0.1px;
+        }
+        
+        .header-subtitle {
+            color: #A0A0A0;
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 0 0 16px;
+            letter-spacing: -0.1px;
+        }
+        
+        /* Stats bar */
+        .stats-bar {
+            background-color: #151515;
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            border-radius: 14px;
+            padding: 12px 20px;
+            margin: 16px 0;
+            text-align: center;
+        }
+        
+        .stats-text {
+            color: #FFFFFF;
+            font-size: 14px;
+            margin: 0;
+            font-weight: 500;
+            letter-spacing: -0.1px;
+        }
+        
+        .stats-highlight {
+            color: #A78BFA;
+            font-weight: 600;
+        }
+        
+        /* Content */
+        .content {
+            padding: 0;
+        }
+        
+        .intro {
+            color: #FFFFFF;
+            font-size: 16px;
+            line-height: 1.65;
+            margin: 0 0 20px;
+            letter-spacing: -0.1px;
+        }
+        
+        .intro strong {
+            color: #A78BFA;
+            font-weight: 700;
+        }
+        
+        .features-section {
+            margin: 20px 0;
+        }
+        
+        .features-title {
+            color: #FFFFFF;
+            font-size: 26px;
+            font-weight: 700;
+            margin: 0 0 16px;
+            letter-spacing: -0.6px;
+            line-height: 1.2;
+        }
+        
+        /* Features grid removed - using table layout in HTML */
+        
+        .feature-item {
+            background-color: #151515;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-left: 4px solid #A78BFA;
+            border-radius: 14px;
+            padding: 18px 18px 18px 22px;
+            margin: 0 0 12px;
+        }
+        
+        .feature-item h3 {
+            color: #FFFFFF;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0 0 8px;
+            letter-spacing: -0.2px;
+        }
+        
+        .feature-item p {
+            color: #B0B0B0;
+            font-size: 13px;
+            line-height: 1.55;
+            margin: 0;
+            letter-spacing: -0.05px;
+        }
+        
+        .cta-section {
+            margin: 24px 0 20px;
+            text-align: center;
+        }
+        
+        .button {
+            display: inline-block;
+            padding: 12px 28px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 15px;
+            margin: 0;
+            text-align: center;
+            letter-spacing: -0.2px;
+            vertical-align: middle;
+            line-height: 1.4;
+        }
+        
+        .button-primary {
+            background: transparent;
+            color: #FFFFFF;
+            border: 1.5px solid #FFFFFF;
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        .button-primary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 6px 30px rgba(255, 255, 255, 0.15);
+        }
+        
+        .button-secondary {
+            background: #5865F2;
+            color: #FFFFFF;
+            border: none;
+            box-shadow: 0 4px 20px rgba(88, 101, 242, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .button-secondary::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+        }
+        
+        .button-secondary:hover::before {
+            left: 100%;
+        }
+        
+        .button {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        .button:hover {
+            transform: translateY(-3px);
+        }
+        
+        
+        .button-secondary:hover {
+            background: #4752C4;
+            box-shadow: 0 8px 35px rgba(88, 101, 242, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        .footer {
+            background-color: transparent;
+            padding: 28px 0 24px;
+            text-align: center;
+            border-top: 1px solid rgba(167, 139, 250, 0.3);
+            margin-top: 28px;
+        }
+        
+        /* Footer divider removed - using border-top instead */
+        
+        .footer p {
+            color: #A0A0A0;
+            font-size: 15px;
+            line-height: 1.7;
+            margin: 0 0 12px;
+            letter-spacing: -0.1px;
+        }
+        
+        .footer a {
+            color: #A78BFA;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .divider {
+            height: 1px;
+            background: rgba(167, 139, 250, 0.3);
+            margin: 24px 0;
+            border: none;
+        }
+        
+        /* Mobile responsive */
+        @media only screen and (max-width: 600px) {
+            .email-wrapper {
+                padding: 20px 10px;
+            }
+            
+            .email-wrapper {
+                padding: 20px 10px;
+            }
+            
+            .header {
+                padding: 16px 0 12px;
+            }
+            
+            .header h1 {
+                font-size: 36px;
+                letter-spacing: -1px;
+                margin: 0 0 12px;
+            }
+            
+            .release-date {
+                font-size: 14px;
+                margin: 0 0 12px;
+            }
+            
+            .header-subtitle {
+                font-size: 15px;
+                line-height: 1.65;
+                margin: 0 0 16px;
+            }
+            
+            .stats-bar {
+                padding: 12px 20px;
+                border-radius: 14px;
+                margin: 16px 0;
+            }
+            
+            .stats-text {
+                font-size: 13px;
+            }
+            
+            .intro {
+                font-size: 15px;
+                line-height: 1.65;
+                margin: 0 0 18px;
+            }
+            
+            .features-title {
+                font-size: 24px;
+                letter-spacing: -0.5px;
+                margin: 0 0 14px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .feature-item {
+                padding: 14px;
+                border-radius: 10px;
+            }
+            
+            .feature-item h3 {
+                font-size: 15px;
+                margin: 0 0 5px;
+            }
+            
+            .feature-item p {
+                font-size: 12px;
+                line-height: 1.45;
+            }
+            
+            .cta-section {
+                margin: 20px 0 16px;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .button {
+                font-size: 15px;
+                padding: 12px 28px;
+                display: block;
+                margin: 0;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .footer {
+                padding: 30px 0 20px;
+            }
+        }
+    </style>
+    <!-- Preheader text (shows in email preview, helps with deliverability) -->
+    <style>
+        .preheader {
+            display: none !important;
+            visibility: hidden;
+            opacity: 0;
+            color: transparent;
+            height: 0;
+            width: 0;
+            font-size: 1px;
+            line-height: 1px;
+            max-height: 0;
+            max-width: 0;
+        }
+    </style>
+    <!--[if mso]>
+    <style type="text/css">
+        .preheader {
+            mso-hide: all;
+        }
+    </style>
+    <![endif]-->
+</head>
+<body style="background-color: #0A0A0A; background-image: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 30%, transparent 60%);">
+    <!-- Preheader text (shows in email preview) -->
+    <div class="preheader" style="display: none !important; visibility: hidden; opacity: 0; color: transparent; height: 0; width: 0; font-size: 1px; line-height: 1px; max-height: 0; max-width: 0;">
+        PathGen v2 is launching December 12, 2025. New features, better performance, and improved coaching.
+    </div>
+    <div class="email-wrapper">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <td align="center">
+                    <div class="email-container">
+                        <!-- Header -->
+                        <div class="header">
+                            <!-- Logo Container - Table-based for email compatibility -->
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom: 20px;">
+                                <tr>
+                                    <td width="44" valign="middle" style="padding-right: 10px;">
+                                        <!-- Logo - Using actual PNG image -->
+                                        <img src="https://pathgen.dev/PathGen%20(1).png" alt="PathGen" width="32" height="32" style="display: block; width: 32px; height: 32px; background-color: #151515; border-radius: 12px; padding: 6px; border: 1px solid rgba(255, 255, 255, 0.1);" />
+                                    </td>
+                                    <td valign="middle">
+                                        <span class="logo-text" style="color: #FFFFFF; font-size: 18px; font-weight: 600;">Pathgen v2</span>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <h1>PathGen v2 is Here</h1>
+                            <p class="release-date">Coming December 12, 2025</p>
+                            <p class="header-subtitle">
+                                The upgrade you've been waiting for to finally improve. Get instant feedback on your gameplay, analyze replays, and improve faster with AI-powered coaching.
+                            </p>
+                            
+                            <div class="stats-bar">
+                                <p class="stats-text">
+                                    500+ players using PathGen • <span class="stats-highlight">200+ matches analyzed today</span>
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="content">
+                            <p class="intro">
+                                <strong>PathGen v2</strong> brings powerful new features designed to help you improve your Fortnite gameplay like never before. Your personal AI coach just got a major upgrade.
+                            </p>
+                            
+                            <!-- Divider -->
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 24px 0;">
+                                <tr>
+                                    <td style="height: 1px; background: rgba(167, 139, 250, 0.3); border: none; padding: 0;"></td>
+                                </tr>
+                            </table>
+                            
+                            <div class="features-section">
+                                <h2 class="features-title">What's New in v2</h2>
+                                
+                            <!-- Features Grid - Table-based for email compatibility -->
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td width="48%" valign="top" style="padding-right: 6px;">
+                                        <!-- Feature 1 -->
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #151515; border: 1px solid rgba(255, 255, 255, 0.08); border-left: 4px solid #A78BFA; border-radius: 14px; margin-bottom: 12px;">
+                                            <tr>
+                                                <td style="padding: 18px 18px 18px 22px;">
+                                                    <h3 style="color: #FFFFFF; font-size: 16px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.2px;">🎤 AI Voice Coaching</h3>
+                                                    <p style="color: #B0B0B0; font-size: 13px; line-height: 1.55; margin: 0; letter-spacing: -0.05px;">Get real-time tactical coaching with our new Voice Add-On. Push-to-talk support, instant feedback, and voiced clip reviews to help you improve faster.</p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        
+                                        <!-- Feature 3 -->
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #151515; border: 1px solid rgba(255, 255, 255, 0.08); border-left: 4px solid #A78BFA; border-radius: 14px; margin-bottom: 12px;">
+                                            <tr>
+                                                <td style="padding: 18px 18px 18px 22px;">
+                                                    <h3 style="color: #FFFFFF; font-size: 16px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.2px;">🏆 Tournament Tracking</h3>
+                                                    <p style="color: #B0B0B0; font-size: 13px; line-height: 1.55; margin: 0; letter-spacing: -0.05px;">Stay on top of all competitive events with live tournament schedules, scoring rules, and qualification requirements all in one place.</p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        
+                                        <!-- Feature 5 -->
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #151515; border: 1px solid rgba(255, 255, 255, 0.08); border-left: 4px solid #A78BFA; border-radius: 14px; margin-bottom: 12px;">
+                                            <tr>
+                                                <td style="padding: 18px 18px 18px 22px;">
+                                                    <h3 style="color: #FFFFFF; font-size: 16px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.2px;">💬 Discord Community</h3>
+                                                    <p style="color: #B0B0B0; font-size: 13px; line-height: 1.55; margin: 0; letter-spacing: -0.05px;">Join our growing community of Fortnite players. Share strategies, get tips, and connect with other players on the same journey.</p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td width="4%"></td>
+                                    <td width="48%" valign="top" style="padding-left: 6px;">
+                                        <!-- Feature 2 -->
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #151515; border: 1px solid rgba(255, 255, 255, 0.08); border-left: 4px solid #A78BFA; border-radius: 14px; margin-bottom: 12px;">
+                                            <tr>
+                                                <td style="padding: 18px 18px 18px 22px;">
+                                                    <h3 style="color: #FFFFFF; font-size: 16px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.2px;">🤖 Enhanced AI Chat</h3>
+                                                    <p style="color: #B0B0B0; font-size: 13px; line-height: 1.55; margin: 0; letter-spacing: -0.05px;">Smarter responses, better context understanding, and improved coaching insights. PathGen helps you identify mistakes and build better strategies.</p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        
+                                        <!-- Feature 4 -->
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #151515; border: 1px solid rgba(255, 255, 255, 0.08); border-left: 4px solid #A78BFA; border-radius: 14px; margin-bottom: 12px;">
+                                            <tr>
+                                                <td style="padding: 18px 18px 18px 22px;">
+                                                    <h3 style="color: #FFFFFF; font-size: 16px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.2px;">📊 Advanced Analytics</h3>
+                                                    <p style="color: #B0B0B0; font-size: 13px; line-height: 1.55; margin: 0; letter-spacing: -0.05px;">Track your progress with detailed usage analytics, conversation history, and personalized improvement recommendations.</p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        
+                                        <!-- Feature 6 -->
+                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #151515; border: 1px solid rgba(255, 255, 255, 0.08); border-left: 4px solid #A78BFA; border-radius: 14px; margin-bottom: 12px;">
+                                            <tr>
+                                                <td style="padding: 18px 18px 18px 22px;">
+                                                    <h3 style="color: #FFFFFF; font-size: 16px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.2px;">⚡ Better Performance</h3>
+                                                    <p style="color: #B0B0B0; font-size: 13px; line-height: 1.55; margin: 0; letter-spacing: -0.05px;">Faster response times, improved reliability, and a smoother experience across all devices.</p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            </div>
+                            
+                            <!-- CTA Buttons -->
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 24px 0 20px;">
+                                <tr>
+                                    <td align="center" style="padding: 0;">
+                                        <a href="https://discord.gg/G8ph5P9HAw" class="button button-secondary" style="display: inline-block; padding: 12px 28px; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 15px; margin: 0 6px 10px; background: #5865F2; color: #FFFFFF; border: none;">Join Discord</a>
+                                        <a href="https://pathgen.dev" class="button button-primary" style="display: inline-block; padding: 12px 28px; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 15px; margin: 0 6px 10px; background: transparent; border: 1.5px solid #FFFFFF; color: #FFFFFF;">Get Started →</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <!-- Footer -->
+                        <div class="footer">
+                            <p>Thank you for being part of the PathGen community!</p>
+                            <p>
+                                <a href="https://pathgen.dev">pathgen.dev</a> | 
+                                <a href="https://discord.gg/G8ph5P9HAw">Discord</a>
+                            </p>
+                            <p style="margin-top: 20px; font-size: 12px; color: #666;">
+                                You're receiving this email because you're a PathGen user.
+                            </p>
+                            <p style="margin-top: 16px; font-size: 12px; color: #666;">
+                                <a href="{{unsubscribe_url}}" style="color: #A78BFA; text-decoration: underline;">Unsubscribe</a> from these emails.
+                            </p>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

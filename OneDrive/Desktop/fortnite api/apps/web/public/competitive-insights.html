@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Logo.png">
+    <link rel="shortcut icon" type="image/png" href="/Logo.png">
+    <link rel="apple-touch-icon" href="/Logo.png">
+    <title>Competitive Insights - PathGen AI</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pathgen.dev/competitive-insights">
+    <meta property="og:title" content="Competitive Insights - PathGen AI">
+    <meta property="og:description" content="Get insights into the competitive Fortnite scene and meta.">
+    <meta property="og:image" content="https://pathgen.dev/embed.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://pathgen.dev/competitive-insights">
+    <meta name="twitter:title" content="Competitive Insights - PathGen AI">
+    <meta name="twitter:description" content="Get insights into the competitive Fortnite scene and meta.">
+    <meta name="twitter:image" content="https://pathgen.dev/embed.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0A0A0A;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header with Pill Nav Bar */
+        .header {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .nav {
+            backdrop-filter: blur(16px);
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 
+                        0 0 0 1px rgba(255, 255, 255, 0.03),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 0 8px;
+            margin-right: 4px;
+        }
+
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .logo-icon svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin: 0 8px;
+        }
+
+        .nav-link {
+            color: #A0A0A0;
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 6px 14px;
+            border-radius: 25px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link.active {
+            color: #FFFFFF;
+            background: rgba(139, 92, 246, 0.15);
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            color: #D1D5DB;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: all 0.15s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(79, 140, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .dropdown-item.danger {
+            color: #ef4444;
+        }
+
+        .dropdown-item.danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ffffff;
+        }
+        .dropdown-item.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .dropdown-item.locked:hover {
+            background: transparent;
+            color: #6b7280;
+        }
+
+        .dropdown-item-icon {
+            font-size: 16px;
+            width: 20px;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 6px 0;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 8px;
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            color: #FFFFFF;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        .caret {
+            font-size: 0.7rem;
+            margin-left: 4px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 12px 4px 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            margin-left: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            overflow: hidden;
+            border: 2px solid #8B5CF6;
+            box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.3);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        /* Live Updates Card */
+        .live-updates-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .live-updates-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .live-updates-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #FFFFFF;
+        }
+
+        .live-updates-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(139, 92, 246, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .live-updates-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .live-update-item {
+            display: flex;
+            align-items: start;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .live-update-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .update-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #FFFFFF;
+        }
+
+        .update-icon.osirion {
+            background: #10B981;
+        }
+
+        .update-icon.kinch {
+            background: #3B82F6;
+        }
+
+        .update-icon.fncomp {
+            background: #14B8A6;
+        }
+
+        .update-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .update-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 4px;
+        }
+
+        .update-text {
+            font-size: 0.875rem;
+            color: #A0A0A0;
+            line-height: 1.5;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 140px 48px 80px;
+            overflow: hidden;
+        }
+
+        .hero-glow {
+            position: absolute;
+            bottom: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1000px;
+            height: 1000px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, rgba(59, 130, 246, 0.15) 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+            filter: blur(60px);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 880px;
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 28px;
+            color: #FFFFFF;
+            letter-spacing: -0.03em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #A0A0A0;
+            line-height: 1.7;
+            margin-bottom: 48px;
+            max-width: 680px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 48px 100px;
+        }
+
+        /* View Toggle */
+        .view-toggle {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 8px;
+            width: fit-content;
+        }
+
+        .toggle-btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: #A0A0A0;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+        }
+
+        .toggle-btn.active {
+            background: rgba(139, 92, 246, 0.2);
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+
+        .toggle-btn:hover {
+            color: #FFFFFF;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .stat-badge {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 8px 16px;
+            font-size: 0.875rem;
+            color: #A0A0A0;
+        }
+
+        .refresh-btn {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 8px 16px;
+            color: #FFFFFF;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .refresh-btn:hover {
+            background: rgba(139, 92, 246, 0.2);
+        }
+
+        /* Content Cards */
+        .content-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .content-card.tweet {
+            border-left: 4px solid #3B82F6;
+        }
+
+        .content-card.tournament {
+            border-left: 4px solid #EAB308;
+        }
+
+        .content-card.forum {
+            border-left: 4px solid #10B981;
+        }
+
+        .card-type {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .card-type.tweet { color: #3B82F6; }
+        .card-type.tournament { color: #EAB308; }
+        .card-type.forum { color: #10B981; }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 8px;
+        }
+
+        .card-content {
+            color: #D1D5DB;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+            color: #A0A0A0;
+            margin-top: 12px;
+        }
+
+        .card-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #FFFFFF;
+            flex-shrink: 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: #A0A0A0;
+        }
+
+        .empty-state .icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #A0A0A0;
+        }
+
+        .error-state {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            color: #EF4444;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img">
+                        <defs>
+                            <filter id="sparkleBlur">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+                            </filter>
+                        </defs>
+                        <g id="glyph">
+                            <rect x="20" y="20" width="16" height="60" rx="8" ry="8" fill="#FFFFFF"/>
+                            <path d="M 36 20 H 50 A 24 24 0 0 1 50 58 H 36 V 20 Z" fill="#FFFFFF"/>
+                            <path d="M 45 28 L 58 32 L 54 40 L 42 38 Z" fill="#000000" opacity="0.3"/>
+                            <path d="M 44 42 L 56 46 L 48 52 Z" fill="#000000" opacity="0.25"/>
+                            <path d="M 38 26 L 42 24 L 42 34 L 38 36 Z" fill="#000000" opacity="0.2"/>
+                        </g>
+                        <g id="sparkles" opacity="0.85">
+                            <circle cx="64" cy="26" r="2.5" fill="#FFFFFF" filter="url(#sparkleBlur)"/>
+                            <circle cx="70" cy="38" r="1.8" fill="#FFFFFF" filter="url(#sparkleBlur)"/>
+                            <circle cx="52" cy="35" r="1.2" fill="#FFFFFF" opacity="0.8" filter="url(#sparkleBlur)"/>
+                            <circle cx="58" cy="28" r="0.9" fill="#FFFFFF" opacity="0.7"/>
+                            <circle cx="24" cy="48" r="1.5" fill="#FFFFFF" filter="url(#sparkleBlur)"/>
+                            <circle cx="60" cy="50" r="1.0" fill="#FFFFFF" opacity="0.6"/>
+                        </g>
+                    </svg>
+                </div>
+                <span>Pathgen v2</span>
+            </a>
+            <div class="nav-center">
+                <a href="/docs.html" class="nav-link">Docs</a>
+                <div class="dropdown">
+                    <a href="#" class="nav-link" onclick="toggleDropdown('features', event)">
+                        Features
+                        <span class="caret">▼</span>
+                    </a>
+                    <div class="dropdown-menu" id="featuresDropdown">
+                        <a href="/analyze" class="dropdown-item">
+                            <span class="dropdown-item-icon">🎮</span>
+                            <span>Replay Parser</span>
+                        </a>
+                        <a href="/masterclass" class="dropdown-item">
+                            <span class="dropdown-item-icon">📖</span>
+                            <span>Masterclass</span>
+                        </a>
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Coach</span>
+                        </a>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">📊</span>
+                            <span>Competitive Insights</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">🎤</span>
+                            <span>Voice</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="/docs.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">📚</span>
+                            <span>Documentation</span>
+                        </a>
+                    </div>
+                </div>
+                <a href="/cih-coaching.html" class="nav-link">CIH Coaching</a>
+                <a href="/nagc-dropmaps.html" class="nav-link">NAGC Drop Maps</a>
+            </div>
+            <div class="nav-right">
+                <a href="/subscribe.html" class="nav-link">Pricing</a>
+                <a href="/login.html" class="nav-cta" id="navCTA">Try For Free</a>
+                <div class="dropdown">
+                    <div class="user-info" id="userInfo" onclick="toggleDropdown('settings', event)" style="display: none;">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <span class="user-name" id="userName">User</span>
+                    </div>
+                    <div class="dropdown-menu" id="settingsDropdown">
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Chat</span>
+                        </a>
+                        <a href="/tournaments.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/settings.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">⚙️</span>
+                            <span>Settings</span>
+                        </a>
+                        <a href="/subscribe.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💳</span>
+                            <span>Upgrade to Pro</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item danger" onclick="logout()">
+                            <span class="dropdown-item-icon">🚪</span>
+                            <span>Logout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-glow"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Competitive Insights</h1>
+            <p class="hero-subtitle">
+                Stay ahead with real-time updates from tournaments, forums, and top Fortnite analysts.
+            </p>
+        </div>
+    </section>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Live Updates Card -->
+            <div class="live-updates-card">
+                <div class="live-updates-header">
+                    <div class="live-updates-title">
+                        <div class="live-updates-icon">🗑️</div>
+                        <span>Live Updates</span>
+                    </div>
+                </div>
+                <div class="live-updates-list" id="liveUpdatesList">
+                    <div class="live-update-item">
+                        <div class="update-icon osirion">O</div>
+                        <div class="update-content">
+                            <div class="update-name">Osirion</div>
+                            <div class="update-text">Loading updates...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Toggle -->
+            <div class="view-toggle">
+                <button class="toggle-btn active" onclick="setViewMode('tweets')">📱 Tweets</button>
+                <button class="toggle-btn" onclick="setViewMode('rundown')">📊 Full Rundown</button>
+            </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-badge">📱 <span id="tweetCount">0</span> tweets</div>
+            <div class="stat-badge" id="tournamentBadge" style="display: none;">🏆 <span id="tournamentCount">0</span> tournaments</div>
+            <div class="stat-badge" id="forumBadge" style="display: none;">💬 <span id="forumCount">0</span> forum posts</div>
+            <div class="stat-badge" id="totalBadge" style="display: none;">📊 <span id="totalCount">0</span> total items</div>
+            <button class="refresh-btn" onclick="loadData()">🔄 Refresh</button>
+        </div>
+
+        <!-- Content Container -->
+        <div id="contentContainer">
+            <div class="loading">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : '';
+        let viewMode = 'tweets';
+        let tweets = [];
+        let tournaments = [];
+        let forumPosts = [];
+        let rundownItems = [];
+
+        function toggleDropdown(type, event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            const dropdown = document.getElementById(type === 'features' ? 'featuresDropdown' : 'settingsDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
+
+        function setViewMode(mode) {
+            viewMode = mode;
+            document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide stats badges
+            if (mode === 'rundown') {
+                document.getElementById('tournamentBadge').style.display = 'block';
+                document.getElementById('forumBadge').style.display = 'block';
+                document.getElementById('totalBadge').style.display = 'block';
+            } else {
+                document.getElementById('tournamentBadge').style.display = 'none';
+                document.getElementById('forumBadge').style.display = 'none';
+                document.getElementById('totalBadge').style.display = 'none';
+            }
+            
+            loadData();
+        }
+
+        async function loadData() {
+            const container = document.getElementById('contentContainer');
+            container.innerHTML = '<div class="loading">Loading...</div>';
+
+            try {
+                if (viewMode === 'tweets') {
+                    await loadTweets();
+                    displayTweets();
+                } else {
+                    await Promise.all([loadTweets(), loadTournaments(), loadForums()]);
+                    combineRundown();
+                    displayRundown();
+                }
+            } catch (error) {
+                console.error('Error loading data:', error);
+                container.innerHTML = `
+                    <div class="error-state">
+                        <div style="font-size: 3rem; margin-bottom: 16px;">⚠️</div>
+                        <div style="font-size: 1.25rem; font-weight: 600; margin-bottom: 12px; color: #FFFFFF;">
+                            Error Loading Data
+                        </div>
+                        <div style="font-size: 0.95rem; margin-bottom: 20px; color: #A0A0A0;">
+                            ${error.message || 'Failed to load data'}
+                        </div>
+                        <button class="refresh-btn" onclick="loadData()">🔄 Retry</button>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadTweets() {
+            try {
+                const response = await fetch(`${API_BASE}/api/tweets`);
+                if (!response.ok) throw new Error('Failed to fetch tweets');
+                const data = await response.json();
+                tweets = (data.tweets || []).map(t => ({
+                    id: t.id || '',
+                    text: t.text || '',
+                    username: t.author?.userName || t.username || 'unknown',
+                    name: t.author?.name || t.name,
+                    created_at: t.createdAt || t.created_at || new Date().toISOString(),
+                }));
+                document.getElementById('tweetCount').textContent = tweets.length;
+                updateLiveUpdates();
+            } catch (error) {
+                console.error('Error loading tweets:', error);
+                tweets = [];
+            }
+        }
+
+        function updateLiveUpdates() {
+            const list = document.getElementById('liveUpdatesList');
+            if (!list) return;
+
+            // Get latest updates from each source
+            const osirionTweets = tweets.filter(t => t.username.toLowerCase() === 'osirion_gg').slice(0, 1);
+            const kinchTweets = tweets.filter(t => t.username.toLowerCase() === 'kinchanalytics').slice(0, 1);
+            const fncompTweets = tweets.filter(t => t.username.toLowerCase() === 'fncompreport').slice(0, 1);
+
+            const updates = [];
+            if (osirionTweets.length > 0) {
+                updates.push({
+                    icon: 'O',
+                    iconClass: 'osirion',
+                    name: 'Osirion',
+                    text: osirionTweets[0].text.length > 50 ? osirionTweets[0].text.substring(0, 50) + '...' : osirionTweets[0].text
+                });
+            }
+            if (kinchTweets.length > 0) {
+                updates.push({
+                    icon: 'KA',
+                    iconClass: 'kinch',
+                    name: 'Kinch Analytics',
+                    text: kinchTweets[0].text.length > 50 ? kinchTweets[0].text.substring(0, 50) + '...' : kinchTweets[0].text
+                });
+            }
+            if (fncompTweets.length > 0) {
+                updates.push({
+                    icon: 'EN',
+                    iconClass: 'fncomp',
+                    name: 'FN Comp Report',
+                    text: fncompTweets[0].text.length > 50 ? fncompTweets[0].text.substring(0, 50) + '...' : fncompTweets[0].text
+                });
+            }
+
+            if (updates.length === 0) {
+                list.innerHTML = `
+                    <div class="live-update-item">
+                        <div class="update-icon osirion">O</div>
+                        <div class="update-content">
+                            <div class="update-name">Osirion</div>
+                            <div class="update-text">No recent updates</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = updates.map(update => `
+                <div class="live-update-item">
+                    <div class="update-icon ${update.iconClass}">${update.icon}</div>
+                    <div class="update-content">
+                        <div class="update-name">${update.name}</div>
+                        <div class="update-text">${update.text}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function loadTournaments() {
+            try {
+                const response = await fetch(`${API_BASE}/api/competitive-insights/tournaments`);
+                if (!response.ok) throw new Error('Failed to fetch tournaments');
+                const data = await response.json();
+                tournaments = data.tournaments || [];
+                document.getElementById('tournamentCount').textContent = tournaments.length;
+            } catch (error) {
+                console.error('Error loading tournaments:', error);
+                tournaments = [];
+            }
+        }
+
+        async function loadForums() {
+            try {
+                const response = await fetch(`${API_BASE}/api/competitive-insights/forums`);
+                if (!response.ok) throw new Error('Failed to fetch forums');
+                const data = await response.json();
+                forumPosts = data.posts || [];
+                document.getElementById('forumCount').textContent = forumPosts.length;
+            } catch (error) {
+                console.error('Error loading forums:', error);
+                forumPosts = [];
+            }
+        }
+
+        function combineRundown() {
+            rundownItems = [];
+            tweets.forEach(t => rundownItems.push({ type: 'tweet', data: t }));
+            tournaments.forEach(t => rundownItems.push({ type: 'tournament', data: t }));
+            forumPosts.forEach(p => rundownItems.push({ type: 'forum', data: p }));
+            
+            rundownItems.sort((a, b) => {
+                const dateA = new Date(
+                    a.type === 'tweet' ? a.data.created_at :
+                    a.type === 'tournament' ? (a.data.startDate || a.data.createdAt) :
+                    a.data.createdAt
+                ).getTime();
+                const dateB = new Date(
+                    b.type === 'tweet' ? b.data.created_at :
+                    b.type === 'tournament' ? (b.data.startDate || b.data.createdAt) :
+                    b.data.createdAt
+                ).getTime();
+                return dateB - dateA;
+            });
+            
+            document.getElementById('totalCount').textContent = rundownItems.length;
+        }
+
+        function displayTweets() {
+            const container = document.getElementById('contentContainer');
+            
+            if (tweets.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📭</div>
+                        <div style="font-size: 1.25rem; margin-bottom: 8px; color: #FFFFFF;">No tweets found</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = tweets.map(tweet => {
+                const logoMap = {
+                    'osirion_gg': '/osirion.jpg',
+                    'KinchAnalytics': '/kinch%20logo.jpg',
+                    'FNcompReport': '/fncr.jpg'
+                };
+                const logoUrl = logoMap[tweet.username] || null;
+                const initial = tweet.username[0].toUpperCase();
+                const timeAgo = getTimeAgo(tweet.created_at);
+
+                return `
+                    <div class="content-card tweet">
+                        <div style="display: flex; align-items: start; gap: 12px; margin-bottom: 12px;">
+                            <div class="avatar" style="${logoUrl ? 'background: transparent;' : ''}">
+                                ${logoUrl ? `<img src="${logoUrl}" alt="${tweet.name || tweet.username}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">` : initial}
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; color: #FFFFFF; margin-bottom: 4px;">
+                                    ${tweet.name || tweet.username}
+                                </div>
+                                <div style="color: #A0A0A0; font-size: 0.875rem;">
+                                    @${tweet.username}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-content">${tweet.text}</div>
+                        <div class="card-meta">
+                            <div>🕐 ${timeAgo}</div>
+                            <div>${new Date(tweet.created_at).toLocaleString()}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function displayRundown() {
+            const container = document.getElementById('contentContainer');
+            
+            if (rundownItems.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📭</div>
+                        <div style="font-size: 1.25rem; margin-bottom: 8px; color: #FFFFFF;">No insights found</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = rundownItems.map(item => {
+                if (item.type === 'tweet') {
+                    const logoMap = {
+                        'osirion_gg': '/osirion.jpg',
+                        'KinchAnalytics': '/kinch%20logo.jpg',
+                        'FNcompReport': '/fncr.jpg'
+                    };
+                    const logoUrl = logoMap[item.data.username] || null;
+                    const initial = item.data.username[0].toUpperCase();
+
+                    return `
+                        <div class="content-card tweet">
+                            <div class="card-type tweet">📱 Tweet</div>
+                            <div style="display: flex; align-items: start; gap: 12px; margin-bottom: 12px;">
+                                <div class="avatar" style="${logoUrl ? 'background: transparent;' : ''}">
+                                    ${logoUrl ? `<img src="${logoUrl}" alt="${item.data.name || item.data.username}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">` : initial}
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; color: #FFFFFF; margin-bottom: 4px;">
+                                        ${item.data.name || item.data.username}
+                                    </div>
+                                    <div style="color: #A0A0A0; font-size: 0.875rem;">
+                                        @${item.data.username}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-content">${item.data.text}</div>
+                            <div class="card-meta">
+                                <div>🕐 ${getTimeAgo(item.data.created_at)}</div>
+                            </div>
+                        </div>
+                    `;
+                } else if (item.type === 'tournament') {
+                    return `
+                        <div class="content-card tournament">
+                            <div class="card-type tournament">🏆 Tournament</div>
+                            <div class="card-title">${item.data.title}</div>
+                            ${item.data.description ? `<div class="card-content">${item.data.description}</div>` : ''}
+                            <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; font-size: 0.875rem; color: #A0A0A0;">
+                                ${item.data.startDate ? `<div>📅 Starts: ${new Date(item.data.startDate).toLocaleDateString()}</div>` : ''}
+                                ${item.data.prizePool ? `<div>💰 Prize Pool: ${item.data.prizePool}</div>` : ''}
+                                ${item.data.format ? `<div>🎮 Format: ${item.data.format}</div>` : ''}
+                            </div>
+                            ${item.data.url ? `<a href="${item.data.url}" target="_blank" rel="noopener noreferrer" style="color: #8B5CF6; text-decoration: none; font-size: 0.875rem;">Learn more →</a>` : ''}
+                        </div>
+                    `;
+                } else if (item.type === 'forum') {
+                    return `
+                        <div class="content-card forum">
+                            <div class="card-type forum">💬 Forum ${item.data.subreddit ? `<span style="color: #A0A0A0; font-size: 0.7rem;">r/${item.data.subreddit}</span>` : ''}</div>
+                            <div class="card-title">${item.data.title}</div>
+                            <div class="card-content">${item.data.content.length > 300 ? item.data.content.substring(0, 300) + '...' : item.data.content}</div>
+                            <div class="card-meta">
+                                <div style="display: flex; gap: 16px;">
+                                    <div>👤 ${item.data.author}</div>
+                                    ${item.data.score !== undefined ? `<div>⬆️ ${item.data.score}</div>` : ''}
+                                    ${item.data.numComments !== undefined ? `<div>💬 ${item.data.numComments}</div>` : ''}
+                                </div>
+                                <div>🕐 ${getTimeAgo(item.data.createdAt)}</div>
+                            </div>
+                            <a href="${item.data.url}" target="_blank" rel="noopener noreferrer" style="color: #8B5CF6; text-decoration: none; font-size: 0.875rem; margin-top: 8px; display: inline-block;">Read more →</a>
+                        </div>
+                    `;
+                }
+                return '';
+            }).join('');
+        }
+
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date().getTime() - new Date(date).getTime()) / 1000);
+            if (seconds < 60) return `${seconds}s ago`;
+            if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+            if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+            return `${Math.floor(seconds / 86400)}d ago`;
+        }
+
+        // Check for logged in user and show profile
+        function checkUserLogin() {
+            try {
+                const userDataStr = localStorage.getItem('pathgen_user');
+                const discordUserStr = localStorage.getItem('discordUser');
+                
+                if (userDataStr || discordUserStr) {
+                    let userData = {};
+                    if (userDataStr) {
+                        try {
+                            userData = JSON.parse(userDataStr);
+                        } catch (e) {
+                            console.error('Error parsing user data:', e);
+                        }
+                    }
+                    
+                    if (discordUserStr) {
+                        try {
+                            const discordData = JSON.parse(discordUserStr);
+                            userData.discordUsername = discordData.username;
+                            userData.discordAvatar = discordData.avatar && discordData.id
+                                ? `https://cdn.discordapp.com/avatars/${discordData.id}/${discordData.avatar}.png`
+                                : null;
+                        } catch (e) {
+                            console.error('Error parsing Discord user data:', e);
+                        }
+                    }
+                    
+                    showUserInfo(userData);
+                }
+            } catch (error) {
+                console.error('Error checking user login:', error);
+            }
+        }
+        
+        function showUserInfo(userData) {
+            const navCTA = document.getElementById('navCTA');
+            const userInfo = document.getElementById('userInfo');
+            const userAvatar = document.getElementById('userAvatar');
+            const userName = document.getElementById('userName');
+
+            if (navCTA) navCTA.style.display = 'none';
+            if (userInfo) userInfo.style.display = 'flex';
+            
+            // Set avatar - use Discord avatar, Google avatar, or generic avatar if available
+            const avatarUrl = userData.discordAvatar || userData.googleAvatar || userData.avatar;
+            if (avatarUrl && userAvatar) {
+                const img = document.createElement('img');
+                img.src = avatarUrl;
+                img.alt = 'Avatar';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.borderRadius = '50%';
+                img.style.objectFit = 'cover';
+                img.onerror = function() {
+                    // Fallback if image fails to load
+                    const initial = (userData.name || userData.email || userData.discordUsername || userData.googleUsername || 'U').charAt(0).toUpperCase();
+                    userAvatar.textContent = initial;
+                    userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+                };
+                userAvatar.innerHTML = '';
+                userAvatar.appendChild(img);
+            } else if (userAvatar) {
+                const initial = (userData.name || userData.email || userData.discordUsername || userData.googleUsername || 'U').charAt(0).toUpperCase();
+                userAvatar.textContent = initial;
+                userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+            }
+            
+            // Set name
+            const displayName = userData.name || userData.discordUsername || userData.googleUsername || userData.email?.split('@')[0] || 'User';
+            if (userName) userName.textContent = displayName;
+        }
+        
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('pathgen_user');
+                localStorage.removeItem('discordUser');
+                localStorage.removeItem('setupComplete');
+                window.location.href = '/login.html';
+            }
+        }
+
+        // Initialize
+        window.onload = () => {
+            checkUserLogin();
+            loadData();
+            // Auto-refresh every minute
+            setInterval(loadData, 60000);
+        };
+    </script>
+</body>
+</html>
+

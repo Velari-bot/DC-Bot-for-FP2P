@@ -1,0 +1,9 @@
+<!-- Pathgen "P" Mark - Solid Black (No Sparkles) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Pathgen logo">
+  <!-- P Stem -->
+  <rect x="20" y="20" width="16" height="60" rx="8" ry="8" fill="#000000"/>
+  
+  <!-- P Bowl -->
+  <path d="M 36 20 H 50 A 24 24 0 0 1 50 58 H 36 V 20 Z" fill="#000000"/>
+</svg>
+

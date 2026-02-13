@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Tweets - PathGen AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0A0A0A;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header with Pill Nav Bar */
+        .header {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .nav {
+            backdrop-filter: blur(16px);
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 
+                        0 0 0 1px rgba(255, 255, 255, 0.03),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 0 8px;
+            margin-right: 4px;
+        }
+
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .logo-icon svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin: 0 8px;
+        }
+
+        .nav-link {
+            color: #A0A0A0;
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 6px 14px;
+            border-radius: 25px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link.active {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link .caret {
+            font-size: 8px;
+            margin-left: 1px;
+            opacity: 0.7;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 12px 4px 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            margin-left: 8px;
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+        }
+
+        /* Dropdowns */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            min-width: 220px;
+            background: rgba(15, 15, 15, 0.98);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+                        0 0 0 1px rgba(255, 255, 255, 0.05);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            z-index: 200;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: #d1d5db;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(79, 140, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .dropdown-item-icon {
+            font-size: 16px;
+            width: 20px;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 6px 0;
+        }
+
+        .dropdown-item.danger {
+            color: #ef4444;
+        }
+
+        .dropdown-item.danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        #featuresDropdown {
+            left: 0;
+            right: auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 140px 48px 80px;
+            overflow: hidden;
+        }
+
+        /* Purple-Blue Gradient Glow */
+        .hero-glow {
+            position: absolute;
+            bottom: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1000px;
+            height: 1000px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, rgba(59, 130, 246, 0.15) 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+            filter: blur(60px);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 880px;
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 28px;
+            color: #FFFFFF;
+            letter-spacing: -0.03em;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #A0A0A0;
+            line-height: 1.7;
+            margin-bottom: 48px;
+            max-width: 680px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Background Dashboard Previews */
+        .dashboard-previews {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .preview-card {
+            position: absolute;
+            background: #151515;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 24px;
+            width: 340px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
+            opacity: 0.4;
+        }
+
+        .preview-left {
+            left: 8%;
+            top: 22%;
+            transform: rotate(-8deg) perspective(1000px) rotateY(8deg);
+        }
+
+        .preview-right {
+            right: 8%;
+            top: 28%;
+            transform: rotate(8deg) perspective(1000px) rotateY(-8deg);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            background: #2a2a2a;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            color: #C5C5C5;
+            font-weight: 600;
+        }
+
+        .card-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            color: #A0A0A0;
+            font-size: 0.9rem;
+        }
+
+        .card-menu-item.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: #FFFFFF;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 24px 60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #A0A0A0;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10B981;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            color: #FFFFFF;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn:hover {
+            border-color: rgba(139, 92, 246, 0.3);
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateY(-2px);
+        }
+
+        .btn.active {
+            background: rgba(139, 92, 246, 0.15);
+            border-color: rgba(139, 92, 246, 0.4);
+            color: #8B5CF6;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, #8B5CF6, #3B82F6);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(139, 92, 246, 0.3);
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.15);
+        }
+
+        .stat-label {
+            color: #A0A0A0;
+            font-size: 0.875rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Tweets Container */
+        .tweets-container {
+            display: grid;
+            gap: 20px;
+        }
+
+        .tweet-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tweet-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tweet-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(139, 92, 246, 0.3);
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.15);
+        }
+
+        .tweet-card:hover::before {
+            opacity: 1;
+        }
+
+        .tweet-card.live {
+            border-color: rgba(239, 68, 68, 0.4);
+            animation: livePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+        }
+
+        .tweet-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .tweet-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #FFFFFF;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .tweet-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .tweet-avatar:has(img) {
+            background: transparent !important;
+        }
+
+        .tweet-user {
+            flex: 1;
+        }
+
+        .tweet-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #FFFFFF;
+            margin-bottom: 2px;
+        }
+
+        .tweet-username {
+            color: #A0A0A0;
+            font-size: 0.875rem;
+        }
+
+        .tweet-badge {
+            padding: 6px 12px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #EF4444;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: liveBadge 1.5s ease-in-out infinite;
+        }
+
+        @keyframes liveBadge {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .tweet-text {
+            color: #D1D5DB;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .tweet-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #A0A0A0;
+            font-size: 0.875rem;
+        }
+
+        .tweet-time {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #A0A0A0;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            margin-top: 20px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #8B5CF6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #A0A0A0;
+        }
+
+        .empty-state .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .main-content {
+                padding: 40px 16px 40px;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <!-- Pathgen Monochrome P Mark -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img">
+                        <defs>
+                            <filter id="tweetsSparkleBlur">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+                            </filter>
+                        </defs>
+                        
+                        <!-- P Glyph with Facets -->
+                        <g id="glyph">
+                            <rect x="20" y="20" width="16" height="60" rx="8" ry="8" fill="#FFFFFF"/>
+                            <path d="M 36 20 H 50 A 24 24 0 0 1 50 58 H 36 V 20 Z" fill="#FFFFFF"/>
+                            <path d="M 45 28 L 58 32 L 54 40 L 42 38 Z" fill="#000000" opacity="0.3"/>
+                            <path d="M 44 42 L 56 46 L 48 52 Z" fill="#000000" opacity="0.25"/>
+                            <path d="M 38 26 L 42 24 L 42 34 L 38 36 Z" fill="#000000" opacity="0.2"/>
+                        </g>
+                        
+                        <!-- Cosmic Sparkles -->
+                        <g id="sparkles" opacity="0.85">
+                            <circle cx="64" cy="26" r="2.5" fill="#FFFFFF" filter="url(#tweetsSparkleBlur)" class="sparkle-1"/>
+                            <circle cx="70" cy="38" r="1.8" fill="#FFFFFF" filter="url(#tweetsSparkleBlur)" class="sparkle-2"/>
+                            <circle cx="52" cy="35" r="1.2" fill="#FFFFFF" opacity="0.8" filter="url(#tweetsSparkleBlur)" class="sparkle-3"/>
+                            <circle cx="58" cy="28" r="0.9" fill="#FFFFFF" opacity="0.7" class="sparkle-4"/>
+                            <circle cx="24" cy="48" r="1.5" fill="#FFFFFF" filter="url(#tweetsSparkleBlur)" class="sparkle-5"/>
+                            <circle cx="60" cy="50" r="1.0" fill="#FFFFFF" opacity="0.6" class="sparkle-6"/>
+                        </g>
+                    </svg>
+                </div>
+                <span>Pathgen v2</span>
+            </a>
+            
+            <div class="nav-center">
+                <a href="/docs.html" class="nav-link">Docs</a>
+                <div class="dropdown">
+                    <a href="#" class="nav-link" onclick="toggleDropdown('features', event)">
+                        Features
+                        <span class="caret">▼</span>
+                    </a>
+                    <div class="dropdown-menu" id="featuresDropdown">
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Coach</span>
+                        </a>
+                        <a href="/tournaments.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                        </a>
+                        <a href="/tweets.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">🐦</span>
+                            <span>Live Tweets</span>
+                        </a>
+                    </div>
+                </div>
+                <a href="/tournaments.html" class="nav-link">Tournaments</a>
+                <a href="/pricing.html" class="nav-link">Pricing</a>
+            </div>
+            
+            <div class="nav-right" id="navCTA">
+                <a href="/login.html" class="nav-link">Get Started</a>
+            </div>
+            
+            <div class="user-info" id="userInfo" style="display: none;">
+                <div class="user-avatar" id="userAvatar"></div>
+                <div class="user-name" id="userName">User</div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Purple-Blue Gradient Glow -->
+        <div class="hero-glow"></div>
+
+        <!-- Background Dashboard Previews -->
+        <div class="dashboard-previews">
+            <!-- Left Preview Card -->
+            <div class="preview-card preview-left">
+                <div class="card-header">
+                    <div class="card-icon">🐦</div>
+                    <div class="card-title">Live Updates</div>
+                </div>
+                <div class="card-menu-item active">
+                    <span>All Tweets</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Osirion</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Kinch Analytics</span>
+                </div>
+            </div>
+
+            <!-- Right Preview Card -->
+            <div class="preview-card preview-right">
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <div class="card-title">Real-Time Stats</div>
+                </div>
+                <div class="card-menu-item">
+                    <span>Total Tweets</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Live Updates</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>By Source</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-content">
+            <h1 class="hero-title" id="tweetsHeroTitle">Real-Time Competitive Updates</h1>
+            <p class="hero-subtitle" id="tweetsHeroSubtitle">
+                Stay ahead of the competition with live tweets and updates from top Fortnite analysts. 
+                Track Osirion, Kinch Analytics, and FN Comp Report in real-time.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                <span id="connectionStatus">Connected</span>
+            </div>
+            <div class="status-badge">
+                <span>📊</span>
+                <span id="totalTweets">0 tweets</span>
+            </div>
+            <div class="status-badge">
+                <span>🔄</span>
+                <span>Poll: 5min | Refresh: 30s</span>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="btn active" onclick="filterTweets('all')">📱 All Tweets</button>
+            <button class="btn" onclick="filterTweets('osirion_gg')">👤 Osirion</button>
+            <button class="btn" onclick="filterTweets('KinchAnalytics')">📊 Kinch Analytics</button>
+            <button class="btn" onclick="filterTweets('FNcompReport')">📰 FN Comp Report</button>
+            <button class="btn" onclick="loadTweets()">🔄 Refresh</button>
+            <button class="btn" onclick="window.open('/data/simpsons-season-schedule.txt', '_blank')">📅 Schedule</button>
+            <button class="btn" onclick="window.location.href='/chat.html'">🤖 AI Chat</button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid" id="statsGrid" style="display: none;">
+            <div class="stat-card">
+                <div class="stat-label">Total Tweets</div>
+                <div class="stat-value" id="statTotal">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Live Tweets</div>
+                <div class="stat-value" id="statLive">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Osirion</div>
+                <div class="stat-value" id="statOsirion">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Kinch Analytics</div>
+                <div class="stat-value" id="statKinch">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">FN Comp Report</div>
+                <div class="stat-value" id="statFNcomp">0</div>
+            </div>
+        </div>
+
+        <!-- Tweets -->
+        <div class="tweets-container" id="tweetsContainer">
+            <div class="loading">Loading tweets</div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle dropdown
+        function toggleDropdown(type, event) {
+            if (event) event.preventDefault();
+            
+            const dropdowns = {
+                features: document.getElementById('featuresDropdown'),
+                settings: document.getElementById('settingsDropdown')
+            };
+            
+            const currentDropdown = dropdowns[type];
+            if (!currentDropdown) return;
+            
+            // Close other dropdowns
+            Object.entries(dropdowns).forEach(([key, dropdown]) => {
+                if (key !== type && dropdown) {
+                    dropdown.classList.remove('show');
+                }
+            });
+            
+            // Toggle current dropdown
+            currentDropdown.classList.toggle('show');
+            
+            if (event) event.stopPropagation();
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
+
+        // Show user info
+        function showUserInfo(userData) {
+            const navCTA = document.getElementById('navCTA');
+            const userInfo = document.getElementById('userInfo');
+            const userAvatar = document.getElementById('userAvatar');
+            const userName = document.getElementById('userName');
+
+            if (navCTA) navCTA.style.display = 'none';
+            if (userInfo) userInfo.style.display = 'flex';
+            
+            // Set avatar - use Discord avatar if available
+            if (userData.discordAvatar && userAvatar) {
+                const img = document.createElement('img');
+                img.src = userData.discordAvatar;
+                img.alt = 'Avatar';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.borderRadius = '50%';
+                img.style.objectFit = 'cover';
+                img.onerror = function() {
+                    const initial = (userData.name || userData.email || userData.discordUsername || 'U').charAt(0).toUpperCase();
+                    userAvatar.textContent = initial;
+                    userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+                };
+                userAvatar.innerHTML = '';
+                userAvatar.appendChild(img);
+            } else if (userAvatar) {
+                const initial = (userData.name || userData.email || userData.discordUsername || 'U').charAt(0).toUpperCase();
+                userAvatar.textContent = initial;
+                userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+            }
+            
+            // Set name
+            const displayName = userData.name || userData.discordUsername || userData.email?.split('@')[0] || 'User';
+            if (userName) userName.textContent = displayName;
+        }
+
+        // Check auth
+        function checkAuth() {
+            const userData = localStorage.getItem('pathgen_user');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    showUserInfo(user);
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                }
+            }
+        }
+
+        // Check auth on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+        });
+
+        // Hero text variations
+        const tweetsHeroVariations = [
+            {
+                title: "Real-Time Competitive Updates",
+                subtitle: "Stay ahead of the competition with live tweets and updates from top Fortnite analysts. Track Osirion, Kinch Analytics, and FN Comp Report in real-time."
+            },
+            {
+                title: "Never Miss a Beat",
+                subtitle: "Get instant notifications and updates from the most trusted Fortnite competitive sources. Stay informed about tournaments, meta changes, and player insights."
+            },
+            {
+                title: "Live Competitive Intelligence",
+                subtitle: "Track real-time updates from top analysts. Monitor tournament schedules, meta shifts, and competitive insights as they happen."
+            }
+        ];
+
+        let tweetsHeroIndex = 0;
+
+        function cycleTweetsHeroText() {
+            tweetsHeroIndex = (tweetsHeroIndex + 1) % tweetsHeroVariations.length;
+            const variation = tweetsHeroVariations[tweetsHeroIndex];
+
+            const titleEl = document.getElementById('tweetsHeroTitle');
+            const subtitleEl = document.getElementById('tweetsHeroSubtitle');
+
+            if (titleEl && subtitleEl) {
+                // Fade out
+                titleEl.style.transition = 'opacity 0.4s ease';
+                subtitleEl.style.transition = 'opacity 0.4s ease';
+                titleEl.style.opacity = '0';
+                subtitleEl.style.opacity = '0';
+
+                setTimeout(() => {
+                    titleEl.textContent = variation.title;
+                    subtitleEl.textContent = variation.subtitle;
+
+                    // Fade in
+                    titleEl.style.opacity = '1';
+                    subtitleEl.style.opacity = '1';
+                }, 400);
+            }
+        }
+
+        // Cycle hero text every 10 seconds
+        if (document.getElementById('tweetsHeroTitle')) {
+            setInterval(cycleTweetsHeroText, 10000);
+        }
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Animate tweet cards on scroll
+        function initScrollAnimations() {
+            const cards = document.querySelectorAll('.tweet-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = `opacity 0.6s ease ${index * 0.05}s, transform 0.6s ease ${index * 0.05}s`;
+                observer.observe(card);
+            });
+        }
+
+        const API_BASE = 'http://localhost:3000';
+        let currentFilter = 'all';
+        let autoRefreshInterval;
+
+        // Load tweets
+        async function loadTweets() {
+            const container = document.getElementById('tweetsContainer');
+            
+            try {
+                const url = currentFilter === 'all' 
+                    ? `${API_BASE}/api/tweets?limit=50`
+                    : `${API_BASE}/api/tweets/${currentFilter}?limit=50`;
+                
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Failed to fetch tweets');
+                
+                const data = await response.json();
+                
+                // Update connection status
+                document.getElementById('connectionStatus').textContent = 
+                    data.streamConnected ? 'Connected' : 'Disconnected';
+                
+                // Update total tweets
+                document.getElementById('totalTweets').textContent = 
+                    `${data.total} tweet${data.total !== 1 ? 's' : ''}`;
+                
+                // Display tweets
+                if (data.data && data.data.length > 0) {
+                    displayTweets(data.data);
+                    await loadStats();
+                    setTimeout(initScrollAnimations, 100);
+                } else {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="icon">📭</div>
+                            <div>No tweets found</div>
+                            <div style="margin-top: 10px; font-size: 0.9rem;">
+                                Waiting for ${currentFilter === 'all' ? 'tracked accounts' : '@' + currentFilter} to tweet...
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">⚠️</div>
+                        <div>Error loading tweets</div>
+                        <div style="margin-top: 10px; font-size: 0.9rem; color: #EF4444;">
+                            ${error.message}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Get logo for username
+        function getLogoForUsername(username) {
+            const logoMap = {
+                'osirion_gg': '/osirion.jpg',
+                'KinchAnalytics': '/kinch%20logo.jpg',
+                'FNcompReport': '/fncr.jpg'
+            };
+            return logoMap[username] || null;
+        }
+
+        // Display tweets
+        function displayTweets(tweets) {
+            const container = document.getElementById('tweetsContainer');
+            
+            container.innerHTML = tweets.map(tweet => {
+                const isLive = tweet.isLive || false;
+                const time = new Date(tweet.created_at).toLocaleString();
+                const timeAgo = getTimeAgo(tweet.created_at);
+                const initial = tweet.username[0].toUpperCase();
+                const logoUrl = getLogoForUsername(tweet.username);
+                
+                // Create avatar HTML - use logo if available, otherwise use initial
+                let avatarHtml = '';
+                if (logoUrl) {
+                    avatarHtml = `<img src="${logoUrl}" alt="${tweet.name || tweet.username}" onerror="this.style.display='none'; this.parentElement.textContent='${initial}'; this.parentElement.style.background='linear-gradient(135deg, #8B5CF6, #3B82F6)';" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block;">`;
+                } else {
+                    avatarHtml = initial;
+                }
+                
+                return `
+                    <div class="tweet-card ${isLive ? 'live' : ''}">
+                        <div class="tweet-header">
+                            <div class="tweet-avatar">${avatarHtml}</div>
+                            <div class="tweet-user">
+                                <div class="tweet-name">${tweet.name || tweet.username}</div>
+                                <div class="tweet-username">@${tweet.username}</div>
+                            </div>
+                            ${isLive ? '<span class="tweet-badge">🔴 LIVE</span>' : ''}
+                        </div>
+                        <div class="tweet-text">${escapeHtml(tweet.text)}</div>
+                        <div class="tweet-footer">
+                            <div class="tweet-time">
+                                <span>🕐</span>
+                                <span>${timeAgo}</span>
+                            </div>
+                            <div>${time}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Load stats
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_BASE}/api/tweet-stats`);
+                if (!response.ok) return;
+                
+                const stats = await response.json();
+                
+                document.getElementById('statTotal').textContent = stats.total || 0;
+                document.getElementById('statOsirion').textContent = stats.byUser?.osirion_gg || 0;
+                document.getElementById('statKinch').textContent = stats.byUser?.KinchAnalytics || 0;
+                document.getElementById('statFNcomp').textContent = stats.byUser?.FNcompReport || 0;
+                
+                // Calculate live tweets
+                const tweetsResponse = await fetch(`${API_BASE}/api/tweets?limit=100`);
+                const tweetsData = await tweetsResponse.json();
+                const liveTweets = tweetsData.data?.filter(t => t.isLive).length || 0;
+                document.getElementById('statLive').textContent = liveTweets;
+                
+                document.getElementById('statsGrid').style.display = 'grid';
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Filter tweets
+        function filterTweets(filter) {
+            currentFilter = filter;
+            
+            // Update active button
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            loadTweets();
+        }
+
+        // Utility functions
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+            
+            if (seconds < 60) return `${seconds}s ago`;
+            if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+            if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+            return `${Math.floor(seconds / 86400)}d ago`;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Auto-refresh every 30 seconds
+        function startAutoRefresh() {
+            autoRefreshInterval = setInterval(() => {
+                loadTweets();
+            }, 30000);
+        }
+
+        // Initialize
+        window.onload = () => {
+            loadTweets();
+            startAutoRefresh();
+        };
+
+        // Cleanup
+        window.onbeforeunload = () => {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+        };
+    </script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+</body>
+</html>

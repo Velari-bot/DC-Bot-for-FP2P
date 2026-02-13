@@ -1,0 +1,120 @@
+Tournament Strategy Guide
+
+⏰ STARTING LATE ⏰
+
+I did an in-depth statistical analysis of cash cups a couple of seasons ago, and it found that teams that started late (up to 30 minutes or so) did not have an advantage or disadvantage.
+
+The expected result of a team that starts late is basically identical to if they don't start late.
+
+Advantages of starting late:
+- You will have an easier lobby on average, therefore giving you a better chance of winning and getting many elims
+- The mental advantage of starting with a big win can be beneficial
+- You might have a game extra to use up during the tournament
+
+Disadvantages of starting late:
+- You essentially "lose" the time that you weren't playing, so you first game finishes after everyone else
+- You might not get a good result in the first game because rng exists
+
+The balance makes sense when you realise that even though you get an easier first game, everyone else has already got points and even if you get a massive win and jump ahead, PBMM (points-based matchmaking) gives you a harder game afterwards so your advantage is wiped out almost immediately.
+
+There is one situation where starting late is definitely a bad idea:
+In points systems where placement is extremely important, you need to play as many endgames as possible, and starting late can mean that you get 1 less endgame than everyone else.
+
+🤼 POINTS-BASED MATCHMAKING (PBMM) 🤼
+
+You can think of points-based matchmaking as being a 2-sided magnet that keeps pulling you to where your true ability is: If you're doing badly, you'll get an easier lobby and probably move up the leaderboard, while if you're doing really well, your lobby will be too hard for you and you are more likely to drop back down.
+
+Of course you can sometimes do well in a very hard lobby or vice versa, but on average, that is the effect of it. If you continue to do well, you'll keep getting hard lobbies until you fall back down again.
+
+This might be frustrating to you and you feel like you can't move up without moving back down after, but it also means that the last hour of every tournament is always the most important, and especially the last game.
+
+This is because if you move up above where you "should" be, there is much less time to be pulled back down by hard lobbies. You may only need to survive 1 game to stay up there. Or if you do really well in your last game, you don't even have to play in a hard lobby!
+
+The opposite is true too - if you have a bad game in the final hour, you have less chances to catch up again. And if you die early in your final game, you have no more chances, and everyone else has 20 more minutes of game time as well.
+
+In summary:
+- Don't let yourself get down mentally if your first hour or even 2 hours don't go well because a good final hour really changes everything.
+- Never play aggressive in your final game unless you have to (e.g. you think you need a big win to qualify and you're willing to risk it)
+
+⏸️ WHEN TO WAIT BETWEEN GAMES ⏸️
+
+Why?
+
+If you've died early quite a lot and don't have many games left, then you might want to wait before queueing again.
+
+There are 2 reasons for this:
+1. Reset your mentality
+2. Drop down the rankings a bit and get a slightly easier lobby
+
+When?
+
+You can play 1 game every 30 minutes (25 minutes game + 5 minutes queue), so you can work backwards from the end.
+
+- If you have 3 games left and longer than 1 hour before queues close then wait until 1 hour left.
+- If you have 4 games left and longer than 1.5 hours before queues close then wait until 1.5 hours left.
+- If you have 5 games left and longer than 2 hours before queues close then wait until 2 hours left.
+
+This can chain together if you keep dying off spawn, so if you wait with 5 games left and then die early again, you should be waiting again for your next game.
+
+🎮 GAMES STARTING AT XX:40-XX:45
+
+Some people are hard keying off spawn because they either have 2 spare games or they need to catch up a lot of points.
+
+Some people are in their 9th game and want to play it out for 15 minutes and get some placement so they are not keying so hard.
+
+In general, the game will die off steadily until xx:56 and you'll get some free placement if you survive to that point.
+
+Once you reach xx:56 nobody will die as they're all in their last game, and you may still have anywhere from 20-40 people in 50/50 zone.
+
+🎮 GAMES STARTING AT XX:45-XX:52
+
+Many people are hard keying off spawn so that they can get a few points before leaving for final queue.
+
+The rest of the people are in their 10th game or trying to play it out anyway.
+
+This means the game dies a load in the first 5 minutes, and then it will be really passive with not many people dying between 2nd and 5th zone.
+
+🎯 SHOULD I LOAD INTO A KEY GAME OR A STACKED GAME? (When I have 1 game left)
+
+Some people think it's better to wait for a stacked game because the lobby might be a bit easier when you drop down the leaderboard more.
+
+The concept is true, but in reality you're not going to drop down enough in 10-15 minutes to make a big difference.
+
+In general I would advise loading into a key game and just avoid the really busy areas of the map to avoid getting keyed. Once you avoid that, you're getting "free" placement points and less stacked end-games, which helps you a lot. You don't have to worry about surge at all either.
+
+❓ SHOULD I LEAVE MY W-KEY GAME OR PLAY IT OUT?
+
+Many factors go into this decision:
+
+Do you have good loot? If you do, it might be your best chance for a good result.
+
+How many players are alive? If you haven't had any placement points yet there's less reason to leave game as you're just replacing this game with the next one.
+
+How many points do you need? If you need a few points to qualify and you think you can get there with the loot you have then you may as well stay in. If you need another 40 points then you probably need to leave and key the final game.
+
+📋 SHORT VERSION OF WHEN TO QUEUE FOR LAST GAME:
+
+If you queue between xx:40 and xx:50 you will be more likely to get keyed off spawn, but the endgame will be more dead.
+
+So if you can land safe and hide from the keyers then go for this.
+
+If you don't want to be in a wkey game like that then just go for the final queue in the last 10 minutes, which will be more stacked all the way through (especially if you're close to qualling).
+
+⏱️ FINAL QUEUE TIME
+
+It varies from tournament to tournament, so I can't really tell you the time for each tournament/round here.
+
+Some tournaments you need 5 minutes queue time to be safe and others even more.
+
+Clearly sometimes you'll get a game with less time anyway, but it's a risk you have to figure out yourself...
+
+🤔 STAYING IN GAME AND RISK THE FINAL QUEUE OR NOT?
+
+Here's some things you have to ask yourself:
+
+How many points can I gain by staying in for another 2 minutes?: If you're in moving zones then 2 minutes can get you a lot of points. If you're in 1st zone...probably not worth staying and risking the final queue.
+
+How many points do I need?: If you only need a few points to qualify, it's probably worth waiting for them and avoiding the risk of dying off spawn in last game.
+
+As always, I can help you out in Premium with these decisions during tournaments. Final Queue times, points estimates and general decision-making is something I am there for during EU and NAE tournaments!
+

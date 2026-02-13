@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Logo.png">
+    <link rel="shortcut icon" type="image/png" href="/Logo.png">
+    <link rel="apple-touch-icon" href="/Logo.png">
+    <title>Competitive Insights - PathGen AI</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pathgen.dev/tweets">
+    <meta property="og:title" content="Competitive Tweets - PathGen AI">
+    <meta property="og:description" content="Stay updated with the latest Fortnite competitive news and updates.">
+    <meta property="og:image" content="https://pathgen.dev/embed.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://pathgen.dev/tweets">
+    <meta name="twitter:title" content="Competitive Tweets - PathGen AI">
+    <meta name="twitter:description" content="Stay updated with the latest Fortnite competitive news and updates.">
+    <meta name="twitter:image" content="https://pathgen.dev/embed.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0A0A0A;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header with Pill Nav Bar */
+        .header {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .nav {
+            backdrop-filter: blur(16px);
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 
+                        0 0 0 1px rgba(255, 255, 255, 0.03),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 0 8px;
+            margin-right: 4px;
+        }
+
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .logo-icon svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin: 0 8px;
+        }
+
+        .nav-link {
+            color: #A0A0A0;
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 6px 14px;
+            border-radius: 25px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link.active {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link .caret {
+            font-size: 8px;
+            margin-left: 1px;
+            opacity: 0.7;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 12px 4px 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            margin-left: 8px;
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+        }
+
+        /* Dropdowns */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            min-width: 220px;
+            background: rgba(15, 15, 15, 0.98);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+                        0 0 0 1px rgba(255, 255, 255, 0.05);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            z-index: 200;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: #d1d5db;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(79, 140, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .dropdown-item-icon {
+            font-size: 16px;
+            width: 20px;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 6px 0;
+        }
+
+        .dropdown-item.danger {
+            color: #ef4444;
+        }
+
+        .dropdown-item.danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .dropdown-item.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .dropdown-item.locked:hover {
+            background: transparent;
+            color: #6b7280;
+        }
+
+        #featuresDropdown {
+            left: 0;
+            right: auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 140px 48px 80px;
+            overflow: hidden;
+        }
+
+        /* Purple-Blue Gradient Glow */
+        .hero-glow {
+            position: absolute;
+            bottom: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1000px;
+            height: 1000px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, rgba(59, 130, 246, 0.15) 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+            filter: blur(60px);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 880px;
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 28px;
+            color: #FFFFFF;
+            letter-spacing: -0.03em;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #A0A0A0;
+            line-height: 1.7;
+            margin-bottom: 48px;
+            max-width: 680px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Background Dashboard Previews */
+        .dashboard-previews {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .preview-card {
+            position: absolute;
+            background: #151515;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 24px;
+            width: 340px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
+            opacity: 0.4;
+        }
+
+        .preview-left {
+            left: 8%;
+            top: 22%;
+            transform: rotate(-8deg) perspective(1000px) rotateY(8deg);
+        }
+
+        .preview-right {
+            right: 8%;
+            top: 28%;
+            transform: rotate(8deg) perspective(1000px) rotateY(-8deg);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            background: #2a2a2a;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            color: #C5C5C5;
+            font-weight: 600;
+        }
+
+        .card-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            color: #A0A0A0;
+            font-size: 0.9rem;
+        }
+
+        .card-menu-item.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: #FFFFFF;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 24px 60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #A0A0A0;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10B981;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            color: #FFFFFF;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn:hover {
+            border-color: rgba(139, 92, 246, 0.3);
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateY(-2px);
+        }
+
+        .btn.active {
+            background: rgba(139, 92, 246, 0.15);
+            border-color: rgba(139, 92, 246, 0.4);
+            color: #8B5CF6;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, #8B5CF6, #3B82F6);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(139, 92, 246, 0.3);
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.15);
+        }
+
+        .stat-label {
+            color: #A0A0A0;
+            font-size: 0.875rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Tweets Container */
+        .tweets-container {
+            display: grid;
+            gap: 20px;
+        }
+
+        .tweet-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tweet-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tweet-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(139, 92, 246, 0.3);
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.15);
+        }
+
+        .tweet-card:hover::before {
+            opacity: 1;
+        }
+
+        .tweet-card.live {
+            border-color: rgba(239, 68, 68, 0.4);
+            animation: livePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+        }
+
+        .tweet-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .tweet-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #FFFFFF;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .tweet-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .tweet-avatar:has(img) {
+            background: transparent !important;
+        }
+
+        .tweet-user {
+            flex: 1;
+        }
+
+        .tweet-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #FFFFFF;
+            margin-bottom: 2px;
+        }
+
+        .tweet-username {
+            color: #A0A0A0;
+            font-size: 0.875rem;
+        }
+
+        .tweet-badge {
+            padding: 6px 12px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #EF4444;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: liveBadge 1.5s ease-in-out infinite;
+        }
+
+        @keyframes liveBadge {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .tweet-text {
+            color: #D1D5DB;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .tweet-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #A0A0A0;
+            font-size: 0.875rem;
+        }
+
+        .tweet-time {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #A0A0A0;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            margin-top: 20px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #8B5CF6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #A0A0A0;
+        }
+
+        .empty-state .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .main-content {
+                padding: 40px 16px 40px;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <!-- Pathgen Monochrome P Mark -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img">
+                        <defs>
+                            <filter id="tweetsSparkleBlur">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+                            </filter>
+                        </defs>
+                        
+                        <!-- P Glyph with Facets -->
+                        <g id="glyph">
+                            <rect x="20" y="20" width="16" height="60" rx="8" ry="8" fill="#FFFFFF"/>
+                            <path d="M 36 20 H 50 A 24 24 0 0 1 50 58 H 36 V 20 Z" fill="#FFFFFF"/>
+                            <path d="M 45 28 L 58 32 L 54 40 L 42 38 Z" fill="#000000" opacity="0.3"/>
+                            <path d="M 44 42 L 56 46 L 48 52 Z" fill="#000000" opacity="0.25"/>
+                            <path d="M 38 26 L 42 24 L 42 34 L 38 36 Z" fill="#000000" opacity="0.2"/>
+                        </g>
+                        
+                        <!-- Cosmic Sparkles -->
+                        <g id="sparkles" opacity="0.85">
+                            <circle cx="64" cy="26" r="2.5" fill="#FFFFFF" filter="url(#tweetsSparkleBlur)" class="sparkle-1"/>
+                            <circle cx="70" cy="38" r="1.8" fill="#FFFFFF" filter="url(#tweetsSparkleBlur)" class="sparkle-2"/>
+                            <circle cx="52" cy="35" r="1.2" fill="#FFFFFF" opacity="0.8" filter="url(#tweetsSparkleBlur)" class="sparkle-3"/>
+                            <circle cx="58" cy="28" r="0.9" fill="#FFFFFF" opacity="0.7" class="sparkle-4"/>
+                            <circle cx="24" cy="48" r="1.5" fill="#FFFFFF" filter="url(#tweetsSparkleBlur)" class="sparkle-5"/>
+                            <circle cx="60" cy="50" r="1.0" fill="#FFFFFF" opacity="0.6" class="sparkle-6"/>
+                        </g>
+                    </svg>
+                </div>
+                <span>Pathgen v2</span>
+            </a>
+            
+            <div class="nav-center">
+                <a href="/docs.html" class="nav-link">Docs</a>
+                <div class="dropdown">
+                    <a href="#" class="nav-link" onclick="toggleDropdown('features', event)">
+                        Features
+                        <span class="caret">▼</span>
+                    </a>
+                    <div class="dropdown-menu" id="featuresDropdown">
+                        <a href="/analyze" class="dropdown-item">
+                            <span class="dropdown-item-icon">🎮</span>
+                            <span>Replay Parser</span>
+                        </a>
+                        <a href="/masterclass" class="dropdown-item">
+                            <span class="dropdown-item-icon">📖</span>
+                            <span>Masterclass</span>
+                        </a>
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Coach</span>
+                        </a>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">📊</span>
+                            <span>Competitive Insights</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">🎤</span>
+                            <span>Voice</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="/docs.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">📚</span>
+                            <span>Documentation</span>
+                        </a>
+                    </div>
+                </div>
+                <a href="/cih-coaching.html" class="nav-link">CIH Coaching</a>
+                <a href="/nagc-dropmaps.html" class="nav-link">NAGC Drop Maps</a>
+            </div>
+
+            <div class="nav-right">
+                <a href="/subscribe.html" class="nav-link">Pricing</a>
+                <a href="/login.html" class="nav-cta" id="navCTA">Try For Free</a>
+                <div class="dropdown">
+                    <div class="user-info" id="userInfo" onclick="toggleDropdown('settings', event)" style="display: none;">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <span class="user-name" id="userName">User</span>
+                    </div>
+                    <div class="dropdown-menu" id="settingsDropdown">
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Chat</span>
+                        </a>
+                        <a href="/tournaments.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/settings.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">⚙️</span>
+                            <span>Settings</span>
+                        </a>
+                        <a href="/subscribe.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💳</span>
+                            <span>Upgrade to Pro</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item danger" onclick="logout()">
+                            <span class="dropdown-item-icon">🚪</span>
+                            <span>Logout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Purple-Blue Gradient Glow -->
+        <div class="hero-glow"></div>
+
+        <!-- Background Dashboard Previews -->
+        <div class="dashboard-previews">
+            <!-- Left Preview Card -->
+            <div class="preview-card preview-left">
+                <div class="card-header">
+                    <div class="card-icon">🐦</div>
+                    <div class="card-title">Live Updates</div>
+                </div>
+                <div class="card-menu-item active">
+                    <span>All Tweets</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Osirion</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Kinch Analytics</span>
+                </div>
+            </div>
+
+            <!-- Right Preview Card -->
+            <div class="preview-card preview-right">
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <div class="card-title">Real-Time Stats</div>
+                </div>
+                <div class="card-menu-item">
+                    <span>Total Tweets</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Live Updates</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>By Source</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-content">
+            <h1 class="hero-title" id="tweetsHeroTitle">Competitive Insights</h1>
+            <p class="hero-subtitle" id="tweetsHeroSubtitle">
+                Stay ahead with real-time updates from tournaments, forums, and top Fortnite analysts.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                <span id="connectionStatus">Connected</span>
+            </div>
+            <div class="status-badge">
+                <span>📊</span>
+                <span id="totalTweets">0 tweets</span>
+            </div>
+            <div class="status-badge">
+                <span>🔄</span>
+                <span>Poll: 5min | Refresh: 30s</span>
+            </div>
+        </div>
+
+        <!-- View Toggle -->
+        <div class="view-toggle" style="display: flex; gap: 12px; margin: 0 auto 24px auto; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 8px; width: fit-content;">
+            <button class="btn active" id="tweetsToggle" onclick="setViewMode('tweets')">📱 Tweets</button>
+            <button class="btn" id="rundownToggle" onclick="setViewMode('rundown')">📊 Full Rundown</button>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls" id="tweetsControls">
+            <button class="btn active" onclick="filterTweets('all')">📱 All Tweets</button>
+            <button class="btn" onclick="filterTweets('osirion_gg')">👤 Osirion</button>
+            <button class="btn" onclick="filterTweets('KinchAnalytics')">📊 Kinch Analytics</button>
+            <button class="btn" onclick="window.open('/data/simpsons-season-schedule.txt', '_blank')">📅 Schedule</button>
+            <button class="btn" onclick="window.location.href='/chat.html'">🤖 AI Chat</button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid" id="statsGrid" style="display: none;">
+            <div class="stat-card">
+                <div class="stat-label">Total Tweets</div>
+                <div class="stat-value" id="statTotal">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Live Tweets</div>
+                <div class="stat-value" id="statLive">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Osirion</div>
+                <div class="stat-value" id="statOsirion">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Kinch Analytics</div>
+                <div class="stat-value" id="statKinch">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">FN Comp Report</div>
+                <div class="stat-value" id="statFNcomp">0</div>
+            </div>
+        </div>
+
+        <!-- Tweets -->
+        <div class="tweets-container" id="tweetsContainer">
+            <div class="loading">Loading tweets</div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle dropdown
+        function toggleDropdown(type, event) {
+            if (event) event.preventDefault();
+            
+            const dropdowns = {
+                features: document.getElementById('featuresDropdown'),
+                settings: document.getElementById('settingsDropdown')
+            };
+            
+            const currentDropdown = dropdowns[type];
+            if (!currentDropdown) return;
+            
+            // Close other dropdowns
+            Object.entries(dropdowns).forEach(([key, dropdown]) => {
+                if (key !== type && dropdown) {
+                    dropdown.classList.remove('show');
+                }
+            });
+            
+            // Toggle current dropdown
+            currentDropdown.classList.toggle('show');
+            
+            if (event) event.stopPropagation();
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
+
+        // Show user info
+        function showUserInfo(userData) {
+            const navCTA = document.getElementById('navCTA');
+            const userInfo = document.getElementById('userInfo');
+            const userAvatar = document.getElementById('userAvatar');
+            const userName = document.getElementById('userName');
+
+            if (navCTA) navCTA.style.display = 'none';
+            if (userInfo) userInfo.style.display = 'flex';
+            
+            // Set avatar - use Discord avatar, Google avatar, or generic avatar if available
+            const avatarUrl = userData.discordAvatar || userData.googleAvatar || userData.avatar;
+            if (avatarUrl && userAvatar) {
+                const img = document.createElement('img');
+                img.src = avatarUrl;
+                img.alt = 'Avatar';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.borderRadius = '50%';
+                img.style.objectFit = 'cover';
+                img.onerror = function() {
+                    const initial = (userData.name || userData.email || userData.discordUsername || userData.googleUsername || 'U').charAt(0).toUpperCase();
+                    userAvatar.textContent = initial;
+                    userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+                };
+                userAvatar.innerHTML = '';
+                userAvatar.appendChild(img);
+            } else if (userAvatar) {
+                const initial = (userData.name || userData.email || userData.discordUsername || userData.googleUsername || 'U').charAt(0).toUpperCase();
+                userAvatar.textContent = initial;
+                userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+            }
+            
+            // Set name
+            const displayName = userData.name || userData.discordUsername || userData.googleUsername || userData.email?.split('@')[0] || 'User';
+            if (userName) userName.textContent = displayName;
+        }
+
+        // Check auth
+        function checkAuth() {
+            const userData = localStorage.getItem('pathgen_user');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    showUserInfo(user);
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                }
+            }
+            checkUserLogin(); // Also check Discord login
+        }
+
+        // Check auth on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+        });
+
+        // Hero text variations
+        const tweetsHeroVariations = [
+            {
+                title: "Real-Time Competitive Updates",
+                subtitle: "Stay ahead of the competition with live tweets and updates from top Fortnite analysts. Track Osirion, Kinch Analytics, and FN Comp Report in real-time."
+            },
+            {
+                title: "Never Miss a Beat",
+                subtitle: "Get instant notifications and updates from the most trusted Fortnite competitive sources. Stay informed about tournaments, meta changes, and player insights."
+            },
+            {
+                title: "Live Competitive Intelligence",
+                subtitle: "Track real-time updates from top analysts. Monitor tournament schedules, meta shifts, and competitive insights as they happen."
+            }
+        ];
+
+        let tweetsHeroIndex = 0;
+
+        function cycleTweetsHeroText() {
+            tweetsHeroIndex = (tweetsHeroIndex + 1) % tweetsHeroVariations.length;
+            const variation = tweetsHeroVariations[tweetsHeroIndex];
+
+            const titleEl = document.getElementById('tweetsHeroTitle');
+            const subtitleEl = document.getElementById('tweetsHeroSubtitle');
+
+            if (titleEl && subtitleEl) {
+                // Fade out
+                titleEl.style.transition = 'opacity 0.4s ease';
+                subtitleEl.style.transition = 'opacity 0.4s ease';
+                titleEl.style.opacity = '0';
+                subtitleEl.style.opacity = '0';
+
+                setTimeout(() => {
+                    titleEl.textContent = variation.title;
+                    subtitleEl.textContent = variation.subtitle;
+
+                    // Fade in
+                    titleEl.style.opacity = '1';
+                    subtitleEl.style.opacity = '1';
+                }, 400);
+            }
+        }
+
+        // Cycle hero text every 10 seconds
+        if (document.getElementById('tweetsHeroTitle')) {
+            setInterval(cycleTweetsHeroText, 10000);
+        }
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Animate tweet cards on scroll
+        function initScrollAnimations() {
+            const cards = document.querySelectorAll('.tweet-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = `opacity 0.6s ease ${index * 0.05}s, transform 0.6s ease ${index * 0.05}s`;
+                observer.observe(card);
+            });
+        }
+
+        const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : '';
+        let currentFilter = 'all';
+        let autoRefreshInterval;
+        let viewMode = 'tweets';
+        let tournaments = [];
+        let forumPosts = [];
+        let rundownItems = [];
+
+        // Set view mode
+        function setViewMode(mode) {
+            viewMode = mode;
+            const tweetsToggle = document.getElementById('tweetsToggle');
+            const rundownToggle = document.getElementById('rundownToggle');
+            const tweetsControls = document.getElementById('tweetsControls');
+            
+            if (tweetsToggle && rundownToggle) {
+                tweetsToggle.classList.toggle('active', mode === 'tweets');
+                rundownToggle.classList.toggle('active', mode === 'rundown');
+            }
+            
+            if (tweetsControls) {
+                tweetsControls.style.display = mode === 'tweets' ? 'flex' : 'none';
+            }
+            
+            if (mode === 'rundown') {
+                loadRundown();
+            } else {
+                loadTweets();
+            }
+        }
+
+        // Load full rundown
+        async function loadRundown() {
+            const container = document.getElementById('tweetsContainer');
+            container.innerHTML = '<div class="loading">Loading competitive insights...</div>';
+            
+            try {
+                await Promise.all([loadTweetsForRundown(), loadTournaments(), loadForums()]);
+                combineRundown();
+                displayRundown();
+            } catch (error) {
+                console.error('Error loading rundown:', error);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">⚠️</div>
+                        <div>Error loading competitive insights</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Load tweets for rundown (all tweets, not filtered)
+        async function loadTweetsForRundown() {
+            try {
+                const response = await fetch(`${API_BASE}/api/memory/list?source=twitter&limit=50`);
+                if (!response.ok) throw new Error('Failed to fetch tweets');
+                const data = await response.json();
+                return (data.memories || []).map(m => ({
+                    type: 'tweet',
+                    data: {
+                        id: m.id || '',
+                        text: m.content || '',
+                        username: m.author || '',
+                        name: m.author || '',
+                        created_at: m.createdAt || new Date().toISOString(),
+                    }
+                }));
+            } catch (error) {
+                console.error('Error loading tweets for rundown:', error);
+                return [];
+            }
+        }
+
+        // Load tournaments
+        async function loadTournaments() {
+            try {
+                const response = await fetch(`${API_BASE}/api/competitive-insights/tournaments`);
+                if (!response.ok) throw new Error('Failed to fetch tournaments');
+                const data = await response.json();
+                tournaments = data.tournaments || [];
+            } catch (error) {
+                console.error('Error loading tournaments:', error);
+                tournaments = [];
+            }
+        }
+
+        // Load forums
+        async function loadForums() {
+            try {
+                const response = await fetch(`${API_BASE}/api/competitive-insights/forums`);
+                if (!response.ok) throw new Error('Failed to fetch forums');
+                const data = await response.json();
+                forumPosts = data.posts || [];
+            } catch (error) {
+                console.error('Error loading forums:', error);
+                forumPosts = [];
+            }
+        }
+
+        // Combine rundown items
+        async function combineRundown() {
+            rundownItems = [];
+            
+            // Get all tweets
+            const allTweets = await loadTweetsForRundown();
+            allTweets.forEach(t => rundownItems.push(t));
+            tournaments.forEach(t => rundownItems.push({ type: 'tournament', data: t }));
+            forumPosts.forEach(p => rundownItems.push({ type: 'forum', data: p }));
+            
+            // Sort by date (most recent first)
+            rundownItems.sort((a, b) => {
+                const dateA = new Date(
+                    a.type === 'tweet' ? a.data.created_at :
+                    a.type === 'tournament' ? (a.data.startDate || a.data.createdAt) :
+                    a.data.createdAt
+                ).getTime();
+                const dateB = new Date(
+                    b.type === 'tweet' ? b.data.created_at :
+                    b.type === 'tournament' ? (b.data.startDate || b.data.createdAt) :
+                    b.data.createdAt
+                ).getTime();
+                return dateB - dateA;
+            });
+        }
+
+        // Display rundown
+        function displayRundown() {
+            const container = document.getElementById('tweetsContainer');
+            
+            if (rundownItems.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📭</div>
+                        <div>No insights found</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = rundownItems.map(item => {
+                if (item.type === 'tweet') {
+                    const logoMap = {
+                        'osirion_gg': '/osirion.jpg',
+                        'KinchAnalytics': '/kinch%20logo.jpg',
+                        'FNcompReport': '/fncr.jpg'
+                    };
+                    const logoUrl = logoMap[item.data.username] || null;
+                    const initial = item.data.username[0].toUpperCase();
+                    const timeAgo = getTimeAgo(item.data.created_at);
+
+                    return `
+                        <div class="tweet-card" style="border-left: 4px solid #3B82F6;">
+                            <div style="display: flex; align-items: start; gap: 12px; margin-bottom: 12px;">
+                                <div class="tweet-avatar" style="${logoUrl ? 'background: transparent;' : ''}">
+                                    ${logoUrl ? `<img src="${logoUrl}" alt="${item.data.name || item.data.username}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">` : initial}
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; color: #FFFFFF; margin-bottom: 4px;">
+                                        ${item.data.name || item.data.username}
+                                    </div>
+                                    <div style="color: #A0A0A0; font-size: 0.875rem;">
+                                        @${item.data.username}
+                                    </div>
+                                </div>
+                                <div style="font-size: 0.75rem; color: #3B82F6; font-weight: 600; text-transform: uppercase;">Tweet</div>
+                            </div>
+                            <div class="tweet-text">${escapeHtml(item.data.text)}</div>
+                            <div class="tweet-footer">
+                                <div class="tweet-time">🕐 ${timeAgo}</div>
+                            </div>
+                        </div>
+                    `;
+                } else if (item.type === 'tournament') {
+                    return `
+                        <div class="tweet-card" style="border-left: 4px solid #EAB308;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                                <span style="font-size: 0.75rem; color: #EAB308; font-weight: 600; text-transform: uppercase;">🏆 Tournament</span>
+                            </div>
+                            <div style="font-size: 1.25rem; font-weight: 600; color: #FFFFFF; margin-bottom: 8px;">
+                                ${escapeHtml(item.data.title)}
+                            </div>
+                            ${item.data.description ? `<div style="color: #D1D5DB; line-height: 1.6; margin-bottom: 12px; font-size: 0.95rem;">${escapeHtml(item.data.description)}</div>` : ''}
+                            <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; font-size: 0.875rem; color: #A0A0A0;">
+                                ${item.data.startDate ? `<div>📅 Starts: ${new Date(item.data.startDate).toLocaleDateString()}</div>` : ''}
+                                ${item.data.prizePool ? `<div>💰 Prize Pool: ${escapeHtml(item.data.prizePool)}</div>` : ''}
+                                ${item.data.format ? `<div>🎮 Format: ${escapeHtml(item.data.format)}</div>` : ''}
+                            </div>
+                            ${item.data.url ? `<a href="${item.data.url}" target="_blank" rel="noopener noreferrer" style="color: #8B5CF6; text-decoration: none; font-size: 0.875rem;">Learn more →</a>` : ''}
+                        </div>
+                    `;
+                } else if (item.type === 'forum') {
+                    return `
+                        <div class="tweet-card" style="border-left: 4px solid #10B981;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                                <span style="font-size: 0.75rem; color: #10B981; font-weight: 600; text-transform: uppercase;">💬 Forum</span>
+                                ${item.data.subreddit ? `<span style="font-size: 0.7rem; color: #A0A0A0;">r/${item.data.subreddit}</span>` : ''}
+                            </div>
+                            <div style="font-size: 1.25rem; font-weight: 600; color: #FFFFFF; margin-bottom: 8px;">
+                                ${escapeHtml(item.data.title)}
+                            </div>
+                            <div style="color: #D1D5DB; line-height: 1.6; margin-bottom: 12px; font-size: 0.95rem;">
+                                ${escapeHtml(item.data.content.length > 300 ? item.data.content.substring(0, 300) + '...' : item.data.content)}
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; color: #A0A0A0; margin-top: 12px;">
+                                <div style="display: flex; gap: 16px;">
+                                    <div>👤 ${escapeHtml(item.data.author)}</div>
+                                    ${item.data.score !== undefined ? `<div>⬆️ ${item.data.score}</div>` : ''}
+                                    ${item.data.numComments !== undefined ? `<div>💬 ${item.data.numComments}</div>` : ''}
+                                </div>
+                                <div>🕐 ${getTimeAgo(item.data.createdAt)}</div>
+                            </div>
+                            <a href="${item.data.url}" target="_blank" rel="noopener noreferrer" style="color: #8B5CF6; text-decoration: none; font-size: 0.875rem; margin-top: 8px; display: inline-block;">Read more →</a>
+                        </div>
+                    `;
+                }
+                return '';
+            }).join('');
+            
+            setTimeout(initScrollAnimations, 100);
+        }
+
+        // Load tweets from memory ingestion API (Twitter v2)
+        async function loadTweets() {
+            const container = document.getElementById('tweetsContainer');
+            
+            try {
+                // Use memory list API to get ingested tweets
+                const url = currentFilter === 'all' 
+                    ? `${API_BASE}/api/memory/list?source=twitter&limit=50`
+                    : `${API_BASE}/api/memory/list?source=twitter&author=${currentFilter}&limit=50`;
+                
+                const response = await fetch(url);
+                const memoryData = await response.json();
+                
+                // Check for Firebase credentials error
+                if (!response.ok) {
+                    if (memoryData.error === 'Firebase credentials not configured') {
+                        throw new Error('FIREBASE_CREDENTIALS_ERROR');
+                    }
+                    throw new Error(memoryData.message || 'Failed to fetch tweets');
+                }
+                
+                // Transform memory format to tweet format
+                const tweets = (memoryData.memories || []).map(memory => ({
+                    id: memory.id || '',
+                    text: memory.content || '',
+                    username: memory.author || '',
+                    name: memory.author || '',
+                    created_at: memory.createdAt || new Date().toISOString(),
+                    isLive: false,
+                }));
+                
+                // Mock data structure for compatibility
+                const data = {
+                    data: tweets,
+                    total: tweets.length,
+                    streamConnected: false,
+                };
+                
+                // Update connection status
+                const connectionStatusEl = document.getElementById('connectionStatus');
+                const statusDot = document.querySelector('.status-dot');
+                
+                if (data.streamConnected && data.total > 0) {
+                    connectionStatusEl.textContent = 'Connected';
+                    if (statusDot) {
+                        statusDot.style.background = '#10B981'; // Green
+                    }
+                } else if (data.total > 0) {
+                    connectionStatusEl.textContent = 'Connected';
+                    if (statusDot) {
+                        statusDot.style.background = '#10B981'; // Green - has data
+                    }
+                } else {
+                    connectionStatusEl.textContent = 'Disconnected';
+                    if (statusDot) {
+                        statusDot.style.background = '#F59E0B'; // Orange/Amber
+                    }
+                }
+                
+                // Update total tweets
+                document.getElementById('totalTweets').textContent = 
+                    `${data.total} tweet${data.total !== 1 ? 's' : ''}`;
+                
+                // Display tweets
+                if (data.data && data.data.length > 0) {
+                    displayTweets(data.data);
+                    await loadStats();
+                    setTimeout(initScrollAnimations, 100);
+                } else {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="icon">📭</div>
+                            <div>No tweets found</div>
+                            <div style="margin-top: 10px; font-size: 0.9rem;">
+                                Waiting for ${currentFilter === 'all' ? 'tracked accounts' : '@' + currentFilter} to tweet...
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                // Update connection status to error
+                const connectionStatusEl = document.getElementById('connectionStatus');
+                const statusDot = document.querySelector('.status-dot');
+                
+                if (connectionStatusEl) {
+                    connectionStatusEl.textContent = 'Disconnected';
+                }
+                if (statusDot) {
+                    statusDot.style.background = '#EF4444'; // Red for error
+                }
+                
+                // Check if it's a Firebase credentials error
+                let errorMessage = error.message || 'Failed to fetch tweets';
+                let errorDetails = '';
+                
+                if (error.message === 'FIREBASE_CREDENTIALS_ERROR' || error.message?.includes('credentials')) {
+                    errorMessage = 'Firebase credentials not configured';
+                    errorDetails = `
+                        <div style="margin-top: 15px; padding: 15px; background: rgba(239, 68, 68, 0.1); border-radius: 8px; text-align: left; font-size: 0.85rem;">
+                            <strong>Setup Required:</strong><br>
+                            1. Run: <code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;">cd apps\\web && .\\setup-local-firebase.ps1</code><br>
+                            2. Or add <code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;">GOOGLE_APPLICATION_CREDENTIALS_JSON</code> to <code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;">.env.local</code><br>
+                            3. Get credentials from: <a href="https://console.firebase.google.com/project/pathgen-v2/settings/serviceaccounts/adminsdk" target="_blank" style="color: #60A5FA;">Firebase Console</a><br>
+                            4. Restart your dev server after adding credentials
+                        </div>
+                    `;
+                }
+                
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">⚠️</div>
+                        <div>Error loading tweets</div>
+                        <div style="margin-top: 10px; font-size: 0.9rem; color: #EF4444;">
+                            ${errorMessage}
+                        </div>
+                        ${errorDetails}
+                    </div>
+                `;
+            }
+        }
+
+        // Get logo for username
+        function getLogoForUsername(username) {
+            const logoMap = {
+                'osirion_gg': '/osirion.jpg',
+                'KinchAnalytics': '/kinch%20logo.jpg',
+                'FNcompReport': '/fncr.jpg'
+            };
+            return logoMap[username] || null;
+        }
+
+        // Display tweets
+        function displayTweets(tweets) {
+            const container = document.getElementById('tweetsContainer');
+            
+            container.innerHTML = tweets.map(tweet => {
+                const isLive = tweet.isLive || false;
+                const time = new Date(tweet.created_at).toLocaleString();
+                const timeAgo = getTimeAgo(tweet.created_at);
+                const initial = tweet.username[0].toUpperCase();
+                const logoUrl = getLogoForUsername(tweet.username);
+                
+                // Create avatar HTML - use logo if available, otherwise use initial
+                let avatarHtml = '';
+                if (logoUrl) {
+                    avatarHtml = `<img src="${logoUrl}" alt="${tweet.name || tweet.username}" onerror="this.style.display='none'; this.parentElement.textContent='${initial}'; this.parentElement.style.background='linear-gradient(135deg, #8B5CF6, #3B82F6)';" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block;">`;
+                } else {
+                    avatarHtml = initial;
+                }
+                
+                return `
+                    <div class="tweet-card ${isLive ? 'live' : ''}">
+                        <div class="tweet-header">
+                            <div class="tweet-avatar">${avatarHtml}</div>
+                            <div class="tweet-user">
+                                <div class="tweet-name">${tweet.name || tweet.username}</div>
+                                <div class="tweet-username">@${tweet.username}</div>
+                            </div>
+                            ${isLive ? '<span class="tweet-badge">🔴 LIVE</span>' : ''}
+                        </div>
+                        <div class="tweet-text">${escapeHtml(tweet.text)}</div>
+                        <div class="tweet-footer">
+                            <div class="tweet-time">
+                                <span>🕐</span>
+                                <span>${timeAgo}</span>
+                            </div>
+                            <div>${time}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Load stats from memory API
+        async function loadStats() {
+            try {
+                // Get stats by fetching all memories and counting
+                const response = await fetch(`${API_BASE}/api/memory/list?source=twitter&limit=200`);
+                if (!response.ok) return;
+                
+                const data = await response.json();
+                const memories = data.memories || [];
+                
+                const stats = {
+                    total: memories.length,
+                    byUser: {
+                        osirion_gg: memories.filter(m => m.author?.toLowerCase() === 'osirion_gg').length,
+                        KinchAnalytics: memories.filter(m => m.author?.toLowerCase() === 'kinchanalytics').length,
+                        FNcompReport: memories.filter(m => m.author?.toLowerCase() === 'fncompreport').length,
+                    },
+                    live: 0, // No live tweets from memory API
+                };
+                
+                document.getElementById('statTotal').textContent = stats.total || 0;
+                document.getElementById('statOsirion').textContent = stats.byUser?.osirion_gg || 0;
+                document.getElementById('statKinch').textContent = stats.byUser?.KinchAnalytics || 0;
+                document.getElementById('statFNcomp').textContent = stats.byUser?.FNcompReport || 0;
+                document.getElementById('statLive').textContent = stats.live || 0;
+                
+                document.getElementById('statsGrid').style.display = 'grid';
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Filter tweets
+        function filterTweets(filter) {
+            currentFilter = filter;
+            
+            // Update active button
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            loadTweets();
+        }
+
+        // Utility functions
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+            
+            if (seconds < 60) return `${seconds}s ago`;
+            if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+            if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+            return `${Math.floor(seconds / 86400)}d ago`;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Auto-refresh every 24 hours
+        function startAutoRefresh() {
+            autoRefreshInterval = setInterval(() => {
+                // Only refresh if page is visible (saves API calls when tab is hidden)
+                if (!document.hidden) {
+                    if (viewMode === 'tweets') {
+                        loadTweets();
+                    } else {
+                        loadRundown();
+                    }
+                }
+            }, 24 * 60 * 60 * 1000); // 24 hours
+        }
+
+        // Pause auto-refresh when tab is hidden (cost optimization)
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                if (autoRefreshInterval) {
+                    clearInterval(autoRefreshInterval);
+                    console.log('[OPTIMIZATION] Auto-refresh paused (tab hidden)');
+                }
+            } else {
+                startAutoRefresh();
+                console.log('[OPTIMIZATION] Auto-refresh resumed (tab visible)');
+            }
+        });
+
+        // Check for logged in user and show profile
+        function checkUserLogin() {
+            try {
+                const userDataStr = localStorage.getItem('pathgen_user');
+                const discordUserStr = localStorage.getItem('discordUser');
+                
+                if (userDataStr || discordUserStr) {
+                    let userData = {};
+                    if (userDataStr) {
+                        try {
+                            userData = JSON.parse(userDataStr);
+                        } catch (e) {
+                            console.error('Error parsing user data:', e);
+                        }
+                    }
+                    
+                    if (discordUserStr) {
+                        try {
+                            const discordData = JSON.parse(discordUserStr);
+                            userData.discordUsername = discordData.username;
+                            userData.discordAvatar = discordData.avatar && discordData.id
+                                ? `https://cdn.discordapp.com/avatars/${discordData.id}/${discordData.avatar}.png`
+                                : null;
+                        } catch (e) {
+                            console.error('Error parsing Discord user data:', e);
+                        }
+                    }
+                    
+                    showUserInfo(userData);
+                }
+            } catch (error) {
+                console.error('Error checking user login:', error);
+            }
+        }
+        
+        function showUserInfo(userData) {
+            const navCTA = document.getElementById('navCTA');
+            const userInfo = document.getElementById('userInfo');
+            const userAvatar = document.getElementById('userAvatar');
+            const userName = document.getElementById('userName');
+
+            if (navCTA) navCTA.style.display = 'none';
+            if (userInfo) userInfo.style.display = 'flex';
+            
+            // Set avatar - use Discord avatar, Google avatar, or generic avatar if available
+            const avatarUrl = userData.discordAvatar || userData.googleAvatar || userData.avatar;
+            if (avatarUrl && userAvatar) {
+                const img = document.createElement('img');
+                img.src = avatarUrl;
+                img.alt = 'Avatar';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.borderRadius = '50%';
+                img.style.objectFit = 'cover';
+                img.onerror = function() {
+                    // Fallback if image fails to load
+                    const initial = (userData.name || userData.email || userData.discordUsername || userData.googleUsername || 'U').charAt(0).toUpperCase();
+                    userAvatar.textContent = initial;
+                    userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+                };
+                userAvatar.innerHTML = '';
+                userAvatar.appendChild(img);
+            } else if (userAvatar) {
+                const initial = (userData.name || userData.email || userData.discordUsername || userData.googleUsername || 'U').charAt(0).toUpperCase();
+                userAvatar.textContent = initial;
+                userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+            }
+            
+            // Set name
+            const displayName = userData.name || userData.discordUsername || userData.googleUsername || userData.email?.split('@')[0] || 'User';
+            if (userName) userName.textContent = displayName;
+        }
+        
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('pathgen_user');
+                localStorage.removeItem('discordUser');
+                localStorage.removeItem('setupComplete');
+                window.location.href = '/login.html';
+            }
+        }
+
+        // Initialize
+        window.onload = () => {
+            checkAuth(); // This will also call checkUserLogin
+            loadTweets(); // Start with tweets view
+            startAutoRefresh();
+        };
+
+        // Cleanup on page unload (prevent memory leaks and lingering intervals)
+        window.addEventListener('beforeunload', () => {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                console.log('[CLEANUP] Auto-refresh interval cleared');
+            }
+        });
+
+        // Cleanup
+        window.onbeforeunload = () => {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+        };
+    </script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+    <script src="/js/subscription-modal.js"></script>
+    <script src="/js/addon-guard.js"></script>
+</body>
+</html>

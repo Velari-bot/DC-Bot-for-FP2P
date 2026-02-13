@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Logo.png">
+    <link rel="shortcut icon" type="image/png" href="/Logo.png">
+    <link rel="apple-touch-icon" href="/Logo.png">
+    <title>Tutorial - Pathgen v2</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pathgen.dev/tutorial">
+    <meta property="og:title" content="Tutorial - PathGen AI">
+    <meta property="og:description" content="Learn how to use PathGen AI with our step-by-step tutorial.">
+    <meta property="og:image" content="https://pathgen.dev/embed.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://pathgen.dev/tutorial">
+    <meta name="twitter:title" content="Tutorial - PathGen AI">
+    <meta name="twitter:description" content="Learn how to use PathGen AI with our step-by-step tutorial.">
+    <meta name="twitter:image" content="https://pathgen.dev/embed.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #F5F5F5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 680px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Title Section */
+        .title-section {
+            margin-bottom: 32px;
+        }
+
+        .title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0A0A0A;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: #666;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        /* Video Player */
+        .video-container {
+            margin-bottom: 32px;
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #1A1A1A;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .video-player {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #1A1A1A;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .play-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .play-button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-left: 24px solid white;
+            border-top: 14px solid transparent;
+            border-bottom: 14px solid transparent;
+            margin-left: 6px;
+        }
+
+        .video-label {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 13px;
+            font-weight: 500;
+            transform: rotate(-2deg);
+        }
+
+        /* Actual Video Element (Hidden Initially) */
+        video {
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+
+        video.playing {
+            display: block;
+        }
+
+        /* Skip Button */
+        .skip-button {
+            padding: 13px 32px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            background: #E8E8E8;
+            color: #0A0A0A;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+        }
+
+        .skip-button:hover {
+            background: #DEDEDE;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.06);
+            transform: translateY(-1px);
+        }
+
+        .skip-button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                max-width: 100%;
+            }
+
+            .title {
+                font-size: 1.75rem;
+            }
+
+            .play-button {
+                width: 64px;
+                height: 64px;
+            }
+
+            .play-icon {
+                border-left: 20px solid white;
+                border-top: 12px solid transparent;
+                border-bottom: 12px solid transparent;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .play-button:hover,
+            .skip-button:hover {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Title -->
+        <div class="title-section">
+            <h1 class="title">Build Your First Coach</h1>
+            <p class="subtitle">It's time to set up your personal Fortnite AI Coach—Press Play to get started.</p>
+        </div>
+
+        <!-- Video Player -->
+        <div class="video-container">
+            <div class="video-player" id="videoPlayer" onclick="playVideo()">
+                <div class="play-button">
+                    <div class="play-icon"></div>
+                </div>
+                <div class="video-label">Pathgen Tutorial</div>
+            </div>
+            
+            <!-- Actual video (placeholder - replace with your video URL) -->
+            <video id="tutorialVideo" controls>
+                <source src="/assets/videos/pathgen-tutorial.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Skip Button -->
+        <button class="skip-button" onclick="skipTutorial()">Skip Tutorial</button>
+    </div>
+
+    <script>
+        const videoPlayer = document.getElementById('videoPlayer');
+        const tutorialVideo = document.getElementById('tutorialVideo');
+
+        function playVideo() {
+            videoPlayer.style.display = 'none';
+            tutorialVideo.classList.add('playing');
+            tutorialVideo.play();
+        }
+
+        // When video ends, redirect to dashboard
+        tutorialVideo.addEventListener('ended', () => {
+            completeTutorial();
+        });
+
+        function skipTutorial() {
+            localStorage.setItem('tutorialCompleted', 'skipped');
+            console.log('Tutorial skipped');
+            
+            // Redirect to coach setup
+            window.location.href = '/setup-coach.html';
+        }
+
+        function completeTutorial() {
+            localStorage.setItem('tutorialCompleted', 'watched');
+            console.log('Tutorial completed');
+            
+            // Redirect to coach setup
+            window.location.href = '/setup-coach.html';
+        }
+
+        // No redirect checks - allow users to access tutorial directly after payment
+        window.onload = () => {
+            const userData = localStorage.getItem('pathgen_user') || localStorage.getItem('pathgen_user');
+            const subscriptionData = localStorage.getItem('pathgenSubscription');
+            
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    console.log('Welcome to tutorial,', user.firstName || user.name || 'User');
+                } catch (e) {
+                    console.log('Tutorial page loaded');
+                }
+            }
+            
+            if (subscriptionData) {
+                try {
+                    const subscription = JSON.parse(subscriptionData);
+                    console.log('Subscription:', subscription.plan || subscription.type);
+                } catch (e) {
+                    // Ignore parse errors
+                }
+            }
+        };
+    </script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+</body>
+</html>
+

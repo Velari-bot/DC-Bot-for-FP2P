@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Logo.png">
+    <link rel="shortcut icon" type="image/png" href="/Logo.png">
+    <link rel="apple-touch-icon" href="/Logo.png">
+    <title>Fortnite Masterclass by DestinysJesus | Official PathGen Partner</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pathgen.dev/masterclass">
+    <meta property="og:title" content="Masterclass - PathGen AI">
+    <meta property="og:description" content="Advanced Fortnite coaching and training programs.">
+    <meta property="og:image" content="https://pathgen.dev/embed.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://pathgen.dev/masterclass">
+    <meta name="twitter:title" content="Masterclass - PathGen AI">
+    <meta name="twitter:description" content="Advanced Fortnite coaching and training programs.">
+    <meta name="twitter:image" content="https://pathgen.dev/embed.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0A0A0A;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header with Pill Nav Bar */
+        .header {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .nav {
+            backdrop-filter: blur(16px);
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 
+                        0 0 0 1px rgba(255, 255, 255, 0.03),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 0 8px;
+            margin-right: 4px;
+        }
+
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .logo-icon svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin: 0 8px;
+        }
+
+        .nav-link {
+            color: #A0A0A0;
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 6px 14px;
+            border-radius: 25px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link.active {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link .caret {
+            font-size: 8px;
+            margin-left: 1px;
+            opacity: 0.7;
+        }
+
+        .nav-link.external::after {
+            content: '↗';
+            font-size: 10px;
+            opacity: 0.6;
+            margin-left: 2px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-cta {
+            padding: 6px 18px;
+            background: #0A0A0A;
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            border-radius: 50px;
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .nav-cta:hover {
+            background: #151515;
+            border-color: rgba(139, 92, 246, 0.8);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+        }
+
+        .nav-cta::after {
+            content: '→';
+            font-size: 14px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 12px 4px 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            margin-left: 8px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            overflow: hidden;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            min-width: 220px;
+            background: rgba(15, 15, 15, 0.98);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+                        0 0 0 1px rgba(255, 255, 255, 0.05);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            z-index: 200;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: #d1d5db;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(79, 140, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .dropdown-item-icon {
+            font-size: 16px;
+            width: 20px;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 6px 0;
+        }
+
+        .dropdown-item.danger {
+            color: #ef4444;
+        }
+
+        .dropdown-item.danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .dropdown-item.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .dropdown-item.locked:hover {
+            background: transparent;
+            color: #6b7280;
+        }
+
+        #featuresDropdown {
+            left: 0;
+            right: auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: auto;
+            padding: 120px 48px 40px;
+            background: #0A0A0A;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: #FFFFFF;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #A0A0A0;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        .hero-description {
+            font-size: 1.125rem;
+            color: #A0A0A0;
+            max-width: 800px;
+            margin: 0 auto 32px;
+            line-height: 1.7;
+            padding-bottom: 0;
+        }
+
+        /* Buttons */
+        .btn-primary, .btn-secondary {
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            color: #FFFFFF;
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #FFFFFF;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 6px;
+            max-width: 900px;
+            margin: 0 auto 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #8B5CF6;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #A0A0A0;
+        }
+
+        /* Sections */
+        .section {
+            padding: 80px 48px;
+        }
+
+        .section.alt {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .section-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 0;
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 3px;
+            letter-spacing: -0.03em;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: #A0A0A0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 32px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #8B5CF6;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            color: #D1D5DB;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+        }
+
+        .feature-list li span:first-child {
+            color: #8B5CF6;
+            font-size: 1.25rem;
+        }
+
+        /* Video Container */
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            padding-bottom: 32%;
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 20px;
+        }
+
+        /* FAQ */
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .faq-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 32px;
+        }
+
+        .faq-item h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #8B5CF6;
+        }
+
+        .faq-item p {
+            color: #D1D5DB;
+            line-height: 1.7;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 48px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+        }
+
+        .cta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        .cta-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            padding: 48px;
+            text-align: center;
+        }
+
+        .cta-card h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .cta-card p {
+            color: #D1D5DB;
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+
+        .btn-full {
+            width: 100%;
+            justify-content: center;
+        }
+
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .section {
+                padding: 60px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img">
+                        <defs>
+                            <filter id="sparkleBlur">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+                            </filter>
+                        </defs>
+                        <g id="glyph">
+                            <rect x="20" y="20" width="16" height="60" rx="8" ry="8" fill="#FFFFFF"/>
+                            <path d="M 36 20 H 50 A 24 24 0 0 1 50 58 H 36 V 20 Z" fill="#FFFFFF"/>
+                            <path d="M 45 28 L 58 32 L 54 40 L 42 38 Z" fill="#000000" opacity="0.3"/>
+                            <path d="M 44 42 L 56 46 L 48 52 Z" fill="#000000" opacity="0.25"/>
+                            <path d="M 38 26 L 42 24 L 42 34 L 38 36 Z" fill="#000000" opacity="0.2"/>
+                        </g>
+                        <g id="sparkles" opacity="0.85">
+                            <circle cx="64" cy="26" r="2.5" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-1"/>
+                            <circle cx="70" cy="38" r="1.8" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-2"/>
+                            <circle cx="52" cy="35" r="1.2" fill="#FFFFFF" opacity="0.8" filter="url(#sparkleBlur)" class="sparkle-3"/>
+                            <circle cx="58" cy="28" r="0.9" fill="#FFFFFF" opacity="0.7" class="sparkle-4"/>
+                            <circle cx="24" cy="48" r="1.5" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-5"/>
+                            <circle cx="60" cy="50" r="1.0" fill="#FFFFFF" opacity="0.6" class="sparkle-6"/>
+                        </g>
+                    </svg>
+                </div>
+                <span>Pathgen v2</span>
+            </a>
+            
+            <div class="nav-center">
+                <a href="/docs.html" class="nav-link">Docs</a>
+                <div class="dropdown">
+                    <a href="#" class="nav-link" onclick="toggleDropdown('features', event)">
+                        Features
+                        <span class="caret">▼</span>
+                    </a>
+                    <div class="dropdown-menu" id="featuresDropdown">
+                        <a href="/analyze" class="dropdown-item">
+                            <span class="dropdown-item-icon">🎮</span>
+                            <span>Replay Parser</span>
+                        </a>
+                        <a href="/masterclass" class="dropdown-item">
+                            <span class="dropdown-item-icon">📖</span>
+                            <span>Masterclass</span>
+                        </a>
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Coach</span>
+                        </a>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">📊</span>
+                            <span>Competitive Insights</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">🎤</span>
+                            <span>Voice</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="/docs.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">📚</span>
+                            <span>Documentation</span>
+                        </a>
+                    </div>
+                </div>
+                <a href="/cih-coaching.html" class="nav-link">CIH Coaching</a>
+                <a href="/nagc-dropmaps.html" class="nav-link">NAGC Drop Maps</a>
+            </div>
+
+            <div class="nav-right">
+                <a href="/subscribe.html" class="nav-link">Pricing</a>
+                <a href="/login.html" class="nav-cta" id="navCTA">Try For Free</a>
+                <div class="dropdown">
+                    <div class="user-info" id="userInfo" onclick="toggleDropdown('settings', event)" style="display: none;">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <span class="user-name" id="userName">User</span>
+                    </div>
+                    <div class="dropdown-menu" id="settingsDropdown">
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Chat</span>
+                        </a>
+                        <a href="/tournaments.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/settings.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">⚙️</span>
+                            <span>Settings</span>
+                        </a>
+                        <a href="/subscribe.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💳</span>
+                            <span>Upgrade to Pro</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item danger" onclick="logout()">
+                            <span class="dropdown-item-icon">🚪</span>
+                            <span>Logout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Fortnite Masterclass by DestinysJesus</h1>
+            <p class="hero-subtitle">Official PathGen Partner</p>
+            <p class="hero-description">
+                Level up faster with the world's best Fortnite Masterclasses.<br>
+                Trusted by 28+ pros. Over 200+ fighting lessons. Become an elite player faster with PathGen + the Fighting & Solos Masterclasses.
+            </p>
+            
+            <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 40px; margin-top: 0; flex-wrap: wrap;">
+                <a href="https://www.fortnitemasterclass.com/fighting-masterclass/2l1go" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                    Start the Fighting Masterclass 2.0
+                </a>
+                <a href="https://www.fortnitemasterclass.com/solos-masterclass/2l1go" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+                    Start the Solos Masterclass
+                </a>
+            </div>
+
+            <div class="stats-grid" style="margin-bottom: 0; margin-top: 0;">
+                <div class="stat-card">
+                    <div class="stat-value">200+</div>
+                    <div class="stat-label">exclusive lessons</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">28+</div>
+                    <div class="stat-label">pro fighters teaching</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">by DestinysJesus</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">Elite</div>
+                    <div class="stat-label">for serious players</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">Pro</div>
+                    <div class="stat-label">trusted by competitive</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why We Recommend Section -->
+    <section class="section alt" style="padding: 40px 48px 80px; margin-top: 0;">
+        <div class="section-content">
+            <h2 class="section-title" style="margin-bottom: 3px; margin-top: 0;">Why We Recommend This Masterclass</h2>
+            <div style="display: flex; flex-direction: column; gap: 24px; font-size: 1.125rem; color: #D1D5DB; line-height: 1.8; max-width: 900px; margin: 0 auto; text-align: center;">
+                <p>
+                    PathGen's mission is to help players improve with <span style="color: #8B5CF6; font-weight: 600;">real data</span> and <span style="color: #8B5CF6; font-weight: 600;">real coaching</span>.
+                </p>
+                <p>
+                    DestinysJesus's Masterclasses are one of the only Fortnite courses <span style="color: #8B5CF6; font-weight: 600;">actually used by pros</span> — and they perfectly complement our AI coaching tools.
+                </p>
+                <p style="font-size: 1.5rem; font-weight: 600; color: #8B5CF6; margin-top: 16px;">
+                    With PathGen analyzing your gameplay + the Masterclass teaching you mechanics, you improve 10x faster.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fighting Masterclass Section -->
+    <section class="section">
+        <div class="section-content">
+            <h2 class="section-title">Master Fortnite Fighting — 200+ Lessons from 28 Pros</h2>
+            
+            <div class="grid-2">
+                <div class="feature-card">
+                    <h3>What You'll Learn</h3>
+                    <ul class="feature-list">
+                        <li><span>✓</span><span>Exact piece-by-piece fighting concepts</span></li>
+                        <li><span>✓</span><span>How pros think in real fights</span></li>
+                        <li><span>✓</span><span>Advanced mechanics breakdowns</span></li>
+                        <li><span>✓</span><span>Decision-making, timing, awareness</span></li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Advanced Strategies</h3>
+                    <ul class="feature-list">
+                        <li><span>✓</span><span>Anti-playstyle strategies</span></li>
+                        <li><span>✓</span><span>VOD reviews from top pros</span></li>
+                        <li><span>✓</span><span>New 2025 meta coverage</span></li>
+                        <li><span>✓</span><span>Pro-level fight scenarios</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="video-container">
+                <iframe src="https://www.youtube-nocookie.com/embed/-FRZECGYgnA" title="Fighting Masterclass 2.0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-same-origin allow-scripts allow-presentation allow-popups" allowfullscreen></iframe>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="https://www.fortnitemasterclass.com/fighting-masterclass/2l1go" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                    Start Fighting Masterclass 2.0
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solos Masterclass Section -->
+    <section class="section alt">
+        <div class="section-content">
+            <h2 class="section-title">Dominate Solos with Proven Strategies</h2>
+            
+            <div class="grid-2">
+                <div class="feature-card">
+                    <h3>Strategic Gameplay</h3>
+                    <ul class="feature-list">
+                        <li><span>✓</span><span>Rotations & positioning</span></li>
+                        <li><span>✓</span><span>Surge planning</span></li>
+                        <li><span>✓</span><span>Endgame layering</span></li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Mastery Fundamentals</h3>
+                    <ul class="feature-list">
+                        <li><span>✓</span><span>Solo W-key fundamentals</span></li>
+                        <li><span>✓</span><span>Risk vs reward decision-making</span></li>
+                        <li><span>✓</span><span>Mental game & consistency training</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="video-container">
+                <iframe src="https://www.youtube-nocookie.com/embed/hfpaM0CGi4c" title="Solos Masterclass $1,000,000 Edition" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-same-origin allow-scripts allow-presentation allow-popups" allowfullscreen></iframe>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="https://www.fortnitemasterclass.com/solos-masterclass/2l1go" target="_blank" rel="noopener noreferrer" class="btn-primary">
+                    Start Solos Masterclass
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How They Work Together Section -->
+    <section class="section">
+        <div class="section-content">
+            <h2 class="section-title">How PathGen + the Masterclass Work Together</h2>
+            <p class="section-subtitle">A complete improvement system</p>
+            
+            <div class="grid-2" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+                <div class="feature-card">
+                    <h3 style="font-size: 1.25rem;">With PathGen You Get:</h3>
+                    <ul class="feature-list" style="font-size: 0.95rem;">
+                        <li><span>•</span><span>Replay analysis</span></li>
+                        <li><span>•</span><span>Weakness detection</span></li>
+                        <li><span>•</span><span>Auto-generated drills</span></li>
+                        <li><span>•</span><span>Playstyle modeling</span></li>
+                        <li><span>•</span><span>VOD timestamp insights</span></li>
+                        <li><span>•</span><span>Heatmaps & stats</span></li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3 style="font-size: 1.25rem;">With the Masterclass You Get:</h3>
+                    <ul class="feature-list" style="font-size: 0.95rem;">
+                        <li><span>•</span><span>Pro-taught techniques</span></li>
+                        <li><span>•</span><span>Fighting theory</span></li>
+                        <li><span>•</span><span>Solo mastery lessons</span></li>
+                        <li><span>•</span><span>Step-by-step curriculum</span></li>
+                        <li><span>•</span><span>200+ video lessons</span></li>
+                        <li><span>•</span><span>Direct pro insights</span></li>
+                    </ul>
+                </div>
+
+                <div class="feature-card" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(0, 255, 170, 0.2)); border: 2px solid rgba(139, 92, 246, 0.3);">
+                    <h3 style="font-size: 1.25rem;">Together?</h3>
+                    <p style="font-size: 1.75rem; font-weight: 700; color: #8B5CF6; margin-bottom: 20px;">A Full Improvement System</p>
+                    <p style="color: #D1D5DB; line-height: 1.8; font-size: 0.95rem;">
+                        PathGen shows you <span style="font-weight: 600; color: #8B5CF6;">WHAT</span> to fix.<br><br>
+                        The Masterclass shows you <span style="font-weight: 600; color: #8B5CF6;">HOW</span> to fix it.<br><br>
+                        <span style="font-size: 1.125rem; font-weight: 600;">Result: 10x faster improvement</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section alt">
+        <div class="section-content" style="max-width: 900px;">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            
+            <div class="faq-list">
+                <div class="faq-item">
+                    <h3>Is this run by PathGen?</h3>
+                    <p>No, this is an affiliate partnership. PathGen recommends the Masterclass because it's genuinely one of the best Fortnite training programs. We only partner with tools we believe will help our users improve.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Does PathGen get a commission?</h3>
+                    <p>Yes, at no extra cost to you. When you use our affiliate links, PathGen earns a commission which helps us continue building free and valuable tools for the community.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Do I need PathGen to use the Masterclass?</h3>
+                    <p>No — the Masterclass works perfectly on its own. However, using both together will improve you MUCH faster. PathGen identifies your weaknesses, and the Masterclass teaches you exactly how to fix them.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Is the Masterclass worth it?</h3>
+                    <p>If you're serious about improving at Fortnite, absolutely. With 200+ lessons from 28 pros, it's one of the most comprehensive training programs available. Combined with PathGen's data-driven analysis, it's a complete improvement system.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="cta-section">
+        <div class="section-content">
+            <h2 class="section-title">Ready to Level Up?</h2>
+            <p class="section-subtitle">Choose the masterclass that fits your goals</p>
+            
+            <div class="cta-grid">
+                <div class="cta-card">
+                    <h3>Become an Elite Fighter</h3>
+                    <p>Master every aspect of Fortnite fighting with 200+ lessons from 28 pro players.</p>
+                    <a href="https://www.fortnitemasterclass.com/fighting-masterclass/2l1go" target="_blank" rel="noopener noreferrer" class="btn-primary btn-full">
+                        Start Fighting Masterclass 2.0
+                    </a>
+                </div>
+
+                <div class="cta-card">
+                    <h3>Learn to Dominate Solos</h3>
+                    <p>Perfect your solo gameplay with proven strategies for rotations, endgames, and decision-making.</p>
+                    <a href="https://www.fortnitemasterclass.com/solos-masterclass/2l1go" target="_blank" rel="noopener noreferrer" class="btn-primary btn-full">
+                        Join the Solos Masterclass
+                    </a>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <p style="color: #A0A0A0; font-size: 0.875rem;">
+                    Both masterclasses are available at no extra cost when using our affiliate links.<br>
+                    Questions? <a href="/" style="color: #8B5CF6; text-decoration: underline;">Contact PathGen Support</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Show user info if logged in
+        function showUserInfo(userData) {
+            const navCTA = document.getElementById('navCTA');
+            const userInfo = document.getElementById('userInfo');
+            const userAvatar = document.getElementById('userAvatar');
+            const userName = document.getElementById('userName');
+
+            if (navCTA) navCTA.style.display = 'none';
+            if (userInfo) userInfo.style.display = 'flex';
+
+            if (userData.discordAvatar && userAvatar) {
+                const img = document.createElement('img');
+                img.src = userData.discordAvatar;
+                img.alt = 'Avatar';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.borderRadius = '50%';
+                img.style.objectFit = 'cover';
+                img.onerror = function() {
+                    const initial = (userData.name || userData.email || userData.discordUsername || 'U').charAt(0).toUpperCase();
+                    userAvatar.textContent = initial;
+                    userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+                };
+                userAvatar.innerHTML = '';
+                userAvatar.appendChild(img);
+            } else if (userAvatar) {
+                const initial = (userData.name || userData.email || userData.discordUsername || 'U').charAt(0).toUpperCase();
+                userAvatar.textContent = initial;
+                userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+            }
+            
+            const displayName = userData.name || userData.discordUsername || userData.email?.split('@')[0] || 'User';
+            if (userName) userName.textContent = displayName;
+        }
+
+        function checkAuth() {
+            const userData = localStorage.getItem('pathgen_user') || localStorage.getItem('discordUser');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    showUserInfo(user);
+                    return true;
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                }
+            }
+            return false;
+        }
+
+        function toggleDropdown(type, event) {
+            if (event) event.preventDefault();
+            
+            const dropdowns = {
+                features: document.getElementById('featuresDropdown'),
+                settings: document.getElementById('settingsDropdown')
+            };
+            
+            const currentDropdown = dropdowns[type];
+            if (!currentDropdown) return;
+            
+            Object.entries(dropdowns).forEach(([key, dropdown]) => {
+                if (key !== type && dropdown) {
+                    dropdown.classList.remove('show');
+                }
+            });
+            
+            currentDropdown.classList.toggle('show');
+            
+            if (event) event.stopPropagation();
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('pathgen_user');
+                localStorage.removeItem('discordUser');
+                localStorage.removeItem('setupComplete');
+                window.location.href = '/login.html';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+        });
+    </script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+</body>
+</html>

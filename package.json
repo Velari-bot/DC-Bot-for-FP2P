@@ -1,0 +1,95 @@
+{
+  "name": "site",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.980.0",
+    "@aws-sdk/s3-request-presigner": "^3.980.0",
+    "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "antd": "^5.25.4",
+    "aos": "^2.3.4",
+    "autoprefixer": "^10.4.20",
+    "axios": "^1.9.0",
+    "body-parser": "^2.2.2",
+    "bootstrap-icons": "^1.13.1",
+    "canvas-confetti": "^1.9.4",
+    "discord.js": "^14.25.1",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "ffmpeg-static": "^5.3.0",
+    "firebase": "^12.8.0",
+    "firebase-admin": "^13.6.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "framer-motion": "^12.19.1",
+    "hls.js": "^1.5.0",
+    "icons": "^1.0.0",
+    "leaflet": "^1.9.4",
+    "leaflet-draw": "^1.0.4",
+    "lucide-react": "^0.525.0",
+    "multer": "^2.0.2",
+    "openai": "^6.18.0",
+    "path": "^0.12.7",
+    "postcss": "^8.5.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-icons": "^5.5.0",
+    "react-leaflet": "^5.0.0",
+    "react-player": "^3.4.0",
+    "react-router-dom": "^7.6.1",
+    "react-scripts": "5.0.1",
+    "react-spinners": "^0.17.0",
+    "stripe": "^20.2.0",
+    "tailwind": "^4.0.0",
+    "tailwindcss": "^3.4.17",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "npx webpack serve",
+    "start:bot": "node bot.js",
+    "build": "webpack",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.27.1",
+    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-react": "^7.27.1",
+    "@tailwindcss/postcss": "^4.1.7",
+    "babel-loader": "^10.0.0",
+    "copy-webpack-plugin": "^13.0.1",
+    "css-loader": "^7.1.2",
+    "html-webpack-plugin": "^5.6.3",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.99.8",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.1"
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

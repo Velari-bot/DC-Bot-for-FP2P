@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Logo.png">
+    <link rel="shortcut icon" type="image/png" href="/Logo.png">
+    <link rel="apple-touch-icon" href="/Logo.png">
+    <title>Documentation - PathGen AI</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pathgen.dev/docs">
+    <meta property="og:title" content="Documentation - PathGen AI">
+    <meta property="og:description" content="Learn how to use PathGen AI to improve your Fortnite gameplay.">
+    <meta property="og:image" content="https://pathgen.dev/embed.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://pathgen.dev/docs">
+    <meta name="twitter:title" content="Documentation - PathGen AI">
+    <meta name="twitter:description" content="Learn how to use PathGen AI to improve your Fortnite gameplay.">
+    <meta name="twitter:image" content="https://pathgen.dev/embed.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0A0A0A;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header with Pill Nav Bar */
+        .header {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .nav {
+            backdrop-filter: blur(16px);
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 
+                        0 0 0 1px rgba(255, 255, 255, 0.03),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 0 8px;
+            margin-right: 4px;
+        }
+
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .logo-icon svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin: 0 8px;
+        }
+
+        .nav-link {
+            color: #A0A0A0;
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 6px 14px;
+            border-radius: 25px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link.active {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link .caret {
+            font-size: 8px;
+            margin-left: 1px;
+            opacity: 0.7;
+        }
+
+        .nav-link.external::after {
+            content: '↗';
+            font-size: 10px;
+            opacity: 0.6;
+            margin-left: 2px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-cta {
+            padding: 6px 18px;
+            background: #0A0A0A;
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            border-radius: 50px;
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .nav-cta:hover {
+            background: #151515;
+            border-color: rgba(139, 92, 246, 0.8);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+        }
+
+        .nav-cta::after {
+            content: '→';
+            font-size: 14px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 12px 4px 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            margin-left: 8px;
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+        }
+
+        /* Dropdowns */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            min-width: 220px;
+            background: rgba(15, 15, 15, 0.98);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+                        0 0 0 1px rgba(255, 255, 255, 0.05);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            z-index: 200;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: #d1d5db;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(79, 140, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .dropdown-item-icon {
+            font-size: 16px;
+            width: 20px;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 6px 0;
+        }
+
+        .dropdown-item.danger {
+            color: #ef4444;
+        }
+
+        .dropdown-item.danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .dropdown-item.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .dropdown-item.locked:hover {
+            background: transparent;
+            color: #6b7280;
+        }
+
+        #featuresDropdown {
+            left: 0;
+            right: auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 140px 48px 80px;
+            overflow: hidden;
+        }
+
+        /* Purple-Blue Gradient Glow */
+        .hero-glow {
+            position: absolute;
+            bottom: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1000px;
+            height: 1000px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, rgba(59, 130, 246, 0.15) 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+            filter: blur(60px);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 880px;
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 28px;
+            color: #FFFFFF;
+            letter-spacing: -0.03em;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #A0A0A0;
+            line-height: 1.7;
+            margin-bottom: 48px;
+            max-width: 680px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Background Dashboard Previews */
+        .dashboard-previews {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .preview-card {
+            position: absolute;
+            background: #151515;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 24px;
+            width: 340px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
+            opacity: 0.4;
+        }
+
+        .preview-left {
+            left: 8%;
+            top: 22%;
+            transform: rotate(-8deg) perspective(1000px) rotateY(8deg);
+        }
+
+        .preview-right {
+            right: 8%;
+            top: 28%;
+            transform: rotate(8deg) perspective(1000px) rotateY(-8deg);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            background: #2a2a2a;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .card-icon svg {
+            width: 20px;
+            height: 20px;
+            display: block;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            color: #C5C5C5;
+            font-weight: 600;
+        }
+
+        .card-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            color: #A0A0A0;
+            font-size: 0.9rem;
+        }
+
+        .card-menu-item.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: #FFFFFF;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 24px 60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .page-header {
+            margin-bottom: 48px;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: #9ca3af;
+            line-height: 1.6;
+        }
+
+        .docs-section {
+            margin-bottom: 80px;
+            padding: 48px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .docs-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .docs-section:hover {
+            transform: translateY(-4px);
+            border-color: rgba(139, 92, 246, 0.3);
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.15);
+        }
+
+        .docs-section:hover::before {
+            opacity: 1;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #ffffff;
+            position: relative;
+            padding-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #8B5CF6, #3B82F6);
+            border-radius: 2px;
+        }
+
+        .section-content {
+            font-size: 1.125rem;
+            color: #d1d5db;
+            line-height: 1.8;
+            margin-bottom: 32px;
+            max-width: 800px;
+        }
+
+        .code-block {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 24px 0;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 15px;
+            color: #8B5CF6;
+            overflow-x: auto;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 32px 0;
+        }
+
+        .feature-card {
+            background: rgba(26, 26, 26, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.15);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 8px;
+        }
+
+        .feature-desc {
+            font-size: 0.95rem;
+            color: #A0A0A0;
+            line-height: 1.6;
+        }
+
+        .api-endpoint {
+            background: rgba(139, 92, 246, 0.08);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-left: 4px solid #8B5CF6;
+            padding: 24px;
+            margin: 24px 0;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .api-endpoint::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.4), transparent);
+        }
+
+        .api-endpoint:hover {
+            transform: translateX(4px);
+            border-color: rgba(139, 92, 246, 0.4);
+            background: rgba(139, 92, 246, 0.12);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.2);
+        }
+
+        .endpoint-method {
+            color: #10b981;
+            font-weight: 700;
+            margin-right: 12px;
+            font-size: 0.875rem;
+            padding: 4px 10px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 6px;
+        }
+
+        .endpoint-path {
+            color: #8B5CF6;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+        }
+
+        .endpoint-desc {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .nav-links {
+                display: none;
+            }
+
+            .main-content {
+                padding: 100px 16px 40px;
+            }
+
+            .page-title {
+                font-size: 36px;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <!-- Pathgen Monochrome P Mark -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img">
+                        <defs>
+                            <filter id="sparkleBlur">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+                            </filter>
+                        </defs>
+                        
+                        <!-- P Glyph with Facets -->
+                        <g id="glyph">
+                            <rect x="20" y="20" width="16" height="60" rx="8" ry="8" fill="#FFFFFF"/>
+                            <path d="M 36 20 H 50 A 24 24 0 0 1 50 58 H 36 V 20 Z" fill="#FFFFFF"/>
+                            <path d="M 45 28 L 58 32 L 54 40 L 42 38 Z" fill="#000000" opacity="0.3"/>
+                            <path d="M 44 42 L 56 46 L 48 52 Z" fill="#000000" opacity="0.25"/>
+                            <path d="M 38 26 L 42 24 L 42 34 L 38 36 Z" fill="#000000" opacity="0.2"/>
+                        </g>
+                        
+                        <!-- Cosmic Sparkles -->
+                        <g id="sparkles" opacity="0.85">
+                            <circle cx="64" cy="26" r="2.5" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-1"/>
+                            <circle cx="70" cy="38" r="1.8" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-2"/>
+                            <circle cx="52" cy="35" r="1.2" fill="#FFFFFF" opacity="0.8" filter="url(#sparkleBlur)" class="sparkle-3"/>
+                            <circle cx="58" cy="28" r="0.9" fill="#FFFFFF" opacity="0.7" class="sparkle-4"/>
+                            <circle cx="24" cy="48" r="1.5" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-5"/>
+                            <circle cx="60" cy="50" r="1.0" fill="#FFFFFF" opacity="0.6" class="sparkle-6"/>
+                        </g>
+                    </svg>
+                </div>
+                <span>Pathgen v2</span>
+            </a>
+            
+            <div class="nav-center">
+                <a href="/docs.html" class="nav-link active">Docs</a>
+                <div class="dropdown">
+                    <a href="#" class="nav-link" onclick="toggleDropdown('features', event)">
+                        Features
+                        <span class="caret">▼</span>
+                    </a>
+                    <div class="dropdown-menu" id="featuresDropdown">
+                        <a href="/analyze" class="dropdown-item">
+                            <span class="dropdown-item-icon">🎮</span>
+                            <span>Replay Parser</span>
+                        </a>
+                        <a href="/masterclass" class="dropdown-item">
+                            <span class="dropdown-item-icon">📖</span>
+                            <span>Masterclass</span>
+                        </a>
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Coach</span>
+                        </a>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">📊</span>
+                            <span>Competitive Insights</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">🎤</span>
+                            <span>Voice</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="/docs.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">📚</span>
+                            <span>Documentation</span>
+                        </a>
+                    </div>
+                </div>
+                <a href="/cih-coaching.html" class="nav-link">CIH Coaching</a>
+                <a href="/nagc-dropmaps.html" class="nav-link">NAGC Drop Maps</a>
+            </div>
+
+            <div class="nav-right">
+                <a href="/subscribe.html" class="nav-link">Pricing</a>
+                <a href="/login.html" class="nav-cta" id="navCTA">Try For Free</a>
+                <div class="dropdown">
+                    <div class="user-info" id="userInfo" onclick="toggleDropdown('settings', event)">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <span class="user-name" id="userName">User</span>
+                    </div>
+                    <div class="dropdown-menu" id="settingsDropdown">
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Chat</span>
+                        </a>
+                        <a href="/tournaments.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/settings.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">⚙️</span>
+                            <span>Settings</span>
+                        </a>
+                        <a href="/subscribe.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💳</span>
+                            <span>Upgrade to Pro</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item danger" onclick="logout()">
+                            <span class="dropdown-item-icon">🚪</span>
+                            <span>Logout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Purple-Blue Gradient Glow -->
+        <div class="hero-glow"></div>
+
+        <!-- Background Dashboard Previews -->
+        <div class="dashboard-previews">
+            <!-- Left Preview Card -->
+            <div class="preview-card preview-left">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <!-- Pathgen Monochrome P Mark -->
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" style="width: 20px; height: 20px;">
+                            <defs>
+                                <filter id="docsSparkleBlur">
+                                    <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+                                </filter>
+                            </defs>
+                            <g id="glyph">
+                                <rect x="20" y="20" width="16" height="60" rx="8" ry="8" fill="#FFFFFF"/>
+                                <path d="M 36 20 H 50 A 24 24 0 0 1 50 58 H 36 V 20 Z" fill="#FFFFFF"/>
+                                <path d="M 45 28 L 58 32 L 54 40 L 42 38 Z" fill="#000000" opacity="0.3"/>
+                                <path d="M 44 42 L 56 46 L 48 52 Z" fill="#000000" opacity="0.25"/>
+                                <path d="M 38 26 L 42 24 L 42 34 L 38 36 Z" fill="#000000" opacity="0.2"/>
+                            </g>
+                            <g id="sparkles" opacity="0.85">
+                                <circle cx="64" cy="26" r="2.5" fill="#FFFFFF" filter="url(#docsSparkleBlur)"/>
+                                <circle cx="70" cy="38" r="1.8" fill="#FFFFFF" filter="url(#docsSparkleBlur)"/>
+                                <circle cx="52" cy="35" r="1.2" fill="#FFFFFF" opacity="0.8" filter="url(#docsSparkleBlur)"/>
+                                <circle cx="58" cy="28" r="0.9" fill="#FFFFFF" opacity="0.7"/>
+                                <circle cx="24" cy="48" r="1.5" fill="#FFFFFF" filter="url(#docsSparkleBlur)"/>
+                                <circle cx="60" cy="50" r="1.0" fill="#FFFFFF" opacity="0.6"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="card-title">Pathgen Dashboard</div>
+                </div>
+                <div class="card-menu-item active">
+                    <span>📚 Documentation</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>💬 AI Chat</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>🏆 Tournaments</span>
+                </div>
+            </div>
+
+            <!-- Right Preview Card -->
+            <div class="preview-card preview-right">
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <div class="card-title">Quick Reference</div>
+                </div>
+                <div class="card-menu-item">
+                    <span>Getting Started</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>API Reference</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Examples</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-content">
+            <h1 class="hero-title" id="docsHeroTitle">Master PathGen AI</h1>
+            <p class="hero-subtitle" id="docsHeroSubtitle">
+                Everything you need to know about using PathGen AI to improve your Fortnite gameplay. 
+                From getting started to advanced features, we've got you covered.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Pricing & Limits -->
+        <div class="docs-section" style="background: rgba(139, 92, 246, 0.03); border-radius: 16px; padding: 40px; margin-bottom: 48px;">
+            <h2 class="section-title" style="font-size: 2.5rem; margin-bottom: 32px;">💰 Pricing & Usage Limits</h2>
+            
+            <div style="display: grid; gap: 24px; max-width: 900px;">
+                <!-- Free Tier -->
+                <div style="background: rgba(255, 255, 255, 0.03); border-left: 4px solid #6B7280; padding: 24px; border-radius: 12px;">
+                    <h3 style="color: #9CA3AF; font-size: 1.5rem; margin-bottom: 16px;">FREE TIER - $0/month</h3>
+                    <ul style="list-style: none; padding: 0; line-height: 2.2; color: #B0B0B0; font-size: 1.05rem;">
+                        <li>✅ <strong style="color: #fff;">5 messages/day</strong></li>
+                        <li>✅ <strong style="color: #fff;">200 characters max</strong> per message</li>
+                        <li>❌ No saved chat history</li>
+                        <li>❌ 0 voice interactions</li>
+                        <li>❌ 0 gameplay clips</li>
+                        <li>❌ 0 competitive insights</li>
+                    </ul>
+                </div>
+
+                <!-- Base Pro -->
+                <div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.05)); border-left: 4px solid #8B5CF6; padding: 28px; border-radius: 12px; border: 1px solid rgba(139, 92, 246, 0.2);">
+                    <h3 style="color: #A78BFA; font-size: 1.5rem; margin-bottom: 16px;">BASE PRO - $6.99/month</h3>
+                    <ul style="list-style: none; padding: 0; line-height: 2.2; color: #B0B0B0; font-size: 1.05rem;">
+                        <li>✅ <strong style="color: #fff;">200 messages/month</strong></li>
+                        <li>✅ <strong style="color: #fff;">1,000 characters max</strong> per message</li>
+                        <li>✅ <strong style="color: #fff;">Saves chat history</strong></li>
+                        <li>✅ <strong style="color: #fff;">Better AI model</strong> responses</li>
+                        <li>❌ No voice (requires add-on)</li>
+                        <li>❌ No gameplay analysis (requires add-on)</li>
+                        <li>❌ No competitive insights (requires add-on)</li>
+                    </ul>
+                </div>
+
+                <!-- Voice Add-on -->
+                <div style="background: rgba(16, 185, 129, 0.05); border-left: 4px solid #10B981; padding: 24px; border-radius: 12px;">
+                    <h3 style="color: #10B981; font-size: 1.4rem; margin-bottom: 16px;">VOICE ADD-ON - +$1.99/month <span style="color: #6B7280; font-size: 0.9rem;">(Total: $8.98)</span></h3>
+                    <ul style="list-style: none; padding: 0; line-height: 2.2; color: #B0B0B0;">
+                        <li>✅ <strong style="color: #fff;">550 interactions/month</strong></li>
+                        <li>✅ <strong style="color: #fff;">3,600 seconds/month</strong> (60 minutes)</li>
+                        <li>✅ <strong style="color: #fff;">30 minutes max per session</strong></li>
+                        <li>✅ Real-time push-to-talk</li>
+                        <li>✅ Tactical coaching</li>
+                    </ul>
+                </div>
+
+                <!-- Gameplay Add-on -->
+                <div style="background: rgba(245, 158, 11, 0.05); border-left: 4px solid #F59E0B; padding: 24px; border-radius: 12px;">
+                    <h3 style="color: #F59E0B; font-size: 1.4rem; margin-bottom: 16px;">GAMEPLAY ADD-ON - +$1.50/month <span style="color: #6B7280; font-size: 0.9rem;">(Total: $8.49)</span></h3>
+                    <ul style="list-style: none; padding: 0; line-height: 2.2; color: #B0B0B0;">
+                        <li>✅ <strong style="color: #fff;">15 replays/month</strong></li>
+                        <li>✅ <strong style="color: #fff;">Priority processing</strong></li>
+                        <li>✅ <strong style="color: #fff;">Heatmaps & mistake labels</strong></li>
+                    </ul>
+                </div>
+
+                <!-- Competitive Add-on -->
+                <div style="background: rgba(239, 68, 68, 0.05); border-left: 4px solid #EF4444; padding: 24px; border-radius: 12px;">
+                    <h3 style="color: #EF4444; font-size: 1.4rem; margin-bottom: 16px;">COMPETITIVE ADD-ON - +$0.75/month <span style="color: #6B7280; font-size: 0.9rem;">(Total: $7.74)</span></h3>
+                    <ul style="list-style: none; padding: 0; line-height: 2.2; color: #B0B0B0;">
+                        <li>✅ <strong style="color: #fff;">UNLIMITED</strong> insights</li>
+                        <li>✅ <strong style="color: #fff;">UNLIMITED</strong> FNCS reports</li>
+                        <li>✅ <strong style="color: #fff;">UNLIMITED</strong> ranked meta breakdowns</li>
+                        <li>✅ <strong style="color: #fff;">UNLIMITED</strong> loadout meta</li>
+                    </ul>
+                </div>
+
+                <!-- All Add-ons -->
+                <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15)); border: 2px solid #3B82F6; padding: 32px; border-radius: 16px; box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2);">
+                    <h3 style="color: #60A5FA; font-size: 1.8rem; margin-bottom: 12px;">🎉 ALL ADD-ONS BUNDLE</h3>
+                    <p style="color: #A78BFA; font-size: 1.3rem; font-weight: 700; margin-bottom: 20px;">$11.23/month</p>
+                    <p style="margin-bottom: 20px; color: #D1D5DB; font-size: 1.1rem;">Pro + Voice + Gameplay + Competitive</p>
+                    <ul style="list-style: none; padding: 0; line-height: 2.5; color: #D1D5DB; font-size: 1.1rem;">
+                        <li>✅ <strong style="color: #fff;">Everything above combined</strong></li>
+                        <li>✅ Full access to all features</li>
+                        <li>✅ Maximum usage limits</li>
+                        <li>✅ Complete PathGen experience</li>
+                    </ul>
+                    <a href="/subscribe.html" style="display: inline-block; margin-top: 24px; padding: 16px 40px; background: linear-gradient(135deg, #3B82F6, #8B5CF6); color: white; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 1.1rem; box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4); transition: all 0.3s ease;">Get Started →</a>
+                </div>
+
+                <!-- Free Trial Info -->
+                <div style="background: rgba(139, 92, 246, 0.08); border-left: 4px solid #8B5CF6; padding: 24px; border-radius: 12px; margin-top: 8px;">
+                    <h3 style="color: #A78BFA; font-size: 1.3rem; margin-bottom: 16px;">🎁 7-DAY FREE TRIAL</h3>
+                    <p style="color: #9CA3AF; margin-bottom: 12px;">Try all features with billing info required</p>
+                    <ul style="list-style: none; padding: 0; line-height: 2; color: #B0B0B0;">
+                        <li>✅ 100 messages during trial</li>
+                        <li>✅ 50 voice interactions (10 minutes)</li>
+                        <li>✅ 5 gameplay clips</li>
+                        <li>✅ 10 competitive insights</li>
+                        <li>⚠️ <strong style="color: #FCD34D;">Auto-charged after 7 days</strong> if not canceled</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Getting Started -->
+        <div class="docs-section">
+            <h2 class="section-title">🚀 Getting Started</h2>
+            <p class="section-content">
+                PathGen AI is your personal Fortnite coach powered by artificial intelligence. Get instant answers, 
+                personalized training routines, and real-time competitive insights.
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <div class="feature-title">AI Chat Coach</div>
+                    <div class="feature-desc">Ask anything about Fortnite - building, aim, strategies, meta, tournaments. Get instant, intelligent responses with sources.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <div class="feature-title">Tournament Tracker</div>
+                    <div class="feature-desc">Stay updated on competitive events, schedules, and prize pools across all regions.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Live Analytics</div>
+                    <div class="feature-desc">Track weapon meta, player stats, and competitive insights from top analysts.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Using the AI Chat -->
+        <div class="docs-section">
+            <h2 class="section-title">💬 Using the AI Chat</h2>
+            <p class="section-content">
+                The AI chat is your main interaction point. Simply type your question and get instant, context-aware responses.
+            </p>
+
+            <div class="code-block">
+                <div style="color: #8B5CF6; font-weight: 600; margin-bottom: 16px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">Example Questions:</div>
+                <div style="line-height: 2; color: #A0A0A0;">
+                    <div style="margin-bottom: 8px;">• <span style="color: #FFFFFF;">"What tournaments are coming up?"</span></div>
+                    <div style="margin-bottom: 8px;">• <span style="color: #FFFFFF;">"How do I improve my building speed?"</span></div>
+                    <div style="margin-bottom: 8px;">• <span style="color: #FFFFFF;">"What's the current weapon meta?"</span></div>
+                    <div style="margin-bottom: 8px;">• <span style="color: #FFFFFF;">"Give me aim training tips"</span></div>
+                    <div>• <span style="color: #FFFFFF;">"Show me FNCS stats"</span></div>
+                </div>
+            </div>
+
+            <p class="section-content">
+                Every response includes <strong style="color: #8B5CF6; background: rgba(139, 92, 246, 0.1); padding: 2px 8px; border-radius: 4px;">📚 Sources & References</strong> that you can click to verify the information.
+            </p>
+        </div>
+
+        <!-- API Documentation -->
+        <div class="docs-section">
+            <h2 class="section-title">🔌 API Endpoints</h2>
+            <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid #F59E0B; padding: 20px; border-radius: 8px; margin-bottom: 24px;">
+                <p style="color: #FCD34D; font-weight: 600; margin: 0;">
+                    ⚠️ <strong>Under Development</strong> - Our public API is currently in development and will be available in a future update. Stay tuned!
+                </p>
+            </div>
+            <p class="section-content">
+                PathGen AI will provide a RESTful API for developers. All endpoints will return JSON data.
+            </p>
+
+            <div class="api-endpoint" style="opacity: 0.6;">
+                <div>
+                    <span class="endpoint-method">POST</span>
+                    <span class="endpoint-path">/api/chat</span>
+                    <span style="background: #F59E0B; color: #000; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; margin-left: 12px;">COMING SOON</span>
+                </div>
+                <div class="endpoint-desc">Send a message to the AI coach and get a response with sources.</div>
+            </div>
+
+            <div class="api-endpoint" style="opacity: 0.6;">
+                <div>
+                    <span class="endpoint-method">GET</span>
+                    <span class="endpoint-path">/api/data</span>
+                    <span style="background: #F59E0B; color: #000; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; margin-left: 12px;">COMING SOON</span>
+                </div>
+                <div class="endpoint-desc">Retrieve tournament data, tweets, and competitive information.</div>
+            </div>
+
+            <div class="api-endpoint" style="opacity: 0.6;">
+                <div>
+                    <span class="endpoint-method">GET</span>
+                    <span class="endpoint-path">/api/tweets</span>
+                    <span style="background: #F59E0B; color: #000; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; margin-left: 12px;">COMING SOON</span>
+                </div>
+                <div class="endpoint-desc">Get real-time tweets from competitive Fortnite accounts.</div>
+            </div>
+
+            <div class="api-endpoint" style="opacity: 0.6;">
+                <div>
+                    <span class="endpoint-method">GET</span>
+                    <span class="endpoint-path">/health</span>
+                    <span style="background: #F59E0B; color: #000; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; margin-left: 12px;">COMING SOON</span>
+                </div>
+                <div class="endpoint-desc">Check server status and API version.</div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="docs-section">
+            <h2 class="section-title">✨ Key Features</h2>
+            
+            <p class="section-content">
+                <strong style="color: #4f8cff;">🤖 Smart AI Responses:</strong> Powered by GPT-4o-mini, our AI understands context 
+                and provides relevant, accurate coaching advice.
+            </p>
+
+            <p class="section-content">
+                <strong style="color: #4f8cff;">📚 Source Verification:</strong> Every AI response includes clickable sources 
+                so you can verify the information yourself.
+            </p>
+
+            <p class="section-content">
+                <strong style="color: #4f8cff;">🏆 Tournament Tracking:</strong> Never miss a competitive event with our 
+                comprehensive tournament calendar and notifications.
+            </p>
+
+            <p class="section-content">
+                <strong style="color: #4f8cff;">💎 Credit System:</strong> Fair usage system with credits per message. 
+                Free tier includes 10 messages to get started.
+            </p>
+        </div>
+
+        <!-- Support -->
+        <div class="docs-section">
+            <h2 class="section-title">💡 Support</h2>
+            <p class="section-content">
+                Need help? Here's how to get support:
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <div class="feature-title">Ask the AI</div>
+                    <div class="feature-desc">Type "help" in the chat for guidance on using PathGen AI features.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📖</div>
+                    <div class="feature-title">Tutorials</div>
+                    <div class="feature-desc">Check out our step-by-step tutorials to master each feature.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🐛</div>
+                    <div class="feature-title">Report Issues</div>
+                    <div class="feature-desc">Found a bug? Report it via our GitHub issues page.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showUserInfo(userData) {
+            const navCTA = document.getElementById('navCTA');
+            const userInfo = document.getElementById('userInfo');
+            const userAvatar = document.getElementById('userAvatar');
+            const userName = document.getElementById('userName');
+
+            if (navCTA) navCTA.style.display = 'none';
+            if (userInfo) userInfo.style.display = 'flex';
+            
+            // Set avatar - use Discord avatar, Google avatar, or generic avatar if available
+            const avatarUrl = userData.discordAvatar || userData.googleAvatar || userData.avatar;
+            if (avatarUrl && userAvatar) {
+                const img = document.createElement('img');
+                img.src = avatarUrl;
+                img.alt = 'Avatar';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.borderRadius = '50%';
+                img.style.objectFit = 'cover';
+                img.onerror = function() {
+                    // Fallback if image fails to load
+                    const initial = (userData.name || userData.email || userData.discordUsername || userData.googleUsername || 'U').charAt(0).toUpperCase();
+                    userAvatar.textContent = initial;
+                    userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+                };
+                userAvatar.innerHTML = '';
+                userAvatar.appendChild(img);
+            } else if (userAvatar) {
+                const initial = (userData.name || userData.email || userData.discordUsername || userData.googleUsername || 'U').charAt(0).toUpperCase();
+                userAvatar.textContent = initial;
+                userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+            }
+            
+            // Set name
+            const displayName = userData.name || userData.discordUsername || userData.googleUsername || userData.email?.split('@')[0] || 'User';
+            if (userName) userName.textContent = displayName;
+        }
+
+        // Check authentication
+        function checkAuth() {
+            const userData = localStorage.getItem('pathgen_user');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    showUserInfo(user);
+                    return true;
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                }
+            }
+            return false;
+        }
+
+        // Toggle dropdown
+        function toggleDropdown(type, event) {
+            if (event) event.preventDefault();
+            
+            const dropdowns = {
+                features: document.getElementById('featuresDropdown'),
+                settings: document.getElementById('settingsDropdown')
+            };
+            
+            const currentDropdown = dropdowns[type];
+            if (!currentDropdown) return;
+            
+            // Close other dropdowns
+            Object.entries(dropdowns).forEach(([key, dropdown]) => {
+                if (key !== type && dropdown) {
+                    dropdown.classList.remove('show');
+                }
+            });
+            
+            // Toggle current dropdown
+            currentDropdown.classList.toggle('show');
+            
+            if (event) event.stopPropagation();
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
+
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('pathgen_user');
+                localStorage.removeItem('discordUser');
+                localStorage.removeItem('setupComplete');
+                window.location.href = '/login.html';
+            }
+        }
+
+        // Hero text variations for docs page
+        const docsHeroVariations = [
+            {
+                title: "Master PathGen AI",
+                subtitle: "Everything you need to know about using PathGen AI to improve your Fortnite gameplay. From getting started to advanced features, we've got you covered."
+            },
+            {
+                title: "Learn. Build. Dominate.",
+                subtitle: "Comprehensive documentation to help you unlock the full potential of PathGen AI and take your Fortnite skills to the next level."
+            },
+            {
+                title: "Your Complete Guide",
+                subtitle: "Step-by-step tutorials, API references, and best practices to help you become a PathGen AI power user."
+            }
+        ];
+
+        let docsHeroIndex = 0;
+
+        function cycleDocsHeroText() {
+            docsHeroIndex = (docsHeroIndex + 1) % docsHeroVariations.length;
+            const variation = docsHeroVariations[docsHeroIndex];
+
+            const titleEl = document.getElementById('docsHeroTitle');
+            const subtitleEl = document.getElementById('docsHeroSubtitle');
+
+            if (titleEl && subtitleEl) {
+                // Fade out
+                titleEl.style.transition = 'opacity 0.4s ease';
+                subtitleEl.style.transition = 'opacity 0.4s ease';
+                titleEl.style.opacity = '0';
+                subtitleEl.style.opacity = '0';
+
+                setTimeout(() => {
+                    titleEl.textContent = variation.title;
+                    subtitleEl.textContent = variation.subtitle;
+
+                    // Fade in
+                    titleEl.style.opacity = '1';
+                    subtitleEl.style.opacity = '1';
+                }, 400);
+            }
+        }
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Animate sections on scroll
+        function initScrollAnimations() {
+            const sections = document.querySelectorAll('.docs-section');
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                section.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+                observer.observe(section);
+            });
+        }
+
+        // Check auth on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            // Cycle hero text every 10 seconds
+            if (document.getElementById('docsHeroTitle')) {
+                setInterval(cycleDocsHeroText, 10000);
+            }
+            // Initialize scroll animations
+            initScrollAnimations();
+        });
+    </script>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+</body>
+</html>
+

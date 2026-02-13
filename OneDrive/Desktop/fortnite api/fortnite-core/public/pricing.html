@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - PathGen AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0A0A0A;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Full Page Gradient Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.1) 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Header with Pill Nav Bar */
+        .header {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .nav {
+            backdrop-filter: blur(16px);
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 
+                        0 0 0 1px rgba(255, 255, 255, 0.03),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 0 8px;
+            margin-right: 4px;
+        }
+
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .logo-icon svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin: 0 8px;
+        }
+
+        .nav-link {
+            color: #A0A0A0;
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 6px 14px;
+            border-radius: 25px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link.active {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link .caret {
+            font-size: 8px;
+            margin-left: 1px;
+            opacity: 0.7;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 12px 4px 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            margin-left: 8px;
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+        }
+
+        /* Dropdowns */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            min-width: 220px;
+            background: rgba(15, 15, 15, 0.98);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+                        0 0 0 1px rgba(255, 255, 255, 0.05);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            z-index: 200;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: #d1d5db;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(79, 140, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .dropdown-item-icon {
+            font-size: 16px;
+            width: 20px;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 6px 0;
+        }
+
+        .dropdown-item.danger {
+            color: #ef4444;
+        }
+
+        .dropdown-item.danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        #featuresDropdown {
+            left: 0;
+            right: auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 140px 48px 80px;
+            overflow: hidden;
+        }
+
+        /* Purple-Blue Gradient Glow - Full Page */
+        .hero-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1500px;
+            height: 1500px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, rgba(59, 130, 246, 0.15) 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+            filter: blur(80px);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 880px;
+            width: 100%;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Background Dashboard Previews */
+        .dashboard-previews {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .preview-card {
+            position: absolute;
+            background: #151515;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 24px;
+            width: 340px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
+            opacity: 0.4;
+        }
+
+        .preview-left {
+            left: 8%;
+            top: 22%;
+            transform: rotate(-8deg) perspective(1000px) rotateY(8deg);
+        }
+
+        .preview-right {
+            right: 8%;
+            top: 28%;
+            transform: rotate(8deg) perspective(1000px) rotateY(-8deg);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            background: #2a2a2a;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            color: #C5C5C5;
+            font-weight: 600;
+        }
+
+        .card-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            color: #A0A0A0;
+            font-size: 0.9rem;
+        }
+
+        .card-menu-item.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: #FFFFFF;
+        }
+
+        /* Main Content - Centered in Hero */
+        .main-content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Pricing Card */
+        .pricing-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 32px;
+            margin: 0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(139, 92, 246, 0.3);
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.15);
+        }
+
+        .pricing-card:hover::before {
+            opacity: 1;
+        }
+
+        .pricing-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #FFFFFF;
+        }
+
+        .pricing-subtitle {
+            font-size: 0.875rem;
+            color: #A0A0A0;
+            margin-bottom: 24px;
+        }
+
+        /* Price Display */
+        .price-display {
+            text-align: center;
+            margin: 32px 0;
+        }
+
+        .price-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .price-old {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #666;
+            text-decoration: line-through;
+        }
+
+        .price-new {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #FFFFFF;
+        }
+
+        .price-period {
+            font-size: 1rem;
+            color: #A0A0A0;
+            font-weight: 400;
+        }
+
+        /* Features Section */
+        .features-section {
+            margin-bottom: 32px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .feature-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .feature-name {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #FFFFFF;
+        }
+
+        .info-icon {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: #A0A0A0;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: help;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 14px;
+            background: rgba(15, 15, 15, 0.98);
+            backdrop-filter: blur(16px);
+            color: white;
+            font-size: 12px;
+            font-weight: 400;
+            border-radius: 8px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 1000;
+            line-height: 1.5;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid rgba(15, 15, 15, 0.98);
+        }
+
+        .tooltip-price {
+            color: #8B5CF6;
+            font-weight: 600;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .info-icon:hover .tooltip {
+            opacity: 1;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .toggle-input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: 0.3s;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-input:checked + .toggle-slider {
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            border-color: rgba(139, 92, 246, 0.5);
+        }
+
+        .toggle-input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #0A0A0A;
+            color: white;
+            border: 1.5px solid transparent;
+            position: relative;
+            background-clip: padding-box;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50px;
+            padding: 1.5px;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50px;
+            background: radial-gradient(circle at center, rgba(139, 92, 246, 0.5), rgba(59, 130, 246, 0.3));
+            filter: blur(20px);
+            opacity: 0.6;
+            z-index: -1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:hover::after {
+            opacity: 1;
+            filter: blur(30px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .main-content {
+                padding: 40px 16px 40px;
+            }
+
+            .pricing-card {
+                padding: 32px 24px;
+            }
+
+            .price-new {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <!-- Pathgen Monochrome P Mark -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img">
+                        <defs>
+                            <filter id="pricingSparkleBlur">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+                            </filter>
+                        </defs>
+                        
+                        <!-- P Glyph with Facets -->
+                        <g id="glyph">
+                            <rect x="20" y="20" width="16" height="60" rx="8" ry="8" fill="#FFFFFF"/>
+                            <path d="M 36 20 H 50 A 24 24 0 0 1 50 58 H 36 V 20 Z" fill="#FFFFFF"/>
+                            <path d="M 45 28 L 58 32 L 54 40 L 42 38 Z" fill="#000000" opacity="0.3"/>
+                            <path d="M 44 42 L 56 46 L 48 52 Z" fill="#000000" opacity="0.25"/>
+                            <path d="M 38 26 L 42 24 L 42 34 L 38 36 Z" fill="#000000" opacity="0.2"/>
+                        </g>
+                        
+                        <!-- Cosmic Sparkles -->
+                        <g id="sparkles" opacity="0.85">
+                            <circle cx="64" cy="26" r="2.5" fill="#FFFFFF" filter="url(#pricingSparkleBlur)" class="sparkle-1"/>
+                            <circle cx="70" cy="38" r="1.8" fill="#FFFFFF" filter="url(#pricingSparkleBlur)" class="sparkle-2"/>
+                            <circle cx="52" cy="35" r="1.2" fill="#FFFFFF" opacity="0.8" filter="url(#pricingSparkleBlur)" class="sparkle-3"/>
+                            <circle cx="58" cy="28" r="0.9" fill="#FFFFFF" opacity="0.7" class="sparkle-4"/>
+                            <circle cx="24" cy="48" r="1.5" fill="#FFFFFF" filter="url(#pricingSparkleBlur)" class="sparkle-5"/>
+                            <circle cx="60" cy="50" r="1.0" fill="#FFFFFF" opacity="0.6" class="sparkle-6"/>
+                        </g>
+                    </svg>
+                </div>
+                <span>Pathgen v2</span>
+            </a>
+            
+            <div class="nav-center">
+                <a href="/docs.html" class="nav-link">Docs</a>
+                <div class="dropdown">
+                    <a href="#" class="nav-link" onclick="toggleDropdown('features', event)">
+                        Features
+                        <span class="caret">▼</span>
+                    </a>
+                    <div class="dropdown-menu" id="featuresDropdown">
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Coach</span>
+                        </a>
+                        <a href="/tournaments.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                        </a>
+                        <a href="/tweets.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">🐦</span>
+                            <span>Live Tweets</span>
+                        </a>
+                    </div>
+                </div>
+                <a href="/tournaments.html" class="nav-link">Tournaments</a>
+                <a href="/pricing.html" class="nav-link active">Pricing</a>
+            </div>
+            
+            <div class="nav-right" id="navCTA">
+                <a href="/login.html" class="nav-link">Get Started</a>
+            </div>
+            
+            <div class="user-info" id="userInfo" style="display: none;">
+                <div class="user-avatar" id="userAvatar"></div>
+                <div class="user-name" id="userName">User</div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Purple-Blue Gradient Glow -->
+        <div class="hero-glow"></div>
+
+        <!-- Background Dashboard Previews -->
+        <div class="dashboard-previews">
+            <!-- Left Preview Card -->
+            <div class="preview-card preview-left">
+                <div class="card-header">
+                    <div class="card-icon">💰</div>
+                    <div class="card-title">Pricing Plans</div>
+                </div>
+                <div class="card-menu-item active">
+                    <span>Smart AI Coach</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Add-Ons</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Free Trial</span>
+                </div>
+            </div>
+
+            <!-- Right Preview Card -->
+            <div class="preview-card preview-right">
+                <div class="card-header">
+                    <div class="card-icon">✨</div>
+                    <div class="card-title">Features</div>
+                </div>
+                <div class="card-menu-item">
+                    <span>Gameplay Analysis</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Heatmaps + Stats</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Team Coaching</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pricing Card Centered in Hero -->
+        <div class="main-content">
+            <div class="pricing-card">
+            <div class="pricing-title">Upgrade now</div>
+            <div class="pricing-subtitle">Get 50% off on the 1st year, or try it for free</div>
+
+            <!-- Base Pricing (Always Included - No Toggle) -->
+            <div class="price-display">
+                <div class="price-line">
+                    <span class="price-old" id="priceOld">$13.98</span>
+                    <span class="price-new">$<span id="totalPrice">6.99</span></span>
+                    <span class="price-period">/Month</span>
+                </div>
+            </div>
+
+            <!-- Optional Add-On Features -->
+            <div class="features-section">
+                <!-- Gameplay Analysis -->
+                <div class="feature-item">
+                    <label class="toggle-switch">
+                        <input type="checkbox" class="toggle-input" data-price="1.50" data-name="Gameplay Analysis">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <div class="feature-right">
+                        <span class="feature-name">Gameplay Analysis</span>
+                        <div class="info-icon">
+                            i
+                            <div class="tooltip">
+                                AI reviews your clips or replays
+                                <span class="tooltip-price">+$1.50/mo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Heatmaps + Stats -->
+                <div class="feature-item">
+                    <label class="toggle-switch">
+                        <input type="checkbox" class="toggle-input" data-price="1.00" data-name="Heatmaps + Stats">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <div class="feature-right">
+                        <span class="feature-name">Heatmaps + Stats</span>
+                        <div class="info-icon">
+                            i
+                            <div class="tooltip">
+                                Tracks and visualizes drop/fight patterns
+                                <span class="tooltip-price">+$1.00/mo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Competitive Insights -->
+                <div class="feature-item">
+                    <label class="toggle-switch">
+                        <input type="checkbox" class="toggle-input" data-price="0.75" data-name="Competitive Insights">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <div class="feature-right">
+                        <span class="feature-name">Competitive Insights</span>
+                        <div class="info-icon">
+                            i
+                            <div class="tooltip">
+                                FNCS + ranked meta reports
+                                <span class="tooltip-price">+$0.75/mo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Coaching Mode -->
+                <div class="feature-item">
+                    <label class="toggle-switch">
+                        <input type="checkbox" class="toggle-input" data-price="1.50" data-name="Team Coaching Mode">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <div class="feature-right">
+                        <span class="feature-name">Team Coaching Mode</span>
+                        <div class="info-icon">
+                            i
+                            <div class="tooltip">
+                                Add up to 3 teammates
+                                <span class="tooltip-price">+$1.50/mo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom Playstyle Model -->
+                <div class="feature-item">
+                    <label class="toggle-switch">
+                        <input type="checkbox" class="toggle-input" data-price="0.99" data-name="Custom Playstyle Model">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <div class="feature-right">
+                        <span class="feature-name">Custom Playstyle Model</span>
+                        <div class="info-icon">
+                            i
+                            <div class="tooltip">
+                                Coach learns your unique style
+                                <span class="tooltip-price">+$0.99/mo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Voice Interaction -->
+                <div class="feature-item">
+                    <label class="toggle-switch">
+                        <input type="checkbox" class="toggle-input" data-price="0.99" data-name="Voice Interaction">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <div class="feature-right">
+                        <span class="feature-name">Voice Interaction</span>
+                        <div class="info-icon">
+                            i
+                            <div class="tooltip">
+                                Talk to your AI coach
+                                <span class="tooltip-price">+$0.99/mo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="startSubscription()">Upgrade</button>
+                <button class="btn btn-secondary" onclick="startTrial()">Start Free Trial</button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Toggle dropdown
+        function toggleDropdown(type, event) {
+            if (event) event.preventDefault();
+            
+            const dropdowns = {
+                features: document.getElementById('featuresDropdown'),
+                settings: document.getElementById('settingsDropdown')
+            };
+            
+            const currentDropdown = dropdowns[type];
+            if (!currentDropdown) return;
+            
+            // Close other dropdowns
+            Object.entries(dropdowns).forEach(([key, dropdown]) => {
+                if (key !== type && dropdown) {
+                    dropdown.classList.remove('show');
+                }
+            });
+            
+            // Toggle current dropdown
+            currentDropdown.classList.toggle('show');
+            
+            if (event) event.stopPropagation();
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
+
+        // Show user info
+        function showUserInfo(userData) {
+            const navCTA = document.getElementById('navCTA');
+            const userInfo = document.getElementById('userInfo');
+            const userAvatar = document.getElementById('userAvatar');
+            const userName = document.getElementById('userName');
+
+            if (navCTA) navCTA.style.display = 'none';
+            if (userInfo) userInfo.style.display = 'flex';
+            
+            // Set avatar - use Discord avatar if available
+            if (userData.discordAvatar && userAvatar) {
+                const img = document.createElement('img');
+                img.src = userData.discordAvatar;
+                img.alt = 'Avatar';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.borderRadius = '50%';
+                img.style.objectFit = 'cover';
+                img.onerror = function() {
+                    const initial = (userData.name || userData.email || userData.discordUsername || 'U').charAt(0).toUpperCase();
+                    userAvatar.textContent = initial;
+                    userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+                };
+                userAvatar.innerHTML = '';
+                userAvatar.appendChild(img);
+            } else if (userAvatar) {
+                const initial = (userData.name || userData.email || userData.discordUsername || 'U').charAt(0).toUpperCase();
+                userAvatar.textContent = initial;
+                userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+            }
+            
+            // Set name
+            const displayName = userData.name || userData.discordUsername || userData.email?.split('@')[0] || 'User';
+            if (userName) userName.textContent = displayName;
+        }
+
+        // Check auth
+        function checkAuth() {
+            const userData = localStorage.getItem('pathgen_user');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    showUserInfo(user);
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                }
+            }
+        }
+
+        // Check auth on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+        });
+
+        // Hero text variations
+        const pricingHeroVariations = [
+            {
+                title: "Choose Your Plan",
+                subtitle: "Get 50% off on the 1st year, or try it for free. Build your perfect AI coaching experience with customizable add-ons."
+            },
+            {
+                title: "Start Your Journey",
+                subtitle: "Unlock the full potential of PathGen AI with our flexible pricing. Mix and match features to create your ideal coaching setup."
+            },
+            {
+                title: "Build Your Perfect Coach",
+                subtitle: "Customize your AI coaching experience with optional add-ons. Start with the base plan and add features as you need them."
+            }
+        ];
+
+        let pricingHeroIndex = 0;
+
+        function cyclePricingHeroText() {
+            pricingHeroIndex = (pricingHeroIndex + 1) % pricingHeroVariations.length;
+            const variation = pricingHeroVariations[pricingHeroIndex];
+
+            const titleEl = document.getElementById('pricingHeroTitle');
+            const subtitleEl = document.getElementById('pricingHeroSubtitle');
+
+            if (titleEl && subtitleEl) {
+                // Fade out
+                titleEl.style.transition = 'opacity 0.4s ease';
+                subtitleEl.style.transition = 'opacity 0.4s ease';
+                titleEl.style.opacity = '0';
+                subtitleEl.style.opacity = '0';
+
+                setTimeout(() => {
+                    titleEl.textContent = variation.title;
+                    subtitleEl.textContent = variation.subtitle;
+
+                    // Fade in
+                    titleEl.style.opacity = '1';
+                    subtitleEl.style.opacity = '1';
+                }, 400);
+            }
+        }
+
+        // Cycle hero text every 10 seconds
+        if (document.getElementById('pricingHeroTitle')) {
+            setInterval(cyclePricingHeroText, 10000);
+        }
+
+        // Pricing functionality
+        const BASE_PRICE = 6.99;
+        const toggles = document.querySelectorAll('.toggle-input');
+        const totalPriceEl = document.getElementById('totalPrice');
+        const priceOldEl = document.getElementById('priceOld');
+
+        function updatePrice() {
+            let total = BASE_PRICE; // Base $6.99 always included
+            const addons = [];
+
+            toggles.forEach(toggle => {
+                if (toggle.checked) {
+                    const price = parseFloat(toggle.dataset.price);
+                    const name = toggle.dataset.name;
+                    total += price;
+                    addons.push(name);
+                }
+            });
+
+            // Update display
+            totalPriceEl.textContent = total.toFixed(2);
+            priceOldEl.textContent = '$' + (total * 2).toFixed(2); // "50% off" effect
+
+            // Store selection
+            localStorage.setItem('pathgenPlan', JSON.stringify({
+                total: total.toFixed(2),
+                base: 'Smart AI Coach ($6.99)',
+                addons: addons
+            }));
+        }
+
+        // Add event listeners
+        toggles.forEach(toggle => {
+            toggle.addEventListener('change', updatePrice);
+        });
+
+        // Load previous selection
+        const savedPlan = localStorage.getItem('pathgenPlan');
+        if (savedPlan) {
+            const plan = JSON.parse(savedPlan);
+            if (plan.addons) {
+                toggles.forEach(toggle => {
+                    if (plan.addons.includes(toggle.dataset.name)) {
+                        toggle.checked = true;
+                    }
+                });
+            }
+        }
+        
+        // Initial price
+        updatePrice();
+
+        function startSubscription() {
+            const total = totalPriceEl.textContent;
+            const addons = [];
+            
+            toggles.forEach(toggle => {
+                if (toggle.checked) {
+                    const price = parseFloat(toggle.dataset.price);
+                    addons.push(`${toggle.dataset.name} (+$${price.toFixed(2)}/mo)`);
+                }
+            });
+
+            // Store subscription plan
+            localStorage.setItem('pathgenSubscription', JSON.stringify({
+                type: 'paid',
+                total: `$${total}/mo`,
+                base: 'Smart AI Coach ($6.99)',
+                addons: addons.length > 0 ? addons : 'None',
+                startDate: new Date().toISOString()
+            }));
+
+            console.log('Upgrade:', {
+                total: `$${total}/mo`,
+                base: 'Smart AI Coach ($6.99)',
+                addons: addons.length > 0 ? addons : 'None'
+            });
+            
+            // Redirect to chat page
+            window.location.href = '/chat.html';
+        }
+
+        function startTrial() {
+            // Mark as trial user
+            localStorage.setItem('pathgenTrial', JSON.stringify({
+                startDate: new Date().toISOString(),
+                trialDays: 7
+            }));
+
+            // Store subscription plan as trial
+            localStorage.setItem('pathgenSubscription', JSON.stringify({
+                type: 'trial',
+                startDate: new Date().toISOString(),
+                trialDays: 7
+            }));
+            
+            console.log('Starting free trial');
+            
+            // Redirect to chat page
+            window.location.href = '/chat.html';
+        }
+
+    </script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+</body>
+</html>
+

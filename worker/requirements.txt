@@ -1,0 +1,10 @@
+flask
+whisperx
+boto3
+firebase-admin
+axios
+python-dotenv
+torch
+torchvision
+torchaudio
+openai

@@ -1,0 +1,14 @@
+# Twitter scraping dependencies
+# Choose one method:
+
+# Option 1: snscrape (recommended - free, no API needed)
+snscrape>=0.7.0
+
+# Option 2: twscrape (requires Twitter accounts)
+# twscrape>=0.7.0
+
+# Option 3: Scweet (uses Selenium/Playwright)
+# scweet>=1.7.0
+# selenium>=4.0.0
+# playwright>=1.40.0
+

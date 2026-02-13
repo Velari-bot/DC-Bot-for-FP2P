@@ -1,0 +1,25 @@
+How to play on high ping
+
+Firstly - Basically, build slower and don't play like a fast low ping player as the whole atmosphere is delayed.
+
+You have 50/50 chance to take walls from the opponent (and vice versa) if you play under 150 ping, as the build re-place time happens 150ms after the build is destroyed. Therefore, try your best to meet this 150 ping threshold to make it a better and fairer experience for yourself by maintaining good practices (Not Uploading HEAVY files and downloading stuff, running multiple devices on connection when not needed or they are idle, using Ethernet instead of wireless connection, sitting close to the router rather than a whole room or the other side of the house).
+
+Boxes. Make a lot of boxes to confuse the enemy and space your opponent from you and gain info and keep your eyes on the enemy and ready for a hit and try to prefire them as they push you. Keep reboxing and prefiring.
+
+Cope. Whether you like it or not, you're gonna have to deal with the high ping. You have to know what you can and can't do.
+
+Things you can't do:
+- Take walls
+- Hold walls (this is why you prefire and rebox)
+- Do Reaction peeks. Reaction peeks are when you edit something and walk into the peak then shoot and reset. You won't be able to reset the wall fast enough with your ping.
+- Edit and reset to prefire. Prefiring isn't just waiting for them to break a wall, then shooting, you can also make the wall weak and make them shoot by editing the wall and quickly resetting. You can't do this because your ping will make the reset go very slow, allowing them to shoot you before you can reset.
+
+What you can do:
+- Rebox. We went over this above, you need to just go for prefires and keep making boxes so you can get chip damage.
+- Disengage. Disengaging is usually an option. It is very hard this season, but your chances of disengaging won't change with 0 ping or 100 ping.
+
+Outside of real games:
+You can emulate the poor scenarios by practicing on a distant creative server and this increase of ping prepares you to practice the exact same way in stacked tournaments and scrims. This will force you to adapt your in game style in creative for effective practice and transfer.
+
+If your high ping your best option in competitive Fortnite is to become an IGL and get your game sense as good as possible mainly because it's hard to fight and become a flashy fragger on 40+ ping.
+

@@ -1,0 +1,26 @@
+{
+  "name": "@pathgen/ui",
+  "version": "1.0.0",
+  "description": "Pathgen UI components and design system",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "keywords": ["ui", "components", "logo", "pathgen"],
+  "author": "Pathgen Team",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "react": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  }
+}
+

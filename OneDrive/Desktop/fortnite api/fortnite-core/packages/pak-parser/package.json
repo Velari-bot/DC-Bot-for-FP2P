@@ -1,0 +1,20 @@
+{
+  "name": "@fortnite-core/pak-parser",
+  "version": "1.0.0",
+  "description": "Pak file parser for Fortnite",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@fortnite-core/database": "*",
+    "@agc93/pak-reader": "*",
+    "axios": "^1.6.5",
+    "fs-extra": "^11.2.0",
+    "dotenv": "^16.3.1"
+  }
+}
+

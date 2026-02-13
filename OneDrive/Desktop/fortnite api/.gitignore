@@ -1,0 +1,117 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+**/dist/
+.next/
+**/.next/
+build/
+**/build/
+
+# Environment files
+.env
+.env.local
+.env*.local
+.env.production
+**/.env
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Data
+data/replays/*
+!data/replays/.gitkeep
+data/results/*
+!data/results/.gitkeep
+uploads/
+**/uploads/
+
+# Docker
+.docker/
+
+# C# specific
+**/bin/
+**/obj/
+**/*.user
+**/*.suo
+**/*.sln.docstates
+
+# TypeScript
+*.tsbuildinfo
+**/*.tsbuildinfo
+
+# Sensitive files with secrets
+pathgen-v2-firebase-adminsdk*.json
+**/*firebase-adminsdk*.json
+GMAIL_SETUP_COMPLETE.md
+fix-oauth-access.md
+test-gmail*.ps1
+**/STRIPE-*.md
+**/STRIPE_*.md
+UPDATE_STRIPE_LIVE_KEYS.md
+QUICK-START-FIREBASE-FUNCTIONS.md
+START-HERE-FIREBASE-FUNCTIONS.md
+STRIPE-SETUP-COMPLETE.md
+setup-firebase-functions.ps1
+FIREBASE-FUNCTIONS-*.md
+**/add-*-stripe*.ps1
+**/add-stripe-*.ps1
+set-stripe-secrets.ps1
+
+# System directories (Windows)
+AppData/
+Cookies/
+Documents/My Music/
+Documents/My Pictures/
+Documents/My Videos/
+Local Settings/
+My Documents/
+NetHood/
+PrintHood/
+Recent/
+SendTo/
+Start Menu/
+Templates/
+Saved Games/
+Searches/
+Videos/
+blenderkit_data/
+NTUSER.DAT*
+ntuser.ini
+source/
+
+# Desktop files outside repo
+../*.mp4
+../*.mkv
+../*.webm
+../*.psd
+../*.png
+../*.zip
+../*.lnk
+../*.url
+../*.lua
+../desktop.ini
+../**/Betaflight Configurator.lnk
+../**/Cursor.lnk
+../**/Docker Desktop.lnk
+../**/Downloads - Shortcut.lnk
+../**/ExpressLRS Configurator.lnk
+../**/Riot Client.lnk
+../**/Wooting Double Movement.lnk

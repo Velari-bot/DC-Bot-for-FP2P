@@ -1,0 +1,1981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathgen v2 - AI Coaches for Every Fortnite Player</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Logo.png">
+    <link rel="shortcut icon" type="image/png" href="/Logo.png">
+    <link rel="apple-touch-icon" href="/Logo.png">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pathgen.dev/">
+    <meta property="og:title" content="Pathgen v2 - AI Coaches for Every Fortnite Player">
+    <meta property="og:description" content="Your personal Fortnite coach — powered by AI. PathGen analyzes your gameplay, builds training routines, and gives you real-time insights to help you play smarter and climb faster.">
+    <meta property="og:image" content="https://pathgen.dev/embed.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://pathgen.dev/">
+    <meta name="twitter:title" content="Pathgen v2 - AI Coaches for Every Fortnite Player">
+    <meta name="twitter:description" content="Your personal Fortnite coach — powered by AI. PathGen analyzes your gameplay, builds training routines, and gives you real-time insights to help you play smarter and climb faster.">
+    <meta name="twitter:image" content="https://pathgen.dev/embed.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/ads.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0A0A0A;
+            color: #FFFFFF;
+            overflow-x: hidden;
+        }
+
+        /* Urgent Banner */
+        .urgent-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+            color: #ffffff;
+            text-align: center;
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .urgent-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.6), rgba(59, 130, 246, 0.6), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .urgent-banner-icon {
+            color: #8B5CF6;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .urgent-banner-text {
+            color: #e5e7eb;
+        }
+        
+        .urgent-banner-text strong {
+            color: #A78BFA;
+            font-weight: 600;
+        }
+
+        .urgent-banner-link {
+            color: #4f8cff;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 4px;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid transparent;
+        }
+
+        .urgent-banner-link:hover {
+            color: #3b7ce0;
+            border-bottom-color: #3b7ce0;
+        }
+
+        /* Header with Pill Nav Bar */
+        .header {
+            position: fixed;
+            top: 52px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            transition: top 0.3s ease;
+        }
+        
+        /* Adjust header when banner is hidden */
+        .header.no-banner {
+            top: 24px;
+        }
+
+        .nav {
+            backdrop-filter: blur(16px);
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 
+                        0 0 0 1px rgba(255, 255, 255, 0.03),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 0 8px;
+            margin-right: 4px;
+        }
+
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .logo-icon svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin: 0 8px;
+        }
+
+        .nav-link {
+            color: #A0A0A0;
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 6px 14px;
+            border-radius: 25px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link.active {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link .caret {
+            font-size: 8px;
+            margin-left: 1px;
+            opacity: 0.7;
+        }
+
+        .nav-link.external::after {
+            content: '↗';
+            font-size: 10px;
+            opacity: 0.6;
+            margin-left: 2px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-cta {
+            padding: 6px 18px;
+            background: #0A0A0A;
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            border-radius: 50px;
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .nav-cta:hover {
+            background: #151515;
+            border-color: rgba(139, 92, 246, 0.8);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+        }
+
+        .nav-cta::after {
+            content: '→';
+            font-size: 14px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 12px 4px 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            margin-left: 8px;
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+        }
+
+        /* Dropdowns */
+        .dropdown { position: relative; }
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            min-width: 220px;
+            background: rgba(15, 15, 15, 0.98);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+                        0 0 0 1px rgba(255, 255, 255, 0.05);
+            opacity: 0; visibility: hidden; transform: translateY(-10px);
+            transition: all 0.2s ease; z-index: 200;
+        }
+        .dropdown-menu.show { opacity:1; visibility:visible; transform: translateY(0); }
+        .dropdown-item {
+            display:flex; align-items:center; gap:12px;
+            padding:10px 14px; border-radius:10px; color:#d1d5db;
+            font-size:14px; cursor:pointer; transition:all 0.2s ease; text-decoration:none;
+        }
+        .dropdown-item:hover { background: rgba(79, 140, 255, 0.1); color:#fff; }
+        .dropdown-item-icon { font-size:16px; width:20px; }
+        .dropdown-divider { height:1px; background:rgba(255,255,255,0.1); margin:6px 0; }
+        .dropdown-item.danger { color:#ef4444; }
+        .dropdown-item.danger:hover { background: rgba(239,68,68,0.1); }
+        .dropdown-item.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .dropdown-item.locked:hover {
+            background: transparent;
+            color: #6b7280;
+        }
+        #featuresDropdown { left:0; right:auto; }
+
+        /* Hero Section */
+        .hero { min-height: 100vh; display:flex; align-items:center; justify-content:center; position:relative; padding:140px 48px 100px; overflow:hidden; }
+        .hero-container { max-width:1400px; width:100%; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; position:relative; z-index:10; }
+        .hero-left { position:relative; } .hero-right{ position:relative; }
+
+        /* AI Coach Interface Mockup - Matching chat.html style */
+        .ai-coach-mockup {
+            background:#000000; border:1px solid rgba(255,255,255,0.1); border-radius:20px; padding:0;
+            box-shadow:0 30px 100px rgba(0,0,0,0.8); position:relative; overflow:hidden;
+            transform: translateY(40px); opacity:0; transition: all 1s cubic-bezier(0.4,0,0.2,1);
+            max-width:420px; width:100%; height:600px; display:flex; flex-direction:column;
+        }
+        .ai-coach-mockup.animate-in { transform: translateY(0); opacity:1; }
+        .mockup-header{ display:flex; align-items:center; gap:12px; padding:20px; border-bottom:1px solid rgba(255,255,255,0.1); background:rgba(10,10,10,0.8); }
+        .mockup-avatar{ width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+        .mockup-avatar svg{ width:100%; height:100%; display:block; }
+        .mockup-title{ font-size:1rem; font-weight:600; color:#FFFFFF; }
+        .mockup-status{ font-size:0.75rem; color:#10B981; margin-left:auto; }
+        .mockup-chat{ flex:1; padding:20px; overflow-y:auto; display:flex; flex-direction:column; gap:20px; background:#000000; }
+        .mockup-message{ display:flex; margin-bottom:0; opacity:0; transform: translateY(20px); animation: messageAppear 0.4s ease forwards; }
+        @keyframes messageAppear { to { opacity:1; transform: translateY(0);} }
+        .mockup-message.user{ justify-content:flex-end; } .mockup-message.ai{ justify-content:flex-start; }
+        .mockup-message-bubble{ max-width:75%; padding:14px 18px; border-radius:20px; line-height:1.5; font-size:0.875rem; box-shadow:0 2px 8px rgba(0,0,0,0.3); }
+        .mockup-message.user .mockup-message-bubble{ background:#4f8cff; color:white; border-bottom-right-radius:4px; }
+        .mockup-message.ai .mockup-message-bubble{ background:#1a1a1a; color:white; border-bottom-left-radius:4px; border:1px solid rgba(255,255,255,0.1); }
+        .typing-indicator{ display:flex; gap:6px; padding:12px 16px; align-self:flex-start; background:#1a1a1a; border-radius:20px; border-bottom-left-radius:4px; margin-top:8px; }
+        .typing-dot{ width:8px; height:8px; background:#4f8cff; border-radius:50%; animation: typing 1.4s infinite; }
+        .typing-dot:nth-child(2){ animation-delay:0.2s; } .typing-dot:nth-child(3){ animation-delay:0.4s; }
+        @keyframes typing{ 0%,60%,100%{ transform: translateY(0); opacity:0.5;} 30%{ transform: translateY(-10px); opacity:1;} }
+        .mockup-chat::-webkit-scrollbar{ width:4px; } .mockup-chat::-webkit-scrollbar-track{ background:transparent; } .mockup-chat::-webkit-scrollbar-thumb{ background:rgba(139,92,246,0.3); border-radius:2px; }
+
+        /* Purple-Blue Gradient Glow (like Lemni) */
+        .hero-glow {
+            position: absolute;
+            bottom: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1000px;
+            height: 1000px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, rgba(59, 130, 246, 0.15) 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+            filter: blur(60px);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 880px;
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 28px;
+            color: #FFFFFF;
+            letter-spacing: -0.03em;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #A0A0A0;
+            line-height: 1.7;
+            margin-bottom: 48px;
+            max-width: 680px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            animation: fadeInUp 1s ease;
+        }
+
+        /* Primary Button with Purple-Blue Glow (Pill-Shaped) */
+        .btn-primary {
+            padding: 10px 28px;
+            background: #0A0A0A;
+            color: #FFFFFF;
+            border: 1.5px solid transparent;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            position: relative;
+            background-clip: padding-box;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50px;
+            padding: 1.5px;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50px;
+            background: radial-gradient(circle at center, rgba(139, 92, 246, 0.5), rgba(59, 130, 246, 0.3));
+            filter: blur(20px);
+            opacity: 0.6;
+            z-index: -1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:hover::after {
+            opacity: 1;
+            filter: blur(30px);
+        }
+
+        .btn-secondary {
+            padding: 10px 28px;
+            background: transparent;
+            color: #FFFFFF;
+            border: 1px solid #2a2a2a;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            border-color: #3a3a3a;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        /* Background Dashboard Previews (Angled like Lemni) */
+        .dashboard-previews {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .preview-card {
+            position: absolute;
+            background: #151515;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 24px;
+            width: 340px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
+            opacity: 0.4;
+        }
+
+        .preview-left {
+            left: 8%;
+            top: 22%;
+            transform: rotate(-8deg) perspective(1000px) rotateY(8deg);
+        }
+
+        .preview-center-left {
+            left: 18%;
+            top: 35%;
+            transform: rotate(-3deg) perspective(1000px) rotateY(5deg);
+            opacity: 0.25;
+        }
+
+        .preview-right {
+            right: 8%;
+            top: 28%;
+            transform: rotate(8deg) perspective(1000px) rotateY(-8deg);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            background: #2a2a2a;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .card-icon svg {
+            width: 20px;
+            height: 20px;
+            display: block;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            color: #C5C5C5;
+            font-weight: 600;
+        }
+
+        .card-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            color: #A0A0A0;
+            font-size: 0.9rem;
+        }
+
+        .card-menu-item.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: #FFFFFF;
+        }
+
+        .menu-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .avatar:has(img) {
+            background: transparent !important;
+        }
+
+        .avatar-purple { background: #8B5CF6; }
+        .avatar-orange { background: #F59E0B; }
+        .avatar-pink { background: #EC4899; }
+
+        .message-item {
+            display: flex;
+            align-items: start;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .message-item .avatar {
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+        }
+
+        .message-name {
+            font-size: 0.85rem;
+            color: #FFFFFF;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .message-preview {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .nav-center {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .hero-ctas {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .dashboard-previews {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo span {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* AI Coaching Experience Section */
+        .ai-coaching-section {
+            padding: 120px 48px;
+            background: #0A0A0A;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-coaching-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        @keyframes subtleFloat {
+            0%, 100% {
+                transform: translateY(0) rotate(-2deg);
+            }
+            50% {
+                transform: translateY(-8px) rotate(-2deg);
+            }
+        }
+
+        .ai-coaching-video-wrapper {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.8);
+            aspect-ratio: 16 / 9;
+            background: #000000;
+            width: 100%;
+            min-height: 400px;
+            transform: rotate(-2deg);
+            animation: subtleFloat 4s ease-in-out infinite;
+        }
+
+        .ai-coaching-video-wrapper video,
+        .ai-coaching-video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: none;
+            display: block;
+        }
+
+        .ai-coaching-content {
+            text-align: left;
+        }
+
+        .ai-coaching-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 32px;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .ai-coaching-title .highlight {
+            color: #8B5CF6;
+        }
+
+        .ai-coaching-text {
+            font-size: 1.15rem;
+            color: #D1D5DB;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        @media (max-width: 968px) {
+            .ai-coaching-section {
+                padding: 80px 24px;
+            }
+
+            .ai-coaching-container {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+
+            .ai-coaching-video-wrapper {
+                order: 1;
+            }
+
+            .ai-coaching-content {
+                order: 2;
+                text-align: center;
+            }
+
+            .ai-coaching-title {
+                font-size: 2.5rem;
+            }
+
+            .ai-coaching-text {
+                font-size: 1.05rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .ai-coaching-section {
+                padding: 60px 16px;
+            }
+
+            .ai-coaching-container {
+                gap: 32px;
+            }
+
+            .ai-coaching-title {
+                font-size: 2rem;
+            }
+
+            .ai-coaching-text {
+                font-size: 1rem;
+            }
+        }
+
+        /* Discord Section */
+        .discord-section {
+            padding: 120px 48px;
+            background: #0A0A0A;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .discord-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .discord-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .discord-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .discord-member-count {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #8B5CF6;
+            margin-bottom: 8px;
+        }
+
+        .discord-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #5865F2;
+            border-radius: 12px;
+            color: white;
+            font-size: 24px;
+        }
+
+        .discord-images-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            position: relative;
+            perspective: 1200px;
+        }
+
+        .discord-image-card {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s ease;
+            transform-style: preserve-3d;
+            background: #000;
+        }
+
+        /* 3D Pane Effects - Subtle angles for each card */
+        .discord-image-card:nth-child(1) {
+            transform: perspective(1200px) rotateY(-3deg) rotateX(2deg) translateZ(0);
+        }
+
+        .discord-image-card:nth-child(2) {
+            transform: perspective(1200px) rotateY(1deg) rotateX(-1deg) translateZ(10px);
+        }
+
+        .discord-image-card:nth-child(3) {
+            transform: perspective(1200px) rotateY(3deg) rotateX(1deg) translateZ(0);
+        }
+
+        .discord-image-card:nth-child(4) {
+            transform: perspective(1200px) rotateY(-2deg) rotateX(-2deg) translateZ(-5px);
+        }
+
+        .discord-image-card:nth-child(5) {
+            transform: perspective(1200px) rotateY(0deg) rotateX(2deg) translateZ(8px);
+        }
+
+        .discord-image-card:nth-child(6) {
+            transform: perspective(1200px) rotateY(2deg) rotateX(-1deg) translateZ(0);
+        }
+
+        .discord-image-card:hover {
+            transform: perspective(1200px) rotateY(0deg) rotateX(0deg) translateZ(30px) scale(1.03);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.4);
+            z-index: 10;
+        }
+
+        .discord-image-card iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .discord-cta-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .discord-cta-button {
+            background: linear-gradient(135deg, #5865F2 0%, #4752C4 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 8px 24px rgba(88, 101, 242, 0.4);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .discord-cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(88, 101, 242, 0.5);
+            background: linear-gradient(135deg, #4752C4 0%, #3B45A3 100%);
+        }
+
+        .discord-cta-button svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .discord-analysis-text {
+            text-align: center;
+            margin-top: 48px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .discord-analysis-text p {
+            font-size: 1.15rem;
+            color: #E0E0E0;
+            line-height: 1.7;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        @media (max-width: 968px) {
+            .discord-section {
+                padding: 80px 24px;
+            }
+
+            .discord-title {
+                font-size: 2rem;
+            }
+
+            .discord-member-count {
+                font-size: 2.5rem;
+            }
+
+            .discord-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 20px;
+            }
+
+            .discord-images-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(3, 1fr);
+                gap: 16px;
+                perspective: 800px;
+            }
+
+            .discord-image-card:nth-child(n) {
+                transform: perspective(800px) rotateY(0deg) rotateX(0deg) translateZ(0);
+            }
+
+            .discord-image-card:hover {
+                transform: perspective(800px) rotateY(0deg) rotateX(0deg) translateZ(20px) scale(1.03);
+            }
+
+            .discord-cta-button {
+                padding: 14px 28px;
+                font-size: 1rem;
+            }
+
+            .discord-analysis-text {
+                margin-top: 32px;
+            }
+
+            .discord-analysis-text p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .discord-section {
+                padding: 60px 16px;
+            }
+
+            .discord-title {
+                font-size: 1.75rem;
+            }
+
+            .discord-member-count {
+                font-size: 2rem;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .discord-images-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(6, 1fr);
+                perspective: 600px;
+            }
+
+            .discord-image-card:nth-child(n) {
+                transform: perspective(600px) rotateY(0deg) rotateX(0deg) translateZ(0);
+            }
+
+            .discord-image-card:hover {
+                transform: perspective(600px) rotateY(0deg) rotateX(0deg) translateZ(10px) scale(1.02);
+            }
+
+            .discord-cta-container {
+                position: relative;
+                top: auto;
+                left: auto;
+                transform: none;
+                margin-top: 24px;
+            }
+
+            .discord-cta-button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .discord-analysis-text {
+                margin-top: 24px;
+            }
+
+            .discord-analysis-text p {
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Scroll Indicator Arrow */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            pointer-events: none;
+        }
+
+        .scroll-indicator.visible {
+            opacity: 0.4;
+            visibility: visible;
+        }
+
+        .scroll-indicator:hover {
+            opacity: 0.6;
+        }
+
+        .scroll-arrow {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.5);
+            animation: scrollBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollBounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(6px);
+            }
+        }
+
+        .scroll-arrow svg {
+            width: 100%;
+            height: 100%;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+    </style>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2357025365884471"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- Launch Warning Banner -->
+    <div class="urgent-banner" id="launchWarningBanner">
+        <span class="urgent-banner-icon">🔒</span>
+        <span class="urgent-banner-text">Full website access will be available on <strong>December 12, 2025</strong>. Until then, you can explore the homepage.</span>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <!-- Pathgen Monochrome P Mark -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img">
+                        <defs>
+                            <filter id="sparkleBlur">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+                            </filter>
+                        </defs>
+                        
+                        <!-- P Glyph with Facets -->
+                        <g id="glyph">
+                            <rect x="20" y="20" width="16" height="60" rx="8" ry="8" fill="#FFFFFF"/>
+                            <path d="M 36 20 H 50 A 24 24 0 0 1 50 58 H 36 V 20 Z" fill="#FFFFFF"/>
+                            <path d="M 45 28 L 58 32 L 54 40 L 42 38 Z" fill="#000000" opacity="0.3"/>
+                            <path d="M 44 42 L 56 46 L 48 52 Z" fill="#000000" opacity="0.25"/>
+                            <path d="M 38 26 L 42 24 L 42 34 L 38 36 Z" fill="#000000" opacity="0.2"/>
+                        </g>
+                        
+                        <!-- Cosmic Sparkles -->
+                        <g id="sparkles" opacity="0.85">
+                            <circle cx="64" cy="26" r="2.5" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-1"/>
+                            <circle cx="70" cy="38" r="1.8" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-2"/>
+                            <circle cx="52" cy="35" r="1.2" fill="#FFFFFF" opacity="0.8" filter="url(#sparkleBlur)" class="sparkle-3"/>
+                            <circle cx="58" cy="28" r="0.9" fill="#FFFFFF" opacity="0.7" class="sparkle-4"/>
+                            <circle cx="24" cy="48" r="1.5" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-5"/>
+                            <circle cx="60" cy="50" r="1.0" fill="#FFFFFF" opacity="0.6" class="sparkle-6"/>
+                        </g>
+                    </svg>
+                </div>
+                <span>Pathgen v2</span>
+            </a>
+            
+            <div class="nav-center">
+                <a href="/docs.html" class="nav-link">Docs</a>
+                <div class="dropdown">
+                    <a href="#" class="nav-link" onclick="toggleDropdown('features', event)">
+                        Features
+                        <span class="caret">▼</span>
+                    </a>
+                    <div class="dropdown-menu" id="featuresDropdown">
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Coach</span>
+                        </a>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">📊</span>
+                            <span>Competitive Insights</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">🎤</span>
+                            <span>Voice</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <a href="/cih-coaching.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">🎯</span>
+                            <span>CIH Coaching</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/docs.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">📚</span>
+                            <span>Documentation</span>
+                        </a>
+                    </div>
+                </div>
+                <a href="/cih-coaching.html" class="nav-link">CIH Coaching</a>
+                <a href="/nagc-dropmaps.html" class="nav-link">NAGC Drop Maps</a>
+            </div>
+
+            <div class="nav-right">
+                <a href="/subscribe.html" class="nav-link">Pricing</a>
+                <a href="/login.html" class="nav-cta" id="navCTA" onclick="window.location.href='/login.html'; return true;">Try For Free</a>
+                <div class="dropdown">
+                    <div class="user-info" id="userInfo" onclick="toggleDropdown('settings', event)" style="display: none;">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <span class="user-name" id="userName">User</span>
+                    </div>
+                    <div class="dropdown-menu" id="settingsDropdown">
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Chat</span>
+                        </a>
+                        <a href="/tournaments.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/support.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">📧</span>
+                            <span>Support</span>
+                        </a>
+                        <a href="/faq.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">❓</span>
+                            <span>FAQ</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/settings.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">⚙️</span>
+                            <span>Settings</span>
+                        </a>
+                        <a href="/subscribe.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💳</span>
+                            <span>Upgrade to Pro</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item danger" onclick="logout()">
+                            <span class="dropdown-item-icon">🚪</span>
+                            <span>Logout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Purple-Blue Gradient Glow -->
+        <div class="hero-glow"></div>
+
+        <!-- Background Dashboard Previews -->
+        <div class="dashboard-previews">
+            <!-- Left Preview Card -->
+            <div class="preview-card preview-left">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <!-- Pathgen Monochrome P Mark -->
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" style="width: 20px; height: 20px;">
+                            <defs>
+                                <filter id="previewSparkleBlur">
+                                    <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+                                </filter>
+                            </defs>
+                            
+                            <!-- P Glyph with Facets -->
+                            <g id="glyph">
+                                <rect x="20" y="20" width="16" height="60" rx="8" ry="8" fill="#FFFFFF"/>
+                                <path d="M 36 20 H 50 A 24 24 0 0 1 50 58 H 36 V 20 Z" fill="#FFFFFF"/>
+                                <path d="M 45 28 L 58 32 L 54 40 L 42 38 Z" fill="#000000" opacity="0.3"/>
+                                <path d="M 44 42 L 56 46 L 48 52 Z" fill="#000000" opacity="0.25"/>
+                                <path d="M 38 26 L 42 24 L 42 34 L 38 36 Z" fill="#000000" opacity="0.2"/>
+                            </g>
+                            
+                            <!-- Cosmic Sparkles -->
+                            <g id="sparkles" opacity="0.85">
+                                <circle cx="64" cy="26" r="2.5" fill="#FFFFFF" filter="url(#previewSparkleBlur)" class="sparkle-1"/>
+                                <circle cx="70" cy="38" r="1.8" fill="#FFFFFF" filter="url(#previewSparkleBlur)" class="sparkle-2"/>
+                                <circle cx="52" cy="35" r="1.2" fill="#FFFFFF" opacity="0.8" filter="url(#previewSparkleBlur)" class="sparkle-3"/>
+                                <circle cx="58" cy="28" r="0.9" fill="#FFFFFF" opacity="0.7" class="sparkle-4"/>
+                                <circle cx="24" cy="48" r="1.5" fill="#FFFFFF" filter="url(#previewSparkleBlur)" class="sparkle-5"/>
+                                <circle cx="60" cy="50" r="1.0" fill="#FFFFFF" opacity="0.6" class="sparkle-6"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="card-title">Pathgen Dashboard</div>
+                </div>
+                <div class="card-menu-item active">
+                    <div class="menu-icon">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"></path>
+                            <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z"></path>
+                        </svg>
+                    </div>
+                    <span>Chat</span>
+                </div>
+                <div class="card-menu-item">
+                    <div class="avatar avatar-orange">
+                        <img src="/kinch%20logo.jpg" alt="Kinch Analytics" onerror="this.style.display='none'; this.parentElement.textContent='K';" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    </div>
+                    <span>Kinch Analytics</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Data Sources</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Tournaments</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Settings</span>
+                </div>
+            </div>
+
+            <!-- Center-Left Preview (subtle) -->
+            <div class="preview-card preview-center-left">
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <div class="card-title">Analytics</div>
+                </div>
+                <div class="card-menu-item">
+                    <span>FNCS Stats</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Weapon Meta</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Player Data</span>
+                </div>
+            </div>
+
+            <!-- Right Preview Card -->
+            <div class="preview-card preview-right">
+                <div class="card-header">
+                    <div class="card-icon">📱</div>
+                    <div class="card-title">Live Updates</div>
+                </div>
+                <div class="message-item">
+                    <div class="avatar avatar-purple">
+                        <img src="/osirion.jpg" alt="Osirion" onerror="this.style.display='none'; this.parentElement.textContent='O';">
+                    </div>
+                    <div>
+                        <div class="message-name">Osirion</div>
+                        <div class="message-preview">Blinky fish removed from...</div>
+                    </div>
+                </div>
+                <div class="message-item">
+                    <div class="avatar avatar-orange">
+                        <img src="/kinch%20logo.jpg" alt="Kinch Analytics" onerror="this.style.display='none'; this.parentElement.textContent='K';">
+                    </div>
+                    <div>
+                        <div class="message-name">Kinch Analytics</div>
+                        <div class="message-preview">Eval #1 Final stats...</div>
+                    </div>
+                </div>
+                <div class="message-item">
+                    <div class="avatar avatar-pink">
+                        <img src="/fncr.jpg" alt="FN Comp Report" onerror="this.style.display='none'; this.parentElement.textContent='F';">
+                    </div>
+                    <div>
+                        <div class="message-name">FN Comp Report</div>
+                        <div class="message-preview">Tournament update...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="hero-container">
+            <div class="hero-left">
+                <div class="hero-content">
+                    <h1 class="hero-title" id="heroTitle">AI coaches for every Fortnite player.</h1>
+                    <p class="hero-subtitle" id="heroSubtitle">
+                        Get instant feedback on your gameplay, analyze replays, and improve faster with AI-powered coaching. 
+                        PathGen helps you identify mistakes and build better strategies.
+                    </p>
+
+                    <div style="margin-bottom: 24px; padding: 12px 20px; background: rgba(79, 140, 255, 0.1); border: 1px solid rgba(79, 140, 255, 0.3); border-radius: 12px; font-size: 14px; color: #9ca3af;">
+                        <strong style="color: #4f8cff;">500+ players</strong> using PathGen • <strong style="color: #4f8cff;">200+ matches</strong> analyzed today
+                    </div>
+
+                    <div class="hero-ctas">
+                        <button class="btn-primary" onclick="handleGetStarted()">
+                            Get Started
+                            <svg class="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </button>
+                        <a href="/tournaments.html" class="btn-secondary">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                                <circle cx="10" cy="10" r="5" fill="white"></circle>
+                            </svg>
+                            View Tournaments
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-right">
+                <div class="ai-coach-mockup" id="aiCoachMockup">
+                    <div class="mockup-header">
+                        <div class="mockup-avatar">
+                            <!-- Pathgen Monochrome P Mark -->
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img">
+                                <defs>
+                                    <filter id="mockupSparkleBlur">
+                                        <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+                                    </filter>
+                                </defs>
+                                
+                                <!-- P Glyph with Facets -->
+                                <g id="glyph">
+                                    <rect x="20" y="20" width="16" height="60" rx="8" ry="8" fill="#FFFFFF"/>
+                                    <path d="M 36 20 H 50 A 24 24 0 0 1 50 58 H 36 V 20 Z" fill="#FFFFFF"/>
+                                    <path d="M 45 28 L 58 32 L 54 40 L 42 38 Z" fill="#000000" opacity="0.3"/>
+                                    <path d="M 44 42 L 56 46 L 48 52 Z" fill="#000000" opacity="0.25"/>
+                                    <path d="M 38 26 L 42 24 L 42 34 L 38 36 Z" fill="#000000" opacity="0.2"/>
+                                </g>
+                                
+                                <!-- Cosmic Sparkles -->
+                                <g id="sparkles" opacity="0.85">
+                                    <circle cx="64" cy="26" r="2.5" fill="#FFFFFF" filter="url(#mockupSparkleBlur)" class="sparkle-1"/>
+                                    <circle cx="70" cy="38" r="1.8" fill="#FFFFFF" filter="url(#mockupSparkleBlur)" class="sparkle-2"/>
+                                    <circle cx="52" cy="35" r="1.2" fill="#FFFFFF" opacity="0.8" filter="url(#mockupSparkleBlur)" class="sparkle-3"/>
+                                    <circle cx="58" cy="28" r="0.9" fill="#FFFFFF" opacity="0.7" class="sparkle-4"/>
+                                    <circle cx="24" cy="48" r="1.5" fill="#FFFFFF" filter="url(#mockupSparkleBlur)" class="sparkle-5"/>
+                                    <circle cx="60" cy="50" r="1.0" fill="#FFFFFF" opacity="0.6" class="sparkle-6"/>
+                                </g>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="mockup-title">PathGen AI Coach</div>
+                            <div class="mockup-status">● Online</div>
+                        </div>
+                    </div>
+                    <div class="mockup-chat" id="mockupChat">
+                        <!-- Messages will be added dynamically -->
+                    </div>
+                    <div class="typing-indicator" id="typingIndicator" style="display: none; position: absolute; visibility: hidden;">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Coaching Experience Section -->
+    <section class="ai-coaching-section">
+        <div class="ai-coaching-container">
+            <div class="ai-coaching-video-wrapper">
+                <iframe src="https://www.youtube.com/embed/vMdcwibUpMw" title="AI Coaching Experience" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="ai-coaching-content">
+                <h2 class="ai-coaching-title">
+                    Enhanced <span class="highlight">AI</span> Coaching Experience
+                </h2>
+                <p class="ai-coaching-text">
+                    Our mission is to deliver a comprehensive personal development experience to our users, utilizing advanced AI technology to provide personalized coaching that's available around the clock, completely free of charge. Our dedicated development team works tirelessly to enhance the platform and introduce new features. Additionally, we have a vibrant community of users who are always ready to support one another, offering assistance and sharing valuable insights and strategies. To ensure a dynamic and engaging experience, we regularly update our AI models, coaching techniques, and introduce new improvement challenges.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Discord Section -->
+    <section class="discord-section">
+        <div class="discord-container">
+            <div class="discord-header">
+                <h2 class="discord-title">Stop Waiting, Start Improving</h2>
+                <div class="discord-member-count">
+                    <span>Join Others Improving Today!</span>
+                    <div class="discord-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="discord-images-grid">
+                <div class="discord-image-card">
+                    <iframe src="https://www.youtube.com/embed/vMdcwibUpMw" title="Can't IMPROVE in Fortnite? Let's fix that." frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="discord-image-card">
+                    <iframe src="https://www.youtube.com/embed/HZ03wr2CkQs" title="How To IMPROVE So FAST At Fortnite it feels like CHEATING!" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="discord-image-card">
+                    <iframe src="https://www.youtube.com/embed/vzUeZfbyK0s" title="How To Get BETTER at Fortnite In 1 Hour!" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="discord-image-card">
+                    <iframe src="https://www.youtube.com/embed/UTFre1gz91g" title="10 Build Moves You HAVE To Learn In Fortnite" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="discord-image-card">
+                    <iframe src="https://www.youtube.com/embed/pof2GENlBHg" title="How to INSTANTLY EDIT FASTER in FORTNITE!" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="discord-image-card">
+                    <iframe src="https://www.youtube.com/embed/jkNJczSjy4o" title="Best Warmup Routine to Improve Fighting Skill FAST" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="discord-cta-container">
+                    <a href="https://discord.gg/G8ph5P9HAw" target="_blank" class="discord-cta-button">
+                        Join Our Discord!
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="discord-analysis-text">
+                <p>Our insights are backed by analyzing hundreds of YouTube tutorials and Fortnite gameplay replays to bring you the most effective strategies.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator" id="scrollIndicator">
+        <div class="scroll-arrow">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+    <script src="/js/auth-guard.js"></script>
+
+    <script>
+        function checkAuth() {
+            const navCTA = document.getElementById('navCTA');
+            const userInfo = document.getElementById('userInfo');
+            
+            // Check both possible user storage locations
+            const user = localStorage.getItem('pathgen_user') || localStorage.getItem('discordUser');
+            if (user) {
+                try {
+                    const userData = JSON.parse(user);
+                    showUserInfo(userData);
+                    console.log('✅ User is logged in:', userData);
+                    
+                    // Ensure correct elements are visible/hidden
+                    if (navCTA) navCTA.style.display = 'none';
+                    if (userInfo) userInfo.style.display = 'flex';
+                    
+                    return true;
+                } catch (e) {
+                    console.error('❌ Error parsing user data:', e);
+                    // Show login button on error
+                    if (navCTA) navCTA.style.display = 'flex';
+                    if (userInfo) userInfo.style.display = 'none';
+                    return false;
+                }
+            } else {
+                console.log('❌ No user data found. Not logged in.');
+                // Ensure login button is shown when not logged in
+                if (navCTA) navCTA.style.display = 'flex';
+                if (userInfo) userInfo.style.display = 'none';
+            }
+            return false;
+        }
+
+        function debugAuth() {
+            const user = localStorage.getItem('pathgen_user');
+            const discordUser = localStorage.getItem('discordUser');
+            const loginMethod = localStorage.getItem('loginMethod');
+            
+            console.log('=== AUTH DEBUG ===');
+            console.log('Login Method:', loginMethod);
+            console.log('User Data:', user ? JSON.parse(user) : 'None');
+            console.log('Discord User:', discordUser ? JSON.parse(discordUser) : 'None');
+            console.log('==================');
+            
+            return {
+                loggedIn: !!user,
+                loginMethod,
+                userData: user ? JSON.parse(user) : null,
+                discordUser: discordUser ? JSON.parse(discordUser) : null
+            };
+        }
+        window.debugAuth = debugAuth;
+
+        function showUserInfo(userData) {
+            const navCTA = document.getElementById('navCTA');
+            const userInfo = document.getElementById('userInfo');
+            const userAvatar = document.getElementById('userAvatar');
+            const userName = document.getElementById('userName');
+
+            if (navCTA) navCTA.style.display = 'none';
+            if (userInfo) userInfo.style.display = 'flex';
+            
+            if (userData.discordAvatar && userAvatar) {
+                const img = document.createElement('img');
+                img.src = userData.discordAvatar;
+                img.alt = 'Avatar';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.borderRadius = '50%';
+                img.style.objectFit = 'cover';
+                img.onerror = function() {
+                    const initial = (userData.name || userData.email || userData.discordUsername || 'U').charAt(0).toUpperCase();
+                    userAvatar.textContent = initial;
+                    userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+                };
+                userAvatar.innerHTML = '';
+                userAvatar.appendChild(img);
+            } else if (userAvatar) {
+                const initial = (userData.name || userData.email || userData.discordUsername || 'U').charAt(0).toUpperCase();
+                userAvatar.textContent = initial;
+                userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+            }
+            
+            const displayName = userData.name || userData.discordUsername || userData.email?.split('@')[0] || 'User';
+            if (userName) userName.textContent = displayName;
+        }
+
+        function handleGetStarted() {
+            if (checkAuth()) {
+                window.location.href = '/chat.html';
+            } else {
+                window.location.href = '/login.html';
+            }
+        }
+
+        function toggleDropdown(type, event) {
+            if (event) event.preventDefault();
+            
+            const dropdowns = {
+                features: document.getElementById('featuresDropdown'),
+                settings: document.getElementById('settingsDropdown')
+            };
+            
+            const currentDropdown = dropdowns[type];
+            if (!currentDropdown) return;
+            
+            Object.entries(dropdowns).forEach(([key, dropdown]) => {
+                if (key !== type && dropdown) dropdown.classList.remove('show');
+            });
+            
+            currentDropdown.classList.toggle('show');
+            if (event) event.stopPropagation();
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('show'));
+            }
+        });
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('pathgen_user');
+                localStorage.removeItem('discordUser');
+                localStorage.removeItem('setupComplete');
+                window.location.href = '/login.html';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // Check auth status (but don't redirect - index.html is public)
+            const authStatus = checkAuth();
+            if (!authStatus) {
+                console.log('💡 Tip: Run debugAuth() in console to check authentication status');
+            }
+            
+            // Auth guard handles page access restrictions (including launch date check)
+            // Subscription checks are handled by individual pages/APIs
+        });
+
+        const heroVariations = [
+            { title: "AI coaches for every Fortnite player.", subtitle: "Get instant feedback on your gameplay, analyze replays, and improve faster with AI-powered coaching. PathGen helps you identify mistakes and build better strategies." },
+            { title: "Your personal Fortnite coach — powered by AI.", subtitle: "PathGen analyzes your gameplay, builds training routines, and gives you real-time insights to help you play smarter and climb faster." },
+            { title: "Train smarter. Play faster. Win more.", subtitle: "PathGen is your AI Fortnite coach — analyzing gameplay, finding mistakes, and building a custom path to improvement." },
+            { title: "AI coaching made personal.", subtitle: "PathGen lets creators and teams deploy their own Fortnite coaching agents, tailored to their playstyle — so every player can learn from the best." }
+        ];
+
+        let currentIndex = 0;
+        function cycleHeroText() {
+            currentIndex = (currentIndex + 1) % heroVariations.length;
+            const variation = heroVariations[currentIndex];
+            const titleEl = document.getElementById('heroTitle');
+            const subtitleEl = document.getElementById('heroSubtitle');
+            titleEl.style.transition = 'opacity 0.4s ease';
+            subtitleEl.style.transition = 'opacity 0.4s ease';
+            titleEl.style.opacity = '0';
+            subtitleEl.style.opacity = '0';
+            setTimeout(() => {
+                titleEl.textContent = variation.title;
+                subtitleEl.textContent = variation.subtitle;
+                titleEl.style.opacity = '1';
+                subtitleEl.style.opacity = '1';
+            }, 400);
+        }
+        setInterval(cycleHeroText, 10000);
+
+        document.addEventListener('mousemove', (e) => {
+            if (window.innerWidth < 968) return;
+            const { clientX, clientY } = e;
+            const { innerWidth, innerHeight } = window;
+            const xPercent = (clientX / innerWidth - 0.5) * 15;
+            const yPercent = (clientY / innerHeight - 0.5) * 15;
+            const left = document.querySelector('.preview-left');
+            const right = document.querySelector('.preview-right');
+            if (left) {
+                left.style.transform = `
+                    translateX(${xPercent}px) 
+                    translateY(${yPercent}px)
+                    rotate(-8deg) 
+                    perspective(1000px) 
+                    rotateY(8deg)
+                `;
+            }
+            if (right) {
+                right.style.transform = `
+                    translateX(${-xPercent}px) 
+                    translateY(${-yPercent}px)
+                    rotate(8deg) 
+                    perspective(1000px) 
+                    rotateY(-8deg)
+                `;
+            }
+        });
+
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -100px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                } else {
+                    entry.target.classList.remove('animate-in');
+                }
+            });
+        }, observerOptions);
+
+        // Prevent automatic scrolling on page load
+        // This prevents hash anchors, scrollTo, and other auto-scroll behaviors
+        (function() {
+            // Prevent hash scrolling
+            if (window.location.hash) {
+                // Remove hash without scrolling
+                const hash = window.location.hash;
+                history.replaceState(null, null, window.location.pathname + window.location.search);
+            }
+            
+            // Prevent any scrollTo calls on load
+            let scrollToBlocked = false;
+            const originalScrollTo = window.scrollTo;
+            window.scrollTo = function(...args) {
+                if (!scrollToBlocked) {
+                    originalScrollTo.apply(window, args);
+                }
+            };
+            
+            // After a short delay, allow normal scrolling
+            setTimeout(() => {
+                scrollToBlocked = false;
+                window.scrollTo = originalScrollTo;
+            }, 100);
+            
+            // Ensure page starts at top
+            window.scrollTo(0, 0);
+            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
+        })();
+
+        // Check if we should show the launch warning banner
+        const LAUNCH_DATE = new Date('2025-12-12T00:01:00Z');
+        const launchWarningBanner = document.getElementById('launchWarningBanner');
+        const header = document.querySelector('.header');
+        if (launchWarningBanner) {
+            const now = new Date();
+            if (now >= LAUNCH_DATE) {
+                // After launch, hide the banner
+                launchWarningBanner.style.display = 'none';
+                // Adjust header position
+                if (header) {
+                    header.classList.add('no-banner');
+                }
+            }
+        } else if (header) {
+            // If banner doesn't exist, adjust header
+            header.classList.add('no-banner');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Ensure we're at the top of the page
+            window.scrollTo(0, 0);
+            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
+            
+            const animateElements = document.querySelectorAll('.scroll-animate, .scroll-scale, .scroll-slide-left, .scroll-slide-right');
+            animateElements.forEach(el => observer.observe(el));
+
+            const mockup = document.getElementById('aiCoachMockup');
+            if (mockup) { setTimeout(() => { mockup.classList.add('animate-in'); }, 500); }
+
+            const mockupChat = document.getElementById('mockupChat');
+            const typingIndicator = document.getElementById('typingIndicator');
+            const conversations = [
+                [
+                    { type: 'user', text: 'Hey, can you help me improve my gameplay?', delay: 1000 },
+                    { type: 'ai', text: 'Absolutely! I\'d love to help you improve. Let me analyze your recent matches first.', delay: 2000 },
+                    { type: 'typing', delay: 1500 },
+                    { type: 'ai', text: 'I\'ve reviewed your last 5 matches. Your accuracy is solid at 87%, but I noticed some positioning issues in mid-game.', delay: 2000 },
+                    { type: 'user', text: 'What should I focus on?', delay: 2000 },
+                    { type: 'typing', delay: 1500 },
+                    { type: 'ai', text: 'Your Game Plan is Ready! 🎯\n\n1. Focus on high ground control\n2. Improve rotation timing\n3. Practice building under pressure', delay: 2000 }
+                ],
+                [
+                    { type: 'user', text: 'What are the best drop spots right now?', delay: 1000 },
+                    { type: 'typing', delay: 1500 },
+                    { type: 'ai', text: 'Based on current meta, I recommend:\n\n• Pleasant Park - Great loot, safe rotations\n• Tilted Towers - High action, good for practice\n• Lazy Lake - Balanced risk/reward', delay: 2500 },
+                    { type: 'user', text: 'Which one fits my playstyle?', delay: 2000 },
+                    { type: 'typing', delay: 1500 },
+                    { type: 'ai', text: 'Since you prefer aggressive play, Tilted Towers would help you improve combat skills. But for consistent placement, go with Pleasant Park.', delay: 2500 }
+                ],
+                [
+                    { type: 'user', text: 'How can I improve my building speed?', delay: 1000 },
+                    { type: 'typing', delay: 1500 },
+                    { type: 'ai', text: 'Building speed comes from muscle memory. Here\'s your training plan:\n\n1. Practice 90s for 15 min daily\n2. Work on ramp rushes\n3. Focus on smooth edits', delay: 2500 },
+                    { type: 'user', text: 'Any specific Creative maps?', delay: 2000 },
+                    { type: 'typing', delay: 1500 },
+                    { type: 'ai', text: 'Yes! Try Raider\'s Building Practice (5732-2211-4455). It has drills for all skill levels. Start with the basics and work your way up.', delay: 2500 }
+                ]
+            ];
+
+            let currentConversation = 0;
+            let conversationIndex = 0;
+            let isPlaying = false;
+
+            function addMessage(text, type) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `mockup-message ${type}`;
+                const bubble = document.createElement('div');
+                bubble.className = 'mockup-message-bubble';
+                const lines = text.split('\n');
+                lines.forEach((line, index) => {
+                    if (index > 0) bubble.appendChild(document.createElement('br'));
+                    bubble.appendChild(document.createTextNode(line));
+                });
+                messageDiv.appendChild(bubble);
+                mockupChat.appendChild(messageDiv);
+                setTimeout(() => { mockupChat.scrollTop = mockupChat.scrollHeight; }, 100);
+            }
+
+            function showTyping() {
+                const existingTyping = mockupChat.querySelector('.typing-indicator');
+                if (existingTyping) existingTyping.remove();
+                const typingClone = typingIndicator.cloneNode(true);
+                typingClone.style.display = 'flex';
+                typingClone.style.padding = '12px 16px';
+                typingClone.style.marginTop = '8px';
+                typingClone.style.alignSelf = 'flex-start';
+                mockupChat.appendChild(typingClone);
+                setTimeout(() => { mockupChat.scrollTop = mockupChat.scrollHeight; }, 50);
+            }
+            function hideTyping() {
+                const typingInChat = mockupChat.querySelector('.typing-indicator');
+                if (typingInChat) typingInChat.remove();
+            }
+            function clearChat() { mockupChat.innerHTML = ''; }
+
+            function playConversation() {
+                if (isPlaying) return;
+                isPlaying = true;
+                const conversation = conversations[currentConversation];
+                conversationIndex = 0;
+                function playNext() {
+                    if (conversationIndex >= conversation.length) {
+                        isPlaying = false;
+                        setTimeout(() => {
+                            clearChat();
+                            currentConversation = (currentConversation + 1) % conversations.length;
+                            setTimeout(() => { playConversation(); }, 2000);
+                        }, 3000);
+                        return;
+                    }
+                    const item = conversation[conversationIndex];
+                    if (item.type === 'typing') {
+                        showTyping();
+                        setTimeout(() => { hideTyping(); conversationIndex++; playNext(); }, item.delay);
+                    } else {
+                        hideTyping();
+                        addMessage(item.text, item.type);
+                        conversationIndex++;
+                        setTimeout(() => { playNext(); }, item.delay);
+                    }
+                }
+                playNext();
+            }
+            setTimeout(() => { playConversation(); }, 1500);
+
+            const mapZoomContainers = document.querySelectorAll('.map-zoom-container');
+            const mapObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const map = entry.target.querySelector('.map-zoom');
+                        if (map) { setTimeout(() => { map.classList.add('zoomed'); }, 300); }
+                    }
+                });
+            }, { threshold: 0.5 });
+            mapZoomContainers.forEach(container => { mapObserver.observe(container); });
+
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = (y - centerY) / 20;
+                    const rotateY = (centerX - x) / 20;
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+                });
+                card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+            });
+
+            // Scroll Indicator Logic
+            const scrollIndicator = document.getElementById('scrollIndicator');
+            
+            function updateScrollIndicator() {
+                if (!scrollIndicator) return;
+                
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight;
+                const canScrollDown = scrollTop + windowHeight < documentHeight - 10;
+                
+                if (canScrollDown) {
+                    scrollIndicator.classList.add('visible');
+                } else {
+                    scrollIndicator.classList.remove('visible');
+                }
+            }
+            
+            // Check on load and scroll
+            updateScrollIndicator();
+            window.addEventListener('scroll', updateScrollIndicator);
+            window.addEventListener('resize', updateScrollIndicator);
+        });
+    </script>
+    
+    <!-- Ad Manager Script (disabled - files don't exist yet) -->
+    <!-- <script src="/js/ad-manager.js"></script> -->
+    <!-- <script src="/js/check-ad-visibility.js"></script> -->
+    <script>
+        // Ad initialization disabled until ad files are created
+        console.log('[AdManager] Ad system disabled - files not found');
+        
+        // Also try on window load as backup (only if ad doesn't exist)
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                if (window.pathgenAdManager && !document.getElementById('pathgen-banner-ad')) {
+                    console.log('[AdManager] Window loaded - attempting to insert ad');
+                    window.pathgenAdManager.insertBannerAd();
+                } else {
+                    console.log('[AdManager] Window loaded - ad already exists, skipping');
+                }
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,29 @@
+{
+  "name": "@fortnite-core/data-ingestion",
+  "version": "1.0.0",
+  "description": "Multi-source data ingestion for Fortnite",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "start": "node dist/index.js",
+    "ingest": "node dist/index.js",
+    "ingest:once": "node dist/index.js --once"
+  },
+  "dependencies": {
+    "@fortnite-core/database": "*",
+    "axios": "^1.6.5",
+    "dotenv": "^16.3.1",
+    "fs-extra": "^11.2.0",
+    "node-cron": "^3.0.3",
+    "snoowrap": "^1.23.0",
+    "rss-parser": "^3.13.0",
+    "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "@types/node-cron": "^3.0.11",
+    "@types/uuid": "^10.0.0"
+  }
+}

@@ -1,0 +1,133 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: pathgen
+      POSTGRES_PASSWORD: pathgenpass
+      POSTGRES_DB: pathgen
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pathgen"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    command: ["redis-server", "--save", "60", "1"]
+    volumes:
+      - redisdata:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  fastify-api:
+    build:
+      context: ./packages/papi
+      dockerfile: Dockerfile
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      parser:
+        condition: service_started
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgres://pathgen:pathgenpass@postgres:5432/pathgen
+      PARSER_URL: http://parser:5000
+      JWT_SECRET: "${JWT_SECRET:-supersecret}"
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./packages/papi:/usr/src/app
+      - ./data/replays:/app/replays
+    command: ["npm", "run", "dev"]
+
+  next-frontend:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    depends_on:
+      - fastify-api
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:4000
+      NEXT_PUBLIC_DISCORD_CLIENT_ID: "${DISCORD_CLIENT_ID}"
+      NODE_ENV: development
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/web:/usr/src/app
+      - /usr/src/app/.next
+      - /usr/src/app/node_modules
+    command: ["npm", "run", "dev"]
+
+  parser:
+    build:
+      context: ./services/parser-csharp
+      dockerfile: Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:5000
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data/replays:/app/replays
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  worker:
+    build:
+      context: ./packages/worker
+      dockerfile: Dockerfile
+    depends_on:
+      redis:
+        condition: service_healthy
+      fastify-api:
+        condition: service_started
+      parser:
+        condition: service_healthy
+    environment:
+      REDIS_URL: redis://redis:6379
+      QUEUE_NAME: analysis
+      PARSER_URL: http://parser:5000
+      DATABASE_URL: postgres://pathgen:pathgenpass@postgres:5432/pathgen
+    volumes:
+      - ./data/results:/app/results
+      - ./packages/worker:/usr/src/app
+    command: ["npm", "run", "dev"]
+
+  cron-monitor:
+    build:
+      context: ./packages/cron-monitor
+      dockerfile: Dockerfile
+    depends_on:
+      - fastify-api
+      - postgres
+      - redis
+    environment:
+      API_URL: http://fastify-api:4000
+      DATABASE_URL: postgres://pathgen:pathgenpass@postgres:5432/pathgen
+      REDIS_URL: redis://redis:6379
+      DISCORD_WEBHOOK_URL: "${DISCORD_WEBHOOK_URL:-}"
+    volumes:
+      - ./data:/app/data
+    command: ["node", "dist/monitor.js"]
+
+volumes:
+  pgdata:
+  redisdata:

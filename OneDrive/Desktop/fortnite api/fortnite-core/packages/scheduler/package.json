@@ -1,0 +1,21 @@
+{
+  "name": "@fortnite-core/scheduler",
+  "version": "1.0.0",
+  "description": "Scheduler for Fortnite data updates",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@fortnite-core/data-ingestion": "*",
+    "@fortnite-core/manifest-parser": "*",
+    "@fortnite-core/pak-parser": "*",
+    "@fortnite-core/database": "*",
+    "node-cron": "^3.0.3",
+    "dotenv": "^16.3.1"
+  }
+}
+

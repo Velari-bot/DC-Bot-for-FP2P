@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Logo.png">
+    <link rel="shortcut icon" type="image/png" href="/Logo.png">
+    <link rel="apple-touch-icon" href="/Logo.png">
+    <title>Admin Panel - PathGen</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pathgen.dev/admin-panel">
+    <meta property="og:title" content="Admin Panel - PathGen AI">
+    <meta property="og:description" content="Administrative dashboard for PathGen AI.">
+    <meta property="og:image" content="https://pathgen.dev/embed.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://pathgen.dev/admin-panel">
+    <meta name="twitter:title" content="Admin Panel - PathGen AI">
+    <meta name="twitter:description" content="Administrative dashboard for PathGen AI.">
+    <meta name="twitter:image" content="https://pathgen.dev/embed.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0A0A0A;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.1) 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: #9ca3af;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #8B5CF6;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: #3B82F6;
+            transform: translateX(-4px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.15);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            color: #9ca3af;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table td {
+            padding: 16px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+        }
+
+        .table tr:hover {
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-pro {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8B5CF6;
+        }
+
+        .badge-free {
+            background: rgba(107, 114, 128, 0.2);
+            color: #9ca3af;
+        }
+
+        .badge-active {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .badge-canceled {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            color: #8B5CF6;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #9ca3af;
+        }
+
+        .spinner {
+            border: 3px solid rgba(139, 92, 246, 0.1);
+            border-top: 3px solid #8B5CF6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #9ca3af;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab:hover {
+            color: #ffffff;
+        }
+
+        .tab.active {
+            color: #8B5CF6;
+            border-bottom-color: #8B5CF6;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9ca3af;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/settings.html" class="back-link">← Back to Settings</a>
+        
+        <div class="header">
+            <h1 class="page-title">👑 Admin Panel</h1>
+            <p class="page-subtitle">System overview and user management</p>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-label">Total Users</div>
+                <div class="stat-value" id="totalUsers">...</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💎</div>
+                <div class="stat-label">Pro Subscribers</div>
+                <div class="stat-value" id="proUsers">...</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💬</div>
+                <div class="stat-label">Messages Today</div>
+                <div class="stat-value" id="messagesToday">...</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-label">MRR</div>
+                <div class="stat-value" id="mrr">...</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="section">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('users')">Users</button>
+                <button class="tab" onclick="switchTab('subscriptions')">Subscriptions</button>
+                <button class="tab" onclick="switchTab('usage')">Usage</button>
+                <button class="tab" onclick="switchTab('webhooks')">Webhooks</button>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="users-tab" class="tab-content active">
+                <div class="section-title">
+                    <span>👥</span>
+                    <span>Recent Users</span>
+                </div>
+                <div id="usersTable" class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading users...</p>
+                </div>
+            </div>
+
+            <!-- Subscriptions Tab -->
+            <div id="subscriptions-tab" class="tab-content">
+                <div class="section-title">
+                    <span>💳</span>
+                    <span>Active Subscriptions</span>
+                </div>
+                <div id="subscriptionsTable" class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading subscriptions...</p>
+                </div>
+            </div>
+
+            <!-- Usage Tab -->
+            <div id="usage-tab" class="tab-content">
+                <div class="section-title">
+                    <span>📊</span>
+                    <span>Usage Statistics</span>
+                </div>
+                <div id="usageTable" class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading usage data...</p>
+                </div>
+            </div>
+
+            <!-- Webhooks Tab -->
+            <div id="webhooks-tab" class="tab-content">
+                <div class="section-title">
+                    <span>🔔</span>
+                    <span>Recent Webhooks</span>
+                </div>
+                <div id="webhooksTable">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔔</div>
+                        <p>Webhook logging coming soon</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+
+    <script>
+        const ADMIN_USERNAMES = ['crl_coach', 'saltyzfn'];
+
+        // Check admin access on page load
+        window.addEventListener('DOMContentLoaded', async () => {
+            if (!checkAdminAccess()) {
+                alert('⛔ Access Denied: Admin privileges required');
+                window.location.href = '/settings.html';
+                return;
+            }
+
+            await loadDashboardData();
+        });
+
+        function checkAdminAccess() {
+            const userDataStr = localStorage.getItem('pathgen_user');
+            if (!userDataStr) return false;
+
+            try {
+                const userData = JSON.parse(userDataStr);
+                const username = (userData.name || userData.discordUsername || '').toLowerCase();
+                
+                const isAdmin = ADMIN_USERNAMES.some(admin => admin.toLowerCase() === username);
+                console.log('🔐 Admin access check:', { username, isAdmin });
+                
+                return isAdmin;
+            } catch (e) {
+                console.error('Error checking admin access:', e);
+                return false;
+            }
+        }
+
+        async function loadDashboardData() {
+            await Promise.all([
+                loadStats(),
+                loadUsers(),
+                loadSubscriptions(),
+                loadUsage(),
+            ]);
+        }
+
+        async function loadStats() {
+            try {
+                const db = firebase.firestore();
+                
+                // Get total users
+                const usersSnapshot = await db.collection('users').get();
+                const totalUsers = usersSnapshot.size;
+                document.getElementById('totalUsers').textContent = totalUsers;
+
+                // Get pro users
+                const proUsers = usersSnapshot.docs.filter(doc => doc.data().isPremium).length;
+                document.getElementById('proUsers').textContent = proUsers;
+
+                // Calculate MRR (rough estimate)
+                let mrr = proUsers * 6.99; // Base plan
+                usersSnapshot.docs.forEach(doc => {
+                    const addons = doc.data().addons || [];
+                    addons.forEach(addon => {
+                        if (addon === 'Voice Interaction') mrr += 1.99;
+                        if (addon === 'Gameplay Analysis') mrr += 1.50;
+                        if (addon === 'Competitive Insights') mrr += 0.75;
+                    });
+                });
+                document.getElementById('mrr').textContent = `$${mrr.toFixed(2)}`;
+
+                // Messages today (would need real tracking)
+                document.getElementById('messagesToday').textContent = '-';
+
+                console.log('✅ Stats loaded:', { totalUsers, proUsers, mrr });
+            } catch (error) {
+                console.error('❌ Error loading stats:', error);
+            }
+        }
+
+        async function loadUsers() {
+            try {
+                const db = firebase.firestore();
+                const usersSnapshot = await db.collection('users')
+                    .orderBy('createdAt', 'desc')
+                    .limit(20)
+                    .get();
+
+                const usersHTML = `
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Plan</th>
+                                <th>Add-ons</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${usersSnapshot.docs.map(doc => {
+                                const data = doc.data();
+                                const createdAt = data.createdAt ? new Date(data.createdAt).toLocaleDateString() : '-';
+                                const addons = data.addons || [];
+                                return `
+                                    <tr>
+                                        <td><strong>${data.name || data.discordUsername || 'Unknown'}</strong></td>
+                                        <td>${data.email || '-'}</td>
+                                        <td>
+                                            <span class="badge ${data.isPremium ? 'badge-pro' : 'badge-free'}">
+                                                ${data.isPremium ? 'Pro' : 'Free'}
+                                            </span>
+                                        </td>
+                                        <td>${addons.length || 0}</td>
+                                        <td>${createdAt}</td>
+                                        <td>
+                                            <button class="btn" onclick="viewUser('${doc.id}')" style="padding: 6px 16px; font-size: 12px;">
+                                                View
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                `;
+
+                document.getElementById('usersTable').innerHTML = usersHTML;
+                console.log('✅ Users loaded:', usersSnapshot.size);
+            } catch (error) {
+                console.error('❌ Error loading users:', error);
+                document.getElementById('usersTable').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⚠️</div>
+                        <p>Error loading users: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadSubscriptions() {
+            try {
+                const db = firebase.firestore();
+                const subsSnapshot = await db.collection('subscriptions')
+                    .orderBy('createdAt', 'desc')
+                    .limit(20)
+                    .get();
+
+                if (subsSnapshot.empty) {
+                    document.getElementById('subscriptionsTable').innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">💳</div>
+                            <p>No subscriptions found</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const subsHTML = `
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Plan</th>
+                                <th>Add-ons</th>
+                                <th>Status</th>
+                                <th>Customer ID</th>
+                                <th>Created</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${subsSnapshot.docs.map(doc => {
+                                const data = doc.data();
+                                const createdAt = data.createdAt ? new Date(data.createdAt.toDate()).toLocaleDateString() : '-';
+                                const addons = data.addons || [];
+                                return `
+                                    <tr>
+                                        <td><code style="font-size: 12px;">${doc.id.substring(0, 12)}...</code></td>
+                                        <td><strong>${data.plan || 'free'}</strong></td>
+                                        <td>${addons.length} add-on${addons.length !== 1 ? 's' : ''}</td>
+                                        <td>
+                                            <span class="badge ${data.status === 'active' ? 'badge-active' : 'badge-canceled'}">
+                                                ${data.status || 'unknown'}
+                                            </span>
+                                        </td>
+                                        <td><code style="font-size: 11px;">${data.stripeCustomerId?.substring(0, 15) || '-'}</code></td>
+                                        <td>${createdAt}</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                `;
+
+                document.getElementById('subscriptionsTable').innerHTML = subsHTML;
+                console.log('✅ Subscriptions loaded:', subsSnapshot.size);
+            } catch (error) {
+                console.error('❌ Error loading subscriptions:', error);
+                document.getElementById('subscriptionsTable').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⚠️</div>
+                        <p>Error loading subscriptions: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadUsage() {
+            try {
+                const db = firebase.firestore();
+                const usageSnapshot = await db.collection('usage')
+                    .orderBy('lastUpdated', 'desc')
+                    .limit(20)
+                    .get();
+
+                if (usageSnapshot.empty) {
+                    document.getElementById('usageTable').innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📊</div>
+                            <p>No usage data found</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const usageHTML = `
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Tier</th>
+                                <th>Text Messages</th>
+                                <th>Voice Seconds</th>
+                                <th>Voice Addon</th>
+                                <th>Last Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${usageSnapshot.docs.map(doc => {
+                                const data = doc.data();
+                                const lastUpdated = data.lastUpdated ? new Date(data.lastUpdated.toDate()).toLocaleDateString() : '-';
+                                return `
+                                    <tr>
+                                        <td><code style="font-size: 12px;">${doc.id.substring(0, 12)}...</code></td>
+                                        <td><span class="badge ${data.tier === 'pro' ? 'badge-pro' : 'badge-free'}">${data.tier || 'free'}</span></td>
+                                        <td>${data.textMessagesThisPeriod || 0}</td>
+                                        <td>${data.voiceSecondsThisPeriod || 0}s</td>
+                                        <td>${data.hasVoiceAddon ? '✅' : '❌'}</td>
+                                        <td>${lastUpdated}</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                `;
+
+                document.getElementById('usageTable').innerHTML = usageHTML;
+                console.log('✅ Usage data loaded:', usageSnapshot.size);
+            } catch (error) {
+                console.error('❌ Error loading usage:', error);
+                document.getElementById('usageTable').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⚠️</div>
+                        <p>Error loading usage data: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+        }
+
+        function viewUser(userId) {
+            alert(`User Details\n\nUser ID: ${userId}\n\nFull user management coming soon!`);
+        }
+    </script>
+</body>
+</html>
+

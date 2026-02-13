@@ -1,0 +1,12 @@
+Stretched Resolution Guide
+
+DISCLAIMER -> DO NOT GO TO THE EXTREMES IF YOU DON'T NEED TO
+
+Can be visually irritating (can cause headaches on extreme visual resolutions)
+
+Confusion between thick and thin objects like trees as opposed to enemies whilst getting familiar with the adjustment to different resolutions
+
+GPU Load: When you apply a stretched resolution, it typically results in a lower overall resolution, reducing the GPU load since fewer pixels need to be rendered. This can lead to higher frame rates. However, if your GPU was the limiting factor before, the CPU might become the bottleneck if it's not powerful enough to handle the increased frame rates.
+
+Display Scaling: Depending on how the stretch is applied (through the game, GPU, or monitor), you might encounter issues like scaling artifacts or additional input lag. This can occur if the stretching process isn't handled efficiently, impacting your overall gaming experience, similar to upscaling technologies like FSR, XeSS and DLSS with the way they try to upscale from lower resolution to higher resolution minimizing FPS loss but creating artefacts or fake frames trying to replicate a typical frame of the standard resolution (as part of Frame Generation or Lossless Scaling technologies).
+

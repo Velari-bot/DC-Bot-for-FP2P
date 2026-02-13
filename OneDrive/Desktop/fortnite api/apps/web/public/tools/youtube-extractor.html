@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Logo.png">
+    <link rel="shortcut icon" type="image/png" href="/Logo.png">
+    <link rel="apple-touch-icon" href="/Logo.png">
+  <title>YouTube Extractor</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pathgen.dev/youtube-extractor">
+    <meta property="og:title" content="YouTube Extractor">
+    <meta property="og:description" content="PathGen AI - Your personal Fortnite coach powered by AI.">
+    <meta property="og:image" content="https://pathgen.dev/embed.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://pathgen.dev/youtube-extractor">
+    <meta name="twitter:title" content="YouTube Extractor">
+    <meta name="twitter:description" content="PathGen AI - Your personal Fortnite coach powered by AI.">
+    <meta name="twitter:image" content="https://pathgen.dev/embed.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { margin:0; background:#000; color:#fff; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+    textarea { width: 100%; height: 180px; background:#0f0f0f; color:#fff; border:1px solid #222; border-radius:8px; padding:12px; }
+    button { background:#2563eb; border:none; color:#fff; padding:10px 14px; border-radius:8px; cursor:pointer; }
+    button:disabled { opacity:.5; cursor:not-allowed; }
+    table { width:100%; border-collapse: collapse; }
+    th, td { text-align:left; padding:8px 10px; border-top:1px solid #1f2937; }
+    th { background:#111827; }
+    .row { display:flex; gap:8px; align-items:center; margin-top:8px; }
+    .json-actions { display:flex; gap:8px; align-items:center; margin:12px 0; }
+    a.btn { display:inline-block; background:#374151; padding:8px 10px; border-radius:8px; color:#fff; text-decoration:none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 style="margin:0 0 12px 0;">YouTube Video Extractor</h1>
+    <p style="color:#cbd5e1; font-size:14px; margin:0 0 16px 0;">Paste YouTube URLs (one per line). Extract metadata and download captions (VTT).</p>
+
+    <label style="font-size:14px;">YouTube URLs</label>
+    <textarea id="urls" placeholder="https://www.youtube.com/watch?v=...\nhttps://youtu.be/..."></textarea>
+    <div class="row">
+      <input id="file" type="file" accept=".txt">
+      <button id="extractBtn">Extract</button>
+      <span id="status" style="color:#cbd5e1; font-size:13px;"></span>
+    </div>
+
+    <div id="errors" style="margin-top:12px;"></div>
+    <div id="resultsWrap" style="display:none;">
+      <div class="json-actions">
+        <button id="copyJsonBtn">Copy JSON</button>
+        <a id="downloadJson" class="btn" download="index.json">Download index.json</a>
+      </div>
+      <div style="overflow:auto; border:1px solid #1f2937; border-radius:8px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Thumbnail</th>
+              <th>Title</th>
+              <th>Channel</th>
+              <th>Published</th>
+              <th>Video ID</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const input = $('urls');
+    const file = $('file');
+    const extractBtn = $('extractBtn');
+    const statusEl = $('status');
+    const resultsWrap = $('resultsWrap');
+    const resultsBody = $('resultsBody');
+    const copyJsonBtn = $('copyJsonBtn');
+    const downloadJson = $('downloadJson');
+    const errorsEl = $('errors');
+
+    file.addEventListener('change', async (e) => {
+      const f = e.target.files?.[0];
+      if (!f) return;
+      const text = await f.text();
+      input.value = text;
+    });
+
+    function makeJson(results) {
+      const payload = results.map(r => ({
+        id: r.id,
+        title: r.title,
+        url: r.url,
+        transcript: r.transcript,
+        author: r.author,
+        created_at: r.created_at,
+        thumbnail: r.thumbnail,
+        tags: r.tags || ['fortnite']
+      }));
+      return JSON.stringify(payload, null, 2);
+    }
+
+    extractBtn.addEventListener('click', async () => {
+      const rawText = input.value || '';
+      if (!rawText.trim()) return;
+      extractBtn.disabled = true;
+      statusEl.textContent = 'Extracting…';
+      errorsEl.innerHTML = '';
+      resultsBody.innerHTML = '';
+      resultsWrap.style.display = 'none';
+      try {
+        const resp = await fetch('/api/youtube/extract', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          // Send raw text; server robustly extracts IDs from any mess
+          body: JSON.stringify({ text: rawText })
+        });
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok) {
+          statusEl.textContent = '';
+          errorsEl.innerHTML = '<div style=\"color:#fca5a5\">' + (data.message || data.error || 'Failed to extract') + '</div>';
+          return;
+        }
+        const results = data.results || [];
+        const errors = data.errors || [];
+        if (errors.length) {
+          const lines = errors.map(e => `${e.id}: ${e.error}`).join('<br>');
+          errorsEl.innerHTML = '<div style=\"color:#fcd34d\">Some errors:<br>' + lines + '</div>';
+        }
+        const json = makeJson(results);
+        downloadJson.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(json);
+        copyJsonBtn.onclick = async () => {
+          try { await navigator.clipboard.writeText(json); } catch {}
+        };
+        for (const r of results) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${r.thumbnail ? `<img src=\"${r.thumbnail}\" style=\"width:96px; height:auto; border-radius:6px\"/>` : ''}</td>
+            <td>
+              <div style=\"font-weight:600\">${r.title || '(untitled)'}</div>
+              <div style=\"font-size:12px; color:#9ca3af\">${r.url}</div>
+            </td>
+            <td>${r.author || '-'}</td>
+            <td>${r.created_at ? new Date(r.created_at).toLocaleString() : '-'}</td>
+            <td>${r.id}</td>
+            <td>
+              <button data-vid=\"${r.id.replace(/^vid-/,'')}\">Get VTT</button>
+            </td>
+          `;
+          const btn = tr.querySelector('button');
+          btn.addEventListener('click', async () => {
+            const vid = btn.getAttribute('data-vid');
+            const res = await fetch('/api/youtube/transcribe?videoId=' + encodeURIComponent(vid));
+            if (!res.ok) { alert('No captions found'); return; }
+            const vtt = await res.text();
+            const blob = new Blob([vtt], { type: 'text/vtt;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = vid + '.vtt';
+            document.body.appendChild(a); a.click(); a.remove();
+            URL.revokeObjectURL(url);
+          });
+          resultsBody.appendChild(tr);
+        }
+        resultsWrap.style.display = results.length ? 'block' : 'none';
+      } catch (e) {
+        errorsEl.innerHTML = '<div style=\"color:#fca5a5\">Unexpected error</div>';
+      } finally {
+        extractBtn.disabled = false;
+        statusEl.textContent = '';
+      }
+    });
+  </script>
+</body>
+</html>
+
+

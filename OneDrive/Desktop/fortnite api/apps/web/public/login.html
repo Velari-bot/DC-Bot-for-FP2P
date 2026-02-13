@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Logo.png">
+    <link rel="shortcut icon" type="image/png" href="/Logo.png">
+    <link rel="apple-touch-icon" href="/Logo.png">
+    <title>Welcome to Pathgen v2</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pathgen.dev/login">
+    <meta property="og:title" content="Login - PathGen AI">
+    <meta property="og:description" content="Sign in to PathGen AI and start improving your Fortnite gameplay.">
+    <meta property="og:image" content="https://pathgen.dev/embed.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://pathgen.dev/login">
+    <meta name="twitter:title" content="Login - PathGen AI">
+    <meta name="twitter:description" content="Sign in to PathGen AI and start improving your Fortnite gameplay.">
+    <meta name="twitter:image" content="https://pathgen.dev/embed.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: radial-gradient(circle at center, #fafafa 0%, #f8f7ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Lemni-style Geometric Background Lines */
+        .bg-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-lines svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes subtlePulse {
+            0%, 100% { opacity: 0.06; }
+            50% { opacity: 0.10; }
+        }
+
+        .container {
+            max-width: 420px;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        /* Monochrome P Logo */
+        .logo {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 24px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Sparkle animations */
+        @keyframes sparkle {
+            0% {
+                opacity: 0.3;
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-6px) scale(1.2);
+            }
+            100% {
+                opacity: 0.3;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .logo-sparkle-animate .sparkle-1 { animation: sparkle 1200ms ease-in-out infinite; animation-delay: 0ms; }
+        .logo-sparkle-animate .sparkle-2 { animation: sparkle 1400ms ease-in-out infinite; animation-delay: 200ms; }
+        .logo-sparkle-animate .sparkle-3 { animation: sparkle 1100ms ease-in-out infinite; animation-delay: 400ms; }
+        .logo-sparkle-animate .sparkle-4 { animation: sparkle 1300ms ease-in-out infinite; animation-delay: 600ms; }
+        .logo-sparkle-animate .sparkle-5 { animation: sparkle 1000ms ease-in-out infinite; animation-delay: 300ms; }
+        .logo-sparkle-animate .sparkle-6 { animation: sparkle 1500ms ease-in-out infinite; animation-delay: 500ms; }
+
+        /* Respect reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .logo-sparkle-animate [class^="sparkle-"] {
+                animation: none !important;
+            }
+            .logo:hover {
+                transform: none;
+            }
+        }
+
+        .title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0A0A0A;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #666;
+            font-weight: 400;
+        }
+
+        .form-container {
+            margin-top: 40px;
+        }
+
+        /* Discord Button with Lemni Bezel & Shadow */
+        .btn-discord {
+            width: 100%;
+            padding: 15px 20px;
+            background: #FFFFFF;
+            border: 1px solid #E5E5E5;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #0A0A0A;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.05),
+                0 2px 4px rgba(0, 0, 0, 0.05),
+                0 4px 12px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+
+        .btn-discord::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.02) 100%);
+            pointer-events: none;
+        }
+
+        .btn-discord:hover {
+            background: #FCFCFC;
+            border-color: #D0D0D0;
+            transform: translateY(-1px);
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.05),
+                0 3px 6px rgba(0, 0, 0, 0.08),
+                0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .discord-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Primary Button with Lemni Bezel & Shadow */
+        .btn-primary {
+            width: 100%;
+            padding: 15px 24px;
+            background: #0A0A0A;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+                0 2px 4px rgba(0, 0, 0, 0.1),
+                0 4px 12px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .btn-primary:hover {
+            background: #1a1a1a;
+            transform: translateY(-1px);
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+                0 3px 6px rgba(0, 0, 0, 0.15),
+                0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer {
+            margin-top: 32px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        .footer a {
+            color: #999;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+
+        .footer a:hover {
+            color: #666;
+            text-decoration: underline;
+        }
+
+        .arrow {
+            width: 16px;
+            height: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Lemni-style Geometric Background -->
+    <div class="bg-lines">
+        <svg xmlns="http://www.w3.org/2000/svg" style="animation: subtlePulse 6s ease-in-out infinite;">
+            <defs>
+                <linearGradient id="gridGradient" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#b372ff"/>
+                    <stop offset="100%" stop-color="#ff70f0"/>
+                </linearGradient>
+            </defs>
+            <!-- Center cross -->
+            <line x1="50%" y1="0" x2="50%" y2="100%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.08"/>
+            <line x1="0" y1="50%" x2="100%" y2="50%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.08"/>
+            
+            <!-- Diagonal rays -->
+            <line x1="0" y1="0" x2="100%" y2="100%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.06"/>
+            <line x1="100%" y1="0" x2="0" y2="100%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.06"/>
+            
+            <!-- Additional angled lines radiating from center -->
+            <line x1="25%" y1="0" x2="75%" y2="100%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.05"/>
+            <line x1="75%" y1="0" x2="25%" y2="100%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.05"/>
+            <line x1="0" y1="25%" x2="100%" y2="75%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.05"/>
+            <line x1="0" y1="75%" x2="100%" y2="25%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.05"/>
+            
+            <!-- Vertical accent lines -->
+            <line x1="33%" y1="0" x2="33%" y2="100%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.04"/>
+            <line x1="67%" y1="0" x2="67%" y2="100%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.04"/>
+            
+            <!-- Horizontal accent lines -->
+            <line x1="0" y1="33%" x2="100%" y2="33%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.04"/>
+            <line x1="0" y1="67%" x2="100%" y2="67%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.04"/>
+        </svg>
+    </div>
+
+    <div class="container">
+        <div class="logo-container">
+            <div class="logo logo-sparkle-animate" id="logo" aria-label="Pathgen - AI Fortnite Coach">
+                <!-- Pathgen Monochrome P Mark -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img">
+                    <defs>
+                        <filter id="sparkleBlur">
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+                        </filter>
+                    </defs>
+                    
+                    <!-- P Glyph with Facets -->
+                    <g id="glyph">
+                        <rect x="20" y="20" width="16" height="60" rx="8" ry="8" fill="#000000"/>
+                        <path d="M 36 20 H 50 A 24 24 0 0 1 50 58 H 36 V 20 Z" fill="#000000"/>
+                        <path d="M 45 28 L 58 32 L 54 40 L 42 38 Z" fill="#F2F2F2" opacity="0.3"/>
+                        <path d="M 44 42 L 56 46 L 48 52 Z" fill="#BDBDBD" opacity="0.25"/>
+                        <path d="M 38 26 L 42 24 L 42 34 L 38 36 Z" fill="#F2F2F2" opacity="0.2"/>
+                    </g>
+                    
+                    <!-- Cosmic Sparkles -->
+                    <g id="sparkles" opacity="0.85">
+                        <circle cx="64" cy="26" r="2.5" fill="#000000" filter="url(#sparkleBlur)" class="sparkle-1"/>
+                        <circle cx="70" cy="38" r="1.8" fill="#000000" filter="url(#sparkleBlur)" class="sparkle-2"/>
+                        <circle cx="52" cy="35" r="1.2" fill="#000000" opacity="0.8" filter="url(#sparkleBlur)" class="sparkle-3"/>
+                        <circle cx="58" cy="28" r="0.9" fill="#000000" opacity="0.7" class="sparkle-4"/>
+                        <circle cx="24" cy="48" r="1.5" fill="#000000" filter="url(#sparkleBlur)" class="sparkle-5"/>
+                        <circle cx="60" cy="50" r="1.0" fill="#000000" opacity="0.6" class="sparkle-6"/>
+                    </g>
+                </svg>
+            </div>
+            <h1 class="title">Welcome to Pathgen v2</h1>
+            <p class="subtitle">Elevate your Fortnite gameplay with AI coaches</p>
+        </div>
+
+        <div class="form-container">
+            <!-- Discord Login Button -->
+            <button class="btn-discord" onclick="loginWithDiscord()">
+                <svg class="discord-icon" fill="#5865F2" viewBox="0 0 24 24">
+                    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+                </svg>
+                Continue with Discord
+            </button>
+
+            <!-- Google Login Button -->
+            <button class="btn-discord" onclick="loginWithGoogle()" style="margin-top: 12px;">
+                <svg class="discord-icon" viewBox="0 0 24 24" style="width: 20px; height: 20px;">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Continue with Google
+            </button>
+        </div>
+
+        <div class="footer">
+            Pathgen v2 © 2025 
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+
+    <script>
+        // Respect reduced motion preference for sparkle animations
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const logo = document.getElementById('logo');
+        
+        function updateSparkles() {
+            if (prefersReducedMotion.matches) {
+                logo.classList.remove('logo-sparkle-animate');
+            } else {
+                logo.classList.add('logo-sparkle-animate');
+            }
+        }
+        
+        updateSparkles();
+        prefersReducedMotion.addEventListener('change', updateSparkles);
+
+        // Discord OAuth configuration
+        const DISCORD_CLIENT_ID = '1430744947732250726';
+        
+        // CRITICAL: Always use non-www pathgen.dev for redirect URI
+        // This redirect URI MUST be added to Discord Developer Portal
+        // It MUST match exactly in both authorization and token exchange
+        let REDIRECT_URI;
+        if (window.location.hostname === 'pathgen.dev' || window.location.hostname === 'www.pathgen.dev') {
+            // Always use non-www version for pathgen.dev to ensure consistency
+            REDIRECT_URI = 'https://pathgen.dev/setup.html';
+        } else {
+            REDIRECT_URI = window.location.origin + '/setup.html';
+        }
+        
+        // Store the redirect URI so setup.html can use the EXACT same one
+        // This is critical - OAuth requires exact match between authorization and token exchange
+        localStorage.setItem('discord_redirect_uri', REDIRECT_URI);
+        localStorage.setItem('google_redirect_uri', REDIRECT_URI);
+        
+        console.log('🔐 Discord Client ID:', DISCORD_CLIENT_ID);
+        console.log('📍 Redirect URI to use:', REDIRECT_URI);
+        
+        // Google OAuth configuration
+        const GOOGLE_CLIENT_ID = '64409929315-btl6nep70dnqnrg5ifif63ohkjklhkh1.apps.googleusercontent.com';
+        
+        function loginWithDiscord() {
+            // Store login method
+            localStorage.setItem('loginMethod', 'discord');
+            localStorage.setItem('discordAuthInitiated', Date.now());
+            
+            // Build Discord OAuth URL with correct scopes (identify and email)
+            const encodedRedirectUri = encodeURIComponent(REDIRECT_URI);
+            const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodedRedirectUri}&response_type=code&scope=identify%20email`;
+            
+            console.log('🔐 Starting Discord OAuth with scopes: identify, email');
+            console.log('📍 Redirect URI:', REDIRECT_URI);
+            console.log('📍 Encoded Redirect URI:', encodedRedirectUri);
+            console.log('📍 Full Auth URL:', authUrl);
+            
+            // Redirect to Discord OAuth
+            window.location.href = authUrl;
+        }
+
+        function loginWithGoogle() {
+            // Store login method
+            localStorage.setItem('loginMethod', 'google');
+            localStorage.setItem('googleAuthInitiated', Date.now());
+            
+            // Get Google Client ID from environment or use default
+            // In production, this should come from your backend config
+            const googleClientId = GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID';
+            
+            // Build Google OAuth URL
+            const encodedRedirectUri = encodeURIComponent(REDIRECT_URI);
+            const scope = encodeURIComponent('openid email profile');
+            const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${encodedRedirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
+            
+            console.log('🔐 Starting Google OAuth');
+            console.log('📍 Redirect URI:', REDIRECT_URI);
+            console.log('📍 Full Auth URL:', authUrl);
+            
+            // Redirect to Google OAuth
+            window.location.href = authUrl;
+        }
+    </script>
+</body>
+</html>

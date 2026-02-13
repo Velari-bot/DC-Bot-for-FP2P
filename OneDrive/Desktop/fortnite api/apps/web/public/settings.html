@@ -1,0 +1,1757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Logo.png">
+    <link rel="shortcut icon" type="image/png" href="/Logo.png">
+    <link rel="apple-touch-icon" href="/Logo.png">
+    <title>Settings - PathGen AI</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pathgen.dev/settings">
+    <meta property="og:title" content="Settings - PathGen AI">
+    <meta property="og:description" content="Manage your PathGen AI account settings and preferences.">
+    <meta property="og:image" content="https://pathgen.dev/embed.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://pathgen.dev/settings">
+    <meta name="twitter:title" content="Settings - PathGen AI">
+    <meta name="twitter:description" content="Manage your PathGen AI account settings and preferences.">
+    <meta name="twitter:image" content="https://pathgen.dev/embed.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0A0A0A;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Full Page Gradient Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.1) 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Header with Pill Nav Bar */
+        .header {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .nav {
+            backdrop-filter: blur(16px);
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 
+                        0 0 0 1px rgba(255, 255, 255, 0.03),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 0 8px;
+            margin-right: 4px;
+        }
+
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .logo-icon svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin: 0 8px;
+        }
+
+        .nav-link {
+            color: #A0A0A0;
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 6px 14px;
+            border-radius: 25px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link.active {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link .caret {
+            font-size: 8px;
+            margin-left: 1px;
+            opacity: 0.7;
+        }
+
+        .nav-link.external::after {
+            content: '↗';
+            font-size: 10px;
+            opacity: 0.6;
+            margin-left: 2px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-cta {
+            padding: 6px 18px;
+            background: #0A0A0A;
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            border-radius: 50px;
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .nav-cta:hover {
+            background: #151515;
+            border-color: rgba(139, 92, 246, 0.8);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+        }
+
+        .nav-cta::after {
+            content: '→';
+            font-size: 14px;
+        }
+
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 12px 4px 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            margin-left: 8px;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+        }
+
+        /* Dropdowns */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            min-width: 220px;
+            background: rgba(15, 15, 15, 0.98);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+                        0 0 0 1px rgba(255, 255, 255, 0.05);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            z-index: 200;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: #d1d5db;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(79, 140, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .dropdown-item-icon {
+            font-size: 16px;
+            width: 20px;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 6px 0;
+        }
+
+        .dropdown-item.danger {
+            color: #ef4444;
+        }
+
+        .dropdown-item.danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .dropdown-item.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .dropdown-item.locked:hover {
+            background: transparent;
+            color: #6b7280;
+        }
+
+        #featuresDropdown {
+            left: 0;
+            right: auto;
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 140px 48px 80px;
+            overflow: hidden;
+        }
+
+        /* Purple-Blue Gradient Glow */
+        .hero-glow {
+            position: absolute;
+            bottom: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1000px;
+            height: 1000px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, rgba(59, 130, 246, 0.15) 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+            filter: blur(60px);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 880px;
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 28px;
+            color: #FFFFFF;
+            letter-spacing: -0.03em;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #A0A0A0;
+            line-height: 1.7;
+            margin-bottom: 48px;
+            max-width: 680px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Background Dashboard Previews */
+        .dashboard-previews {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        .preview-card {
+            position: absolute;
+            width: 280px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 16px;
+            backdrop-filter: blur(10px);
+            opacity: 0.4;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .preview-left {
+            left: 10%;
+            top: 20%;
+            transform: rotate(-5deg);
+            animation-delay: 0s;
+        }
+
+        .preview-right {
+            right: 10%;
+            top: 30%;
+            transform: rotate(5deg);
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(-5deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(-5deg);
+            }
+        }
+
+        .preview-right {
+            animation-name: floatRight;
+        }
+
+        @keyframes floatRight {
+            0%, 100% {
+                transform: translateY(0) rotate(5deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            background: #2a2a2a;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #FFFFFF;
+        }
+
+        .card-menu-item {
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: #A0A0A0;
+            margin-bottom: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .card-menu-item.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: #FFFFFF;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 24px 60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Settings Sections */
+        .settings-section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 48px;
+            margin-bottom: 32px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .settings-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.5), rgba(59, 130, 246, 0.5));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .settings-section:hover {
+            transform: translateY(-4px);
+            border-color: rgba(139, 92, 246, 0.3);
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.15);
+        }
+
+        .settings-section:hover::before {
+            opacity: 1;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 32px;
+            color: #FFFFFF;
+            position: relative;
+            padding-bottom: 16px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #8B5CF6, #3B82F6);
+            border-radius: 2px;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .setting-desc {
+            font-size: 13px;
+            color: #9ca3af;
+            line-height: 1.4;
+        }
+
+        .setting-value {
+            font-size: 14px;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+        }
+
+        .btn-setting {
+            padding: 10px 24px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            color: #8B5CF6;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-setting:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+        }
+
+        /* Profile Section */
+        .profile-display {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 32px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            margin-bottom: 32px;
+            transition: all 0.3s ease;
+        }
+
+        .profile-display:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .profile-avatar-large {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            overflow: hidden;
+        }
+
+        .profile-avatar-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .profile-email {
+            font-size: 14px;
+            color: #9ca3af;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .nav-links {
+                display: none;
+            }
+
+            .main-content {
+                padding: 100px 16px 40px;
+            }
+
+            .page-title {
+                font-size: 36px;
+            }
+
+            .settings-section {
+                padding: 24px 20px;
+            }
+
+            .setting-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <!-- Pathgen Monochrome P Mark -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img">
+                        <defs>
+                            <filter id="sparkleBlur">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+                            </filter>
+                        </defs>
+                        
+                        <!-- P Glyph with Facets -->
+                        <g id="glyph">
+                            <rect x="20" y="20" width="16" height="60" rx="8" ry="8" fill="#FFFFFF"/>
+                            <path d="M 36 20 H 50 A 24 24 0 0 1 50 58 H 36 V 20 Z" fill="#FFFFFF"/>
+                            <path d="M 45 28 L 58 32 L 54 40 L 42 38 Z" fill="#000000" opacity="0.3"/>
+                            <path d="M 44 42 L 56 46 L 48 52 Z" fill="#000000" opacity="0.25"/>
+                            <path d="M 38 26 L 42 24 L 42 34 L 38 36 Z" fill="#000000" opacity="0.2"/>
+                        </g>
+                        
+                        <!-- Cosmic Sparkles -->
+                        <g id="sparkles" opacity="0.85">
+                            <circle cx="64" cy="26" r="2.5" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-1"/>
+                            <circle cx="70" cy="38" r="1.8" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-2"/>
+                            <circle cx="52" cy="35" r="1.2" fill="#FFFFFF" opacity="0.8" filter="url(#sparkleBlur)" class="sparkle-3"/>
+                            <circle cx="58" cy="28" r="0.9" fill="#FFFFFF" opacity="0.7" class="sparkle-4"/>
+                            <circle cx="24" cy="48" r="1.5" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-5"/>
+                            <circle cx="60" cy="50" r="1.0" fill="#FFFFFF" opacity="0.6" class="sparkle-6"/>
+                        </g>
+                    </svg>
+                </div>
+                <span>Pathgen v2</span>
+            </a>
+            
+            <div class="nav-center">
+                <a href="/docs.html" class="nav-link">Docs</a>
+                <div class="dropdown">
+                    <a href="#" class="nav-link" onclick="toggleDropdown('features', event)">
+                        Features
+                        <span class="caret">▼</span>
+                    </a>
+                    <div class="dropdown-menu" id="featuresDropdown">
+                        <a href="/analyze" class="dropdown-item">
+                            <span class="dropdown-item-icon">🎮</span>
+                            <span>Replay Parser</span>
+                        </a>
+                        <a href="/masterclass" class="dropdown-item">
+                            <span class="dropdown-item-icon">📖</span>
+                            <span>Masterclass</span>
+                        </a>
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Coach</span>
+                        </a>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">📊</span>
+                            <span>Competitive Insights</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">🎤</span>
+                            <span>Voice</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="/docs.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">📚</span>
+                            <span>Documentation</span>
+                        </a>
+                    </div>
+                </div>
+                <a href="/cih-coaching.html" class="nav-link">CIH Coaching</a>
+                <a href="/nagc-dropmaps.html" class="nav-link">NAGC Drop Maps</a>
+            </div>
+
+            <div class="nav-right">
+                <a href="/subscribe.html" class="nav-link">Pricing</a>
+                <a href="/login.html" class="nav-cta" id="navCTA">Try For Free</a>
+                <div class="dropdown">
+                    <div class="user-info" id="userInfo" onclick="toggleDropdown('settings', event)">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <span class="user-name" id="userName">User</span>
+                    </div>
+                    <div class="dropdown-menu" id="settingsDropdown">
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Chat</span>
+                        </a>
+                        <a href="/tournaments.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/settings.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">⚙️</span>
+                            <span>Settings</span>
+                        </a>
+                        <a href="/subscribe.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💳</span>
+                            <span>Upgrade to Pro</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item danger" onclick="logout()">
+                            <span class="dropdown-item-icon">🚪</span>
+                            <span>Logout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Purple-Blue Gradient Glow -->
+        <div class="hero-glow"></div>
+
+        <!-- Background Dashboard Previews -->
+        <div class="dashboard-previews">
+            <!-- Left Preview Card -->
+            <div class="preview-card preview-left">
+                <div class="card-header">
+                    <div class="card-icon">⚙️</div>
+                    <div class="card-title">Settings</div>
+                </div>
+                <div class="card-menu-item active">
+                    <span>Profile</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Subscription</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Preferences</span>
+                </div>
+            </div>
+
+            <!-- Right Preview Card -->
+            <div class="preview-card preview-right">
+                <div class="card-header">
+                    <div class="card-icon">🔒</div>
+                    <div class="card-title">Security</div>
+                </div>
+                <div class="card-menu-item">
+                    <span>Account</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Privacy</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Data</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-content">
+            <h1 class="hero-title" id="settingsHeroTitle">⚙️ Settings</h1>
+            <p class="hero-subtitle" id="settingsHeroSubtitle">
+                Manage your account, preferences, and subscription settings.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Profile Section -->
+        <div class="settings-section">
+            <h2 class="section-title">👤 Profile</h2>
+            
+            <div class="profile-display">
+                <div class="profile-avatar-large" id="profileAvatar">A</div>
+                <div class="profile-info">
+                    <div class="profile-name" id="profileName">User</div>
+                    <div class="profile-email" id="profileEmail">user@example.com</div>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Display Name</div>
+                    <div class="setting-desc">Your name as it appears across PathGen</div>
+                </div>
+                <div class="setting-value" id="displayNameValue">-</div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Email Address</div>
+                    <div class="setting-desc">Connected via Discord OAuth</div>
+                </div>
+                <div class="setting-value" id="emailValue">-</div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Login Method</div>
+                    <div class="setting-desc">How you authenticate with PathGen</div>
+                </div>
+                <div class="setting-value" id="loginMethodValue">Discord</div>
+            </div>
+        </div>
+
+        <!-- Account Settings -->
+        <div class="settings-section">
+            <h2 class="section-title">💳 Subscription</h2>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Current Plan</div>
+                    <div class="setting-desc">Your active subscription tier</div>
+                </div>
+                <div class="setting-value" id="currentPlanValue">Free Plan</div>
+            </div>
+
+            <!-- Free User: Show Upgrade Button -->
+            <div class="setting-item" id="upgradeSection">
+                <div class="setting-info">
+                    <div class="setting-label">Upgrade to Pro</div>
+                    <div class="setting-desc">Unlimited messages, advanced features, priority support</div>
+                </div>
+                <button class="btn-setting" onclick="window.location.href='/subscribe.html'">
+                    Upgrade Now
+                </button>
+            </div>
+
+            <!-- Premium User: Show Subscription Manager -->
+            <div id="subscriptionManagerSection" style="display: none;">
+                <!-- Manage Add-ons Toggle -->
+                <div class="setting-item" style="cursor: pointer; border-bottom: none;" onclick="toggleAddonManager()">
+                    <div class="setting-info">
+                        <div class="setting-label">Manage Add-ons</div>
+                        <div class="setting-desc" id="addonsStatusDesc">Click to view and modify your add-ons</div>
+                    </div>
+                    <span id="addonToggleIcon" style="color: rgba(139, 92, 246, 0.8); font-size: 20px;">▼</span>
+                </div>
+
+                <!-- Expandable Add-on Manager -->
+                <div id="addonManagerContent" style="display: none; padding: 20px; background: rgba(139, 92, 246, 0.05); border-radius: 12px; margin: 16px 0;">
+                    <div style="margin-bottom: 16px;">
+                        <div style="font-size: 14px; font-weight: 600; color: #ffffff; margin-bottom: 8px;">📦 Base Plan</div>
+                        <div style="padding: 12px; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border-left: 3px solid #8B5CF6;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <input type="radio" checked disabled style="cursor: not-allowed;">
+                                <div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #ffffff;">PathGen Pro</div>
+                                    <div style="font-size: 12px; color: #9ca3af; margin-top: 2px;">$6.99/month • 200 messages, saved history, better AI</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <div style="font-size: 14px; font-weight: 600; color: #ffffff; margin-bottom: 8px;">🎮 Available Add-ons</div>
+                        
+                        <!-- Voice Interaction (TEMPORARILY UNAVAILABLE) -->
+                        <div style="padding: 12px; background: rgba(107, 114, 128, 0.1); border-radius: 8px; margin-bottom: 8px; opacity: 0.5;">
+                            <label style="display: flex; align-items: start; gap: 12px; cursor: not-allowed;">
+                                <input type="checkbox" disabled style="margin-top: 3px; cursor: not-allowed;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="font-size: 14px; font-weight: 600; color: #6b7280;">Voice Interaction</span>
+                                        <span style="font-size: 13px; color: #6b7280; font-weight: 600;">$1.99/mo</span>
+                                    </div>
+                                    <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">Temporarily Unavailable</div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Gameplay Analysis (TEMPORARILY UNAVAILABLE) -->
+                        <div style="padding: 12px; background: rgba(107, 114, 128, 0.1); border-radius: 8px; margin-bottom: 8px; opacity: 0.5;">
+                            <label style="display: flex; align-items: start; gap: 12px; cursor: not-allowed;">
+                                <input type="checkbox" disabled style="margin-top: 3px; cursor: not-allowed;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="font-size: 14px; font-weight: 600; color: #6b7280;">Gameplay Analysis</span>
+                                        <span style="font-size: 13px; color: #6b7280; font-weight: 600;">$1.50/mo</span>
+                                    </div>
+                                    <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">Temporarily Unavailable</div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Competitive Insights (TEMPORARILY UNAVAILABLE) -->
+                        <div style="padding: 12px; background: rgba(107, 114, 128, 0.1); border-radius: 8px; margin-bottom: 8px; opacity: 0.5;">
+                            <label style="display: flex; align-items: start; gap: 12px; cursor: not-allowed;">
+                                <input type="checkbox" disabled style="margin-top: 3px; cursor: not-allowed;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="font-size: 14px; font-weight: 600; color: #6b7280;">Competitive Insights</span>
+                                        <span style="font-size: 13px; color: #6b7280; font-weight: 600;">$0.75/mo</span>
+                                    </div>
+                                    <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">Temporarily Unavailable</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Future Update Notice -->
+                    <div style="margin-top: 16px; margin-bottom: 16px; padding: 12px; background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 8px;">
+                        <p style="color: #8B5CF6; font-size: 12px; line-height: 1.5; margin: 0; text-align: center;">
+                            <strong>📅 Coming Soon:</strong> All add-ons will be rolled out in a future update.
+                        </p>
+                    </div>
+
+                    <!-- Coming Soon Add-ons (Grayed Out) -->
+                    <div style="margin-bottom: 16px;">
+                        <div style="font-size: 14px; font-weight: 600; color: #6b7280; margin-bottom: 8px;">🔒 Coming Soon</div>
+                        
+                        <!-- Heatmaps + Stats -->
+                        <div style="padding: 12px; background: rgba(107, 114, 128, 0.1); border-radius: 8px; margin-bottom: 8px; opacity: 0.5;">
+                            <label style="display: flex; align-items: start; gap: 12px; cursor: not-allowed;">
+                                <input type="checkbox" disabled style="margin-top: 3px; cursor: not-allowed;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="font-size: 14px; font-weight: 600; color: #6b7280;">Heatmaps + Stats</span>
+                                        <span style="font-size: 13px; color: #6b7280; font-weight: 600;">$2.99/mo</span>
+                                    </div>
+                                    <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">Advanced analytics and performance tracking • Coming Soon</div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Team Coaching Mode -->
+                        <div style="padding: 12px; background: rgba(107, 114, 128, 0.1); border-radius: 8px; margin-bottom: 8px; opacity: 0.5;">
+                            <label style="display: flex; align-items: start; gap: 12px; cursor: not-allowed;">
+                                <input type="checkbox" disabled style="margin-top: 3px; cursor: not-allowed;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="font-size: 14px; font-weight: 600; color: #6b7280;">Team Coaching Mode</span>
+                                        <span style="font-size: 13px; color: #6b7280; font-weight: 600;">$4.99/mo</span>
+                                    </div>
+                                    <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">Multi-player analysis and team strategy • Coming Soon</div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Custom Playstyle Model -->
+                        <div style="padding: 12px; background: rgba(107, 114, 128, 0.1); border-radius: 8px; margin-bottom: 8px; opacity: 0.5;">
+                            <label style="display: flex; align-items: start; gap: 12px; cursor: not-allowed;">
+                                <input type="checkbox" disabled style="margin-top: 3px; cursor: not-allowed;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="font-size: 14px; font-weight: 600; color: #6b7280;">Custom Playstyle Model</span>
+                                        <span style="font-size: 13px; color: #6b7280; font-weight: 600;">$7.99/mo</span>
+                                    </div>
+                                    <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">AI trained on your specific playstyle • Coming Soon</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Info Message -->
+                    <div style="padding: 12px; background: rgba(59, 130, 246, 0.1); border-radius: 8px; border-left: 3px solid #3B82F6; margin-bottom: 16px;">
+                        <div style="display: flex; gap: 8px; align-items: start;">
+                            <span style="font-size: 16px;">💡</span>
+                            <div style="font-size: 12px; color: #9ca3af; line-height: 1.5;">
+                                Changes will take effect at your next billing cycle. You will not be charged until then.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                        <button onclick="cancelAddonChanges()" style="padding: 10px 20px; background: rgba(107, 114, 128, 0.1); border: 1px solid rgba(107, 114, 128, 0.3); border-radius: 8px; color: #9ca3af; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">
+                            Cancel
+                        </button>
+                        <button id="saveAddonsBtn" onclick="saveAddonChanges()" style="padding: 10px 20px; background: linear-gradient(135deg, #8B5CF6, #3B82F6); border: none; border-radius: 8px; color: #ffffff; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);">
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Billing Management -->
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Manage Billing</div>
+                        <div class="setting-desc">Update payment method, view invoices, or cancel subscription</div>
+                    </div>
+                    <button class="btn-setting" onclick="openStripePortal()" id="manageAccountBtn">
+                        Manage Billing →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Section (only for admin users) -->
+        <div class="settings-section" id="adminSection" style="display: none; border-color: rgba(139, 92, 246, 0.3);">
+            <h2 class="section-title" style="color: #8b5cf6;">👑 Admin</h2>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Admin Dashboard</div>
+                    <div class="setting-desc">View users, subscriptions, usage stats, and system overview</div>
+                </div>
+                <button class="btn-setting" onclick="window.location.href='/admin-panel.html'" style="background: rgba(139, 92, 246, 0.2); color: #8b5cf6; border: 1px solid rgba(139, 92, 246, 0.4);">
+                    Open Admin Panel →
+                </button>
+            </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="settings-section" style="border-color: rgba(239, 68, 68, 0.2);">
+            <h2 class="section-title" style="color: #ef4444;">⚠️ Danger Zone</h2>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Clear Chat History</div>
+                    <div class="setting-desc">Delete all your conversations permanently</div>
+                </div>
+                <button class="btn-danger" onclick="clearHistory()">
+                    Clear History
+                </button>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-label">Delete Account</div>
+                    <div class="setting-desc">Permanently delete your PathGen account and all data</div>
+                </div>
+                <button class="btn-danger" onclick="deleteAccount()">
+                    Delete Account
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadUserData();
+            checkAuth();
+        });
+
+        async function loadUserData() {
+            const userDataStr = localStorage.getItem('pathgen_user');
+            if (!userDataStr) {
+                console.warn('⚠️ No user data in localStorage');
+                return;
+            }
+            
+            try {
+                let userData = JSON.parse(userDataStr);
+                const userId = userData.id || userData.uid || userData.discordId || userData.googleId;
+                
+                // Try to fetch latest user data from Firebase
+                if (typeof firebase !== 'undefined' && firebase.firestore && userId) {
+                    try {
+                        const db = firebase.firestore();
+                        const userDoc = await db.collection('users').doc(userId).get();
+                        
+                        if (userDoc.exists) {
+                            const firestoreData = userDoc.data();
+                            // Merge Firestore data with localStorage data (Firestore takes precedence)
+                            userData = {
+                                ...userData,
+                                ...firestoreData,
+                                // Preserve some localStorage-specific fields
+                                id: userData.id || firestoreData.id,
+                                uid: userData.uid || firestoreData.uid,
+                                discordId: userData.discordId || firestoreData.discordId,
+                                googleId: userData.googleId || firestoreData.googleId,
+                            };
+                            
+                            // Update localStorage with latest data
+                            localStorage.setItem('pathgen_user', JSON.stringify(userData));
+                            console.log('✅ Loaded user data from Firebase:', userData);
+                        } else {
+                            console.warn('⚠️ User document not found in Firestore, using localStorage data');
+                        }
+                    } catch (firebaseError) {
+                        console.error('❌ Error fetching from Firebase, using localStorage:', firebaseError);
+                    }
+                }
+                
+                // Profile Avatar
+                const profileAvatar = document.getElementById('profileAvatar');
+                if (userData.discordAvatar || userData.googleAvatar || userData.avatar) {
+                    const avatarUrl = userData.discordAvatar || userData.googleAvatar || userData.avatar;
+                    profileAvatar.innerHTML = `<img src="${avatarUrl}" alt="Avatar" />`;
+                } else {
+                    const initial = (userData.name || userData.displayName || userData.email || userData.username || 'U').charAt(0).toUpperCase();
+                    profileAvatar.textContent = initial;
+                }
+                
+                // Profile Info
+                const displayName = userData.name || userData.displayName || `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || userData.username || 'User';
+                document.getElementById('profileName').textContent = displayName;
+                document.getElementById('profileEmail').textContent = userData.email || 'Not connected';
+                
+                // Setting Values
+                document.getElementById('displayNameValue').textContent = displayName;
+                document.getElementById('emailValue').textContent = userData.email || 'Not set';
+                document.getElementById('loginMethodValue').textContent = userData.loginMethod ? 
+                    userData.loginMethod.charAt(0).toUpperCase() + userData.loginMethod.slice(1) : 
+                    'Discord';
+                
+                // Update subscription display
+                updateSubscriptionDisplay(userData);
+                
+                // Check if user is admin and show admin section
+                checkAdminAccess(userData);
+                
+            } catch (e) {
+                console.error('❌ Error loading user data:', e);
+            }
+        }
+
+        async function updateSubscriptionDisplay(userData) {
+            const currentPlanValue = document.getElementById('currentPlanValue');
+            
+            const userId = userData.id || userData.uid || userData.discordId;
+            
+            // Fetch latest subscription data from Firebase
+            let isPremium = false;
+            let planText = 'Free Plan';
+            let addons = [];
+            
+            try {
+                if (typeof firebase !== 'undefined' && firebase.firestore && userId) {
+                    const db = firebase.firestore();
+                    const userDoc = await db.collection('users').doc(userId).get();
+                    
+                    if (userDoc.exists) {
+                        const firestoreData = userDoc.data();
+                        isPremium = firestoreData.isPremium || false;
+                        addons = firestoreData.addons || [];
+                        
+                        console.log('📊 Subscription data from Firebase:', {
+                            isPremium,
+                            plan: firestoreData.plan,
+                            addons,
+                            subscriptionStatus: firestoreData.subscriptionStatus
+                        });
+                        
+                        if (isPremium) {
+                            planText = 'PathGen Pro';
+                            if (addons && addons.length > 0) {
+                                planText += ` + ${addons.length} Add-on${addons.length > 1 ? 's' : ''}`;
+                            }
+                        }
+                    } else {
+                        console.warn('⚠️ User document not found in Firestore');
+                    }
+                } else {
+                    console.warn('⚠️ Firebase not initialized or userId missing');
+                    // Fallback to localStorage
+                    isPremium = userData.isPremium || userData.planType === 'paid' || userData.stripeCustomerId || false;
+                    addons = userData.addons || [];
+                    
+                    if (isPremium) {
+                        planText = 'PathGen Pro';
+                        if (addons && addons.length > 0) {
+                            planText += ` + ${addons.length} Add-on${addons.length > 1 ? 's' : ''}`;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Error fetching subscription from Firebase:', error);
+                // Fallback to localStorage
+                isPremium = userData.isPremium || userData.planType === 'paid' || userData.stripeCustomerId || false;
+                addons = userData.addons || [];
+                
+                if (isPremium) {
+                    planText = 'PathGen Pro';
+                    if (addons && addons.length > 0) {
+                        planText += ` + ${addons.length} Add-on${addons.length > 1 ? 's' : ''}`;
+                    }
+                }
+            }
+            
+            // Update UI
+            if (currentPlanValue) {
+                currentPlanValue.textContent = planText;
+            }
+            
+            const upgradeSection = document.getElementById('upgradeSection');
+            const subscriptionManagerSection = document.getElementById('subscriptionManagerSection');
+            
+            if (isPremium) {
+                // Hide upgrade button, show subscription manager
+                if (upgradeSection) upgradeSection.style.display = 'none';
+                if (subscriptionManagerSection) subscriptionManagerSection.style.display = 'block';
+                
+                // Initialize addon checkboxes based on current subscription
+                const addonIds = addons.map(name => mapAddonNameToId(name));
+                originalAddons = [...addonIds];
+                currentAddons = [...addonIds];
+                
+                console.log('🎯 Initializing addon checkboxes:', {
+                    addonNames: addons,
+                    addonIds: addonIds,
+                });
+                
+                // Check the boxes for active addons (only if not disabled)
+                ['voice-interaction', 'gameplay-analysis', 'competitive-insights'].forEach(addonId => {
+                    const checkbox = document.getElementById(`addon-${addonId}`);
+                    if (checkbox && !checkbox.disabled) {
+                        checkbox.checked = addonIds.includes(addonId);
+                    }
+                });
+                
+                // Update status description
+                const statusDesc = document.getElementById('addonsStatusDesc');
+                if (statusDesc) {
+                    const addonCount = addonIds.length;
+                    statusDesc.textContent = addonCount > 0 
+                        ? `${addonCount} add-on${addonCount > 1 ? 's' : ''} active • Click to manage`
+                        : 'No add-ons active • Click to add add-ons';
+                }
+            } else {
+                // Show upgrade button, hide subscription manager
+                if (upgradeSection) upgradeSection.style.display = 'flex';
+                if (subscriptionManagerSection) subscriptionManagerSection.style.display = 'none';
+            }
+        }
+
+        function checkAdminAccess(userData) {
+            const ADMIN_USERNAMES = ['crl_coach', 'saltyzfn'];
+            
+            const username = (userData.name || userData.discordUsername || '').toLowerCase();
+            const isAdmin = ADMIN_USERNAMES.some(admin => admin.toLowerCase() === username);
+            
+            console.log('🔐 Admin access check:', { username, isAdmin });
+            
+            if (isAdmin) {
+                const adminSection = document.getElementById('adminSection');
+                if (adminSection) {
+                    adminSection.style.display = 'block';
+                }
+            }
+        }
+
+        function checkAuth() {
+            const user = localStorage.getItem('pathgen_user');
+            if (user) {
+                try {
+                    const userData = JSON.parse(user);
+                    showUserInfo(userData);
+                } catch (e) {}
+            } else {
+                // DISABLED: Allow access without authentication
+                // Show default/guest view instead of redirecting
+                console.log('No user found, showing guest view');
+            }
+        }
+
+        function showUserInfo(userData) {
+            const navCTA = document.getElementById('navCTA');
+            const userInfo = document.getElementById('userInfo');
+            const userAvatar = document.getElementById('userAvatar');
+            const userName = document.getElementById('userName');
+
+            if (navCTA) navCTA.style.display = 'none';
+            if (userInfo) userInfo.style.display = 'flex';
+            
+            // Set avatar - use Discord avatar, Google avatar, or generic avatar if available
+            const avatarUrl = userData.discordAvatar || userData.googleAvatar || userData.avatar;
+            if (avatarUrl && userAvatar) {
+                const img = document.createElement('img');
+                img.src = avatarUrl;
+                img.alt = 'Avatar';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.borderRadius = '50%';
+                img.style.objectFit = 'cover';
+                img.onerror = function() {
+                    // Fallback if image fails to load
+                    const initial = (userData.name || userData.email || userData.discordUsername || userData.googleUsername || 'U').charAt(0).toUpperCase();
+                    userAvatar.textContent = initial;
+                    userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+                };
+                userAvatar.innerHTML = '';
+                userAvatar.appendChild(img);
+            } else if (userAvatar) {
+                const initial = (userData.name || userData.email || userData.discordUsername || userData.googleUsername || 'U').charAt(0).toUpperCase();
+                userAvatar.textContent = initial;
+                userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+            }
+            
+            // Set name
+            const displayName = userData.name || userData.discordUsername || userData.googleUsername || userData.email?.split('@')[0] || 'User';
+            if (userName) userName.textContent = displayName;
+        }
+
+        // Toggle dropdown
+        function toggleDropdown(type, event) {
+            if (event) event.preventDefault();
+            
+            const dropdowns = {
+                features: document.getElementById('featuresDropdown'),
+                settings: document.getElementById('settingsDropdown')
+            };
+            
+            const currentDropdown = dropdowns[type];
+            if (!currentDropdown) return;
+            
+            // Close other dropdowns
+            Object.entries(dropdowns).forEach(([key, dropdown]) => {
+                if (key !== type && dropdown) {
+                    dropdown.classList.remove('show');
+                }
+            });
+            
+            // Toggle current dropdown
+            currentDropdown.classList.toggle('show');
+            
+            if (event) event.stopPropagation();
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
+
+        // Open Stripe Customer Portal
+        async function openStripePortal() {
+            try {
+                const manageBtn = document.getElementById('manageAccountBtn');
+                if (manageBtn) {
+                    manageBtn.disabled = true;
+                    manageBtn.textContent = 'Opening...';
+                }
+
+                // Get user data
+                const userDataStr = localStorage.getItem('pathgen_user');
+                if (!userDataStr) {
+                    alert('Please log in to manage your subscription');
+                    if (manageBtn) {
+                        manageBtn.disabled = false;
+                        manageBtn.textContent = 'Manage Subscription →';
+                    }
+                    return;
+                }
+
+                const userData = JSON.parse(userDataStr);
+                const userId = userData.id || userData.discordId;
+                const userEmail = userData.email;
+
+                console.log('[PORTAL] Opening for user:', userId, userEmail);
+
+                // Call API to create portal session
+                const response = await fetch('/api/stripe/create-portal-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId: userId,
+                        userEmail: userEmail,
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to create portal session');
+                }
+
+                console.log('[PORTAL] Session created:', data.sessionId);
+
+                // Redirect to Stripe Customer Portal
+                if (data.url) {
+                    window.location.href = data.url;
+                } else {
+                    throw new Error('No portal URL returned');
+                }
+            } catch (error) {
+                console.error('[PORTAL] Error:', error);
+                alert('Failed to open billing portal. Please try again or contact support.');
+                
+                const manageBtn = document.getElementById('manageAccountBtn');
+                if (manageBtn) {
+                    manageBtn.disabled = false;
+                    manageBtn.textContent = 'Manage Subscription →';
+                }
+            }
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('pathgen_user');
+                localStorage.removeItem('discordUser');
+                localStorage.removeItem('setupComplete');
+                window.location.href = '/login.html';
+            }
+        }
+
+        async function clearHistory() {
+            if (!confirm('Are you sure you want to clear all chat history? This cannot be undone.')) {
+                return;
+            }
+
+            try {
+                // Show loading state
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.disabled = true;
+                btn.textContent = 'Clearing...';
+
+                // Get user data
+                const userDataStr = localStorage.getItem('pathgen_user');
+                if (!userDataStr) {
+                    alert('Please log in to clear chat history');
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                    return;
+                }
+
+                const userData = JSON.parse(userDataStr);
+                const userId = userData.id || userData.uid || userData.discordId;
+
+                // Call API to clear history
+                const response = await fetch('/api/user/clear-history', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userId }),
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to clear chat history');
+                }
+
+                // Clear from localStorage
+                localStorage.removeItem('chatHistory');
+                localStorage.removeItem('conversationHistory');
+
+                btn.disabled = false;
+                btn.textContent = originalText;
+                alert('✅ Chat history cleared successfully!');
+            } catch (error) {
+                console.error('❌ Error clearing history:', error);
+                alert('Failed to clear chat history. Please try again.');
+                const btn = event.target;
+                btn.disabled = false;
+                btn.textContent = 'Clear History';
+            }
+        }
+
+        // ====== Subscription Manager Functions ======
+
+        let originalAddons = [];
+        let currentAddons = [];
+
+        function toggleAddonManager() {
+            const content = document.getElementById('addonManagerContent');
+            const icon = document.getElementById('addonToggleIcon');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                icon.textContent = '▲';
+            } else {
+                content.style.display = 'none';
+                icon.textContent = '▼';
+            }
+        }
+
+        function mapAddonNameToId(name) {
+            const mapping = {
+                'Voice Interaction': 'voice-interaction',
+                'Gameplay Analysis': 'gameplay-analysis',
+                'Competitive Insights': 'competitive-insights',
+                'Heatmaps + Stats': 'heatmaps-stats',
+                'Team Coaching Mode': 'team-coaching',
+                'Custom Playstyle Model': 'custom-playstyle',
+            };
+            return mapping[name] || name.toLowerCase().replace(/\s+/g, '-');
+        }
+
+        function updateAddonSelection() {
+            // Get all checked addon checkboxes
+            const checkboxes = document.querySelectorAll('#addonManagerContent input[type="checkbox"]:not([disabled])');
+            currentAddons = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+            
+            console.log('📝 Current addon selection:', currentAddons);
+        }
+
+        function cancelAddonChanges() {
+            // Reset checkboxes to original state
+            currentAddons.forEach(addonId => {
+                const checkbox = document.getElementById(`addon-${addonId}`);
+                if (checkbox) checkbox.checked = false;
+            });
+            
+            originalAddons.forEach(addonId => {
+                const checkbox = document.getElementById(`addon-${addonId}`);
+                if (checkbox) checkbox.checked = true;
+            });
+            
+            currentAddons = [...originalAddons];
+            
+            // Close the manager
+            toggleAddonManager();
+        }
+
+        async function saveAddonChanges() {
+            const saveBtn = document.getElementById('saveAddonsBtn');
+            const originalText = saveBtn.textContent;
+            
+            try {
+                // Show loading state
+                saveBtn.disabled = true;
+                saveBtn.textContent = 'Saving...';
+                saveBtn.style.opacity = '0.6';
+                saveBtn.style.cursor = 'not-allowed';
+
+                // Get user data
+                const userDataStr = localStorage.getItem('pathgen_user');
+                if (!userDataStr) {
+                    alert('Please log in to manage your subscription');
+                    return;
+                }
+
+                const userData = JSON.parse(userDataStr);
+                const userId = userData.id || userData.uid || userData.discordId;
+
+                console.log('💾 Saving addon changes:', {
+                    userId,
+                    originalAddons,
+                    newAddons: currentAddons,
+                });
+
+                // Call API to update subscription
+                const response = await fetch('/api/stripe/update-subscription', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId: userId,
+                        addons: currentAddons,
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || data.message || 'Failed to update subscription');
+                }
+
+                console.log('✅ Subscription updated:', data);
+
+                // Update original addons to reflect saved state
+                originalAddons = [...currentAddons];
+
+                // Show success message
+                const message = `✅ ${data.message}\n\n${data.note || ''}\n\nNext billing date: ${new Date(data.subscription.nextBillingDate).toLocaleDateString()}`;
+                alert(message);
+
+                // Close the manager
+                toggleAddonManager();
+
+                // Reload subscription display
+                await updateSubscriptionDisplay(userData);
+
+            } catch (error) {
+                console.error('❌ Error saving addon changes:', error);
+                alert(`Failed to update subscription: ${error.message}\n\nPlease try again or contact support.`);
+            } finally {
+                // Reset button state
+                saveBtn.disabled = false;
+                saveBtn.textContent = originalText;
+                saveBtn.style.opacity = '1';
+                saveBtn.style.cursor = 'pointer';
+            }
+        }
+
+        async function deleteAccount() {
+            // First confirmation
+            if (!confirm('⚠️ WARNING: This will permanently delete your account and all data. Are you absolutely sure?')) {
+                return;
+            }
+
+            // Second confirmation with text input
+            const confirmation = prompt('Type "DELETE" in capital letters to confirm account deletion:');
+            if (confirmation !== 'DELETE') {
+                alert('Account deletion cancelled.');
+                return;
+            }
+
+            try {
+                // Show loading state
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.disabled = true;
+                btn.textContent = 'Deleting...';
+
+                // Get user data
+                const userDataStr = localStorage.getItem('pathgen_user');
+                if (!userDataStr) {
+                    alert('Please log in to delete your account');
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                    return;
+                }
+
+                const userData = JSON.parse(userDataStr);
+                const userId = userData.id || userData.uid || userData.discordId;
+
+                // Call API to delete account data
+                const response = await fetch('/api/user/delete-account', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userId }),
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to delete account');
+                }
+
+                console.log('✅ User data deleted from Firestore');
+
+                // Delete Firebase Auth user
+                if (typeof firebase !== 'undefined' && firebase.auth) {
+                    const currentUser = firebase.auth().currentUser;
+                    if (currentUser) {
+                        try {
+                            await currentUser.delete();
+                            console.log('✅ Firebase Auth user deleted');
+                        } catch (authError) {
+                            console.warn('⚠️ Could not delete Firebase Auth user:', authError);
+                            // Continue anyway since we deleted the data
+                        }
+                    }
+                }
+
+                // Clear all local data
+                localStorage.clear();
+                sessionStorage.clear();
+
+                alert('✅ Your account has been permanently deleted.');
+                window.location.href = '/login.html';
+            } catch (error) {
+                console.error('❌ Error deleting account:', error);
+                
+                alert('Failed to delete account. Please contact support at support@pathgen.dev');
+                
+                const btn = event.target;
+                btn.disabled = false;
+                btn.textContent = 'Delete Account';
+            }
+        }
+    </script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+    </div>
+</body>
+</html>
+

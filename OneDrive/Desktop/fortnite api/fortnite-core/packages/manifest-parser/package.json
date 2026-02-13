@@ -1,0 +1,20 @@
+{
+  "name": "@fortnite-core/manifest-parser",
+  "version": "1.0.0",
+  "description": "Manifest parser for Fortnite manifests",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@fortnite-core/database": "*",
+    "axios": "^1.6.5",
+    "fs-extra": "^11.2.0",
+    "binary-parser": "^2.2.1",
+    "dotenv": "^16.3.1"
+  }
+}
+

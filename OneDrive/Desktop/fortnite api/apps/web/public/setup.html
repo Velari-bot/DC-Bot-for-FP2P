@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Logo.png">
+    <link rel="shortcut icon" type="image/png" href="/Logo.png">
+    <link rel="apple-touch-icon" href="/Logo.png">
+    <title>Setup - Pathgen v2</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pathgen.dev/setup">
+    <meta property="og:title" content="Setup - PathGen AI">
+    <meta property="og:description" content="Set up your PathGen AI account and get started.">
+    <meta property="og:image" content="https://pathgen.dev/embed.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://pathgen.dev/setup">
+    <meta name="twitter:title" content="Setup - PathGen AI">
+    <meta name="twitter:description" content="Set up your PathGen AI account and get started.">
+    <meta name="twitter:image" content="https://pathgen.dev/embed.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: radial-gradient(circle at center, #fafafa 0%, #f8f7ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Lemni-style Geometric Background Lines */
+        .bg-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-lines svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes subtlePulse {
+            0%, 100% { opacity: 0.06; }
+            50% { opacity: 0.10; }
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        /* Monochrome P Logo */
+        .logo {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 24px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Sparkle animations */
+        @keyframes sparkle {
+            0% {
+                opacity: 0.3;
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-6px) scale(1.2);
+            }
+            100% {
+                opacity: 0.3;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .logo-sparkle-animate .sparkle-1 { animation: sparkle 1200ms ease-in-out infinite; animation-delay: 0ms; }
+        .logo-sparkle-animate .sparkle-2 { animation: sparkle 1400ms ease-in-out infinite; animation-delay: 200ms; }
+        .logo-sparkle-animate .sparkle-3 { animation: sparkle 1100ms ease-in-out infinite; animation-delay: 400ms; }
+        .logo-sparkle-animate .sparkle-4 { animation: sparkle 1300ms ease-in-out infinite; animation-delay: 600ms; }
+        .logo-sparkle-animate .sparkle-5 { animation: sparkle 1000ms ease-in-out infinite; animation-delay: 300ms; }
+        .logo-sparkle-animate .sparkle-6 { animation: sparkle 1500ms ease-in-out infinite; animation-delay: 500ms; }
+
+        /* Respect reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .logo-sparkle-animate [class^="sparkle-"] {
+                animation: none !important;
+            }
+            .logo:hover {
+                transform: none;
+            }
+        }
+
+        .title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0A0A0A;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #666;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .form-container {
+            margin-top: 48px;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.875rem;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        /* Input Fields with Lemni Bezel & Shadow */
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            background: #FFFFFF;
+            border: 1px solid #E5E5E5;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            color: #0A0A0A;
+            transition: all 0.2s ease;
+            box-shadow: 
+                inset 0 1px 2px rgba(0, 0, 0, 0.04),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.9),
+                0 2px 4px rgba(0, 0, 0, 0.05),
+                0 4px 12px rgba(0, 0, 0, 0.06);
+            position: relative;
+        }
+
+        .input-field::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.02) 0%, rgba(255, 255, 255, 0.05) 100%);
+            pointer-events: none;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #8B5CF6;
+            box-shadow: 
+                inset 0 1px 2px rgba(0, 0, 0, 0.04),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.9),
+                0 2px 4px rgba(139, 92, 246, 0.1),
+                0 4px 12px rgba(139, 92, 246, 0.15),
+                0 0 0 3px rgba(139, 92, 246, 0.08);
+        }
+
+        .input-field::placeholder {
+            color: #999;
+        }
+
+        /* Primary Button (same as login) */
+        .btn-primary {
+            width: 100%;
+            padding: 15px 24px;
+            background: #0A0A0A;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+                0 2px 4px rgba(0, 0, 0, 0.1),
+                0 4px 12px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .btn-primary:hover {
+            background: #1a1a1a;
+            transform: translateY(-1px);
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+                0 3px 6px rgba(0, 0, 0, 0.15),
+                0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .arrow {
+            width: 16px;
+            height: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Lemni-style Geometric Background -->
+    <div class="bg-lines">
+        <svg xmlns="http://www.w3.org/2000/svg" style="animation: subtlePulse 6s ease-in-out infinite;">
+            <defs>
+                <linearGradient id="gridGradient" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#b372ff"/>
+                    <stop offset="100%" stop-color="#ff70f0"/>
+                </linearGradient>
+            </defs>
+            <!-- Center cross -->
+            <line x1="50%" y1="0" x2="50%" y2="100%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.08"/>
+            <line x1="0" y1="50%" x2="100%" y2="50%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.08"/>
+            
+            <!-- Diagonal rays -->
+            <line x1="0" y1="0" x2="100%" y2="100%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.06"/>
+            <line x1="100%" y1="0" x2="0" y2="100%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.06"/>
+            
+            <!-- Additional angled lines radiating from center -->
+            <line x1="25%" y1="0" x2="75%" y2="100%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.05"/>
+            <line x1="75%" y1="0" x2="25%" y2="100%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.05"/>
+            <line x1="0" y1="25%" x2="100%" y2="75%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.05"/>
+            <line x1="0" y1="75%" x2="100%" y2="25%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.05"/>
+            
+            <!-- Vertical accent lines -->
+            <line x1="33%" y1="0" x2="33%" y2="100%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.04"/>
+            <line x1="67%" y1="0" x2="67%" y2="100%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.04"/>
+            
+            <!-- Horizontal accent lines -->
+            <line x1="0" y1="33%" x2="100%" y2="33%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.04"/>
+            <line x1="0" y1="67%" x2="100%" y2="67%" stroke="url(#gridGradient)" stroke-width="0.5" opacity="0.04"/>
+        </svg>
+    </div>
+
+    <div class="container">
+        <div class="logo-container">
+            <div class="logo logo-sparkle-animate" id="logo" aria-label="Pathgen - AI Fortnite Coach">
+                <!-- Pathgen Monochrome P Mark -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img">
+                    <defs>
+                        <filter id="sparkleBlur">
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+                        </filter>
+                    </defs>
+                    
+                    <!-- P Glyph with Facets -->
+                    <g id="glyph">
+                        <rect x="20" y="20" width="16" height="60" rx="8" ry="8" fill="#000000"/>
+                        <path d="M 36 20 H 50 A 24 24 0 0 1 50 58 H 36 V 20 Z" fill="#000000"/>
+                        <path d="M 45 28 L 58 32 L 54 40 L 42 38 Z" fill="#F2F2F2" opacity="0.3"/>
+                        <path d="M 44 42 L 56 46 L 48 52 Z" fill="#BDBDBD" opacity="0.25"/>
+                        <path d="M 38 26 L 42 24 L 42 34 L 38 36 Z" fill="#F2F2F2" opacity="0.2"/>
+                    </g>
+                    
+                    <!-- Cosmic Sparkles -->
+                    <g id="sparkles" opacity="0.85">
+                        <circle cx="64" cy="26" r="2.5" fill="#000000" filter="url(#sparkleBlur)" class="sparkle-1"/>
+                        <circle cx="70" cy="38" r="1.8" fill="#000000" filter="url(#sparkleBlur)" class="sparkle-2"/>
+                        <circle cx="52" cy="35" r="1.2" fill="#000000" opacity="0.8" filter="url(#sparkleBlur)" class="sparkle-3"/>
+                        <circle cx="58" cy="28" r="0.9" fill="#000000" opacity="0.7" class="sparkle-4"/>
+                        <circle cx="24" cy="48" r="1.5" fill="#000000" filter="url(#sparkleBlur)" class="sparkle-5"/>
+                        <circle cx="60" cy="50" r="1.0" fill="#000000" opacity="0.6" class="sparkle-6"/>
+                    </g>
+                </svg>
+            </div>
+            <h1 class="title">Welcome to Pathgen v2</h1>
+            <p class="subtitle">Set up AI coaches that deliver an experience players love</p>
+        </div>
+
+        <div class="form-container">
+            <form onsubmit="completeSetup(event)">
+                <div class="input-row">
+                    <div class="input-group">
+                        <label class="input-label">First Name</label>
+                        <input 
+                            type="text" 
+                            class="input-field" 
+                            placeholder="John"
+                            required
+                            id="firstName"
+                        />
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Last Name</label>
+                        <input 
+                            type="text" 
+                            class="input-field" 
+                            placeholder="Doe"
+                            required
+                            id="lastName"
+                        />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    Get Started
+                    <svg class="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+
+    <script>
+        // Respect reduced motion preference for sparkle animations
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const logo = document.getElementById('logo');
+        
+        function updateSparkles() {
+            if (prefersReducedMotion.matches) {
+                logo.classList.remove('logo-sparkle-animate');
+            } else {
+                logo.classList.add('logo-sparkle-animate');
+            }
+        }
+        
+        updateSparkles();
+        prefersReducedMotion.addEventListener('change', updateSparkles);
+
+        // Discord OAuth configuration
+        const DISCORD_CLIENT_ID = '1430744947732250726';
+        const DISCORD_CLIENT_SECRET = ''; // This should be on backend only
+        
+        // CRITICAL: Use the EXACT same redirect URI that was used in login.html
+        // This must match exactly what OAuth providers (Discord/Google) expect
+        let REDIRECT_URI;
+        // Try to get stored redirect URI (set by login.html)
+        const storedDiscordRedirectUri = localStorage.getItem('discord_redirect_uri');
+        const storedGoogleRedirectUri = localStorage.getItem('google_redirect_uri');
+        const storedRedirectUri = storedDiscordRedirectUri || storedGoogleRedirectUri;
+        
+        if (storedRedirectUri) {
+            // Use the stored redirect URI from login.html (ensures exact match)
+            REDIRECT_URI = storedRedirectUri;
+            console.log('📍 Using stored redirect URI from login:', REDIRECT_URI);
+        } else if (window.location.hostname === 'pathgen.dev' || window.location.hostname === 'www.pathgen.dev') {
+            // Always use non-www version for pathgen.dev to ensure consistency
+            REDIRECT_URI = 'https://pathgen.dev/setup.html';
+            console.log('📍 Using default redirect URI (pathgen.dev):', REDIRECT_URI);
+        } else {
+            REDIRECT_URI = window.location.origin + '/setup.html';
+            console.log('📍 Using origin-based redirect URI:', REDIRECT_URI);
+        }
+
+        // Handle Discord OAuth callback
+        async function handleDiscordCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const error = urlParams.get('error');
+
+            if (error) {
+                console.error('Discord OAuth error:', error);
+                alert('Discord login failed. Please try again.');
+                window.location.href = '/login.html';
+                return;
+            }
+
+            if (code) {
+                try {
+                    // Exchange code for access token via backend
+                    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:4000' : '';
+                    const response = await fetch(`${API_BASE}/api/discord/token`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ code, redirectUri: REDIRECT_URI })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        // Backend returns both token and user data
+                        const discordUser = data.user || data;
+                        
+                        // Store Discord user data with all fields
+                        localStorage.setItem('discordUser', JSON.stringify({
+                            id: discordUser.id,
+                            username: discordUser.username,
+                            discriminator: discordUser.discriminator,
+                            email: discordUser.email,
+                            avatar: discordUser.avatar,
+                            verified: discordUser.verified
+                        }));
+                        localStorage.setItem('loginMethod', 'discord');
+                        
+                        console.log('✅ Discord OAuth successful:', {
+                            username: discordUser.username,
+                            email: discordUser.email,
+                            id: discordUser.id
+                        });
+                        
+                        // Clean URL
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    } else {
+                        const errorText = await response.text();
+                        let errorData;
+                        try {
+                            errorData = JSON.parse(errorText);
+                        } catch {
+                            errorData = { error: errorText || 'Unknown error' };
+                        }
+                        console.error('Discord OAuth failed:', response.status, errorData);
+                        
+                        if (response.status === 404) {
+                            alert('Discord OAuth endpoint not found. Please restart the server and ensure DISCORD_CLIENT_SECRET is set in .env file.');
+                        } else if (response.status === 500 && errorData.error === 'Discord OAuth not configured') {
+                            alert('Discord OAuth not configured. Please set DISCORD_CLIENT_SECRET in your .env file.');
+                        } else {
+                            alert(`Discord login failed: ${errorData.error || 'Unknown error'}. Please try again.`);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Discord OAuth error:', error);
+                    alert('Discord login failed. Please check your connection and try again.');
+                }
+            }
+        }
+
+        // Handle Google OAuth callback
+        async function handleGoogleCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const error = urlParams.get('error');
+
+            if (error) {
+                console.error('Google OAuth error:', error);
+                alert('Google login failed. Please try again.');
+                window.location.href = '/login.html';
+                return;
+            }
+
+            if (code) {
+                try {
+                    // Exchange code for access token via backend
+                    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:4000' : '';
+                    const response = await fetch(`${API_BASE}/api/google/token`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ code, redirectUri: REDIRECT_URI })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        // Backend returns both token and user data
+                        const googleUser = data.user || data;
+                        
+                        // Store Google user data (same format as Discord for consistency)
+                        localStorage.setItem('googleUser', JSON.stringify({
+                            id: googleUser.id,
+                            username: googleUser.username,
+                            email: googleUser.email,
+                            avatar: googleUser.avatar,
+                            verified: googleUser.verified,
+                            name: googleUser.name
+                        }));
+                        localStorage.setItem('loginMethod', 'google');
+                        
+                        console.log('✅ Google OAuth successful:', {
+                            username: googleUser.username,
+                            email: googleUser.email,
+                            id: googleUser.id
+                        });
+                        
+                        // Clean URL
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    } else {
+                        const errorText = await response.text();
+                        let errorData;
+                        try {
+                            errorData = JSON.parse(errorText);
+                        } catch {
+                            errorData = { error: errorText || 'Unknown error' };
+                        }
+                        console.error('Google OAuth failed:', response.status, errorData);
+                        
+                        if (response.status === 404) {
+                            alert('Google OAuth endpoint not found. Please ensure GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are set.');
+                        } else if (response.status === 500 && errorData.error === 'Google OAuth not configured') {
+                            alert('Google OAuth not configured. Please set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in your environment variables.');
+                        } else {
+                            alert(`Google login failed: ${errorData.error || 'Unknown error'}. Please try again.`);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Google OAuth error:', error);
+                    alert('Google login failed. Please check your connection and try again.');
+                }
+            }
+        }
+
+        function completeSetup(event) {
+            event.preventDefault();
+            
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            
+            // Store user info
+            localStorage.setItem('userFirstName', firstName);
+            localStorage.setItem('userLastName', lastName);
+            localStorage.setItem('setupComplete', 'true');
+            
+            // Save user data for authentication
+            const loginMethod = localStorage.getItem('loginMethod') || 'discord';
+            const discordUser = localStorage.getItem('discordUser');
+            const googleUser = localStorage.getItem('googleUser');
+            
+            let userData = {
+                name: `${firstName} ${lastName}`.trim(),
+                firstName,
+                lastName,
+                loginMethod: loginMethod,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Add Discord data if available
+            if (discordUser && loginMethod === 'discord') {
+                try {
+                    const discordData = JSON.parse(discordUser);
+                    
+                    // Set email (required)
+                    if (discordData.email) {
+                        userData.email = discordData.email;
+                    }
+                    
+                    // Set Discord identity
+                    userData.discordId = discordData.id;
+                    userData.discordUsername = discordData.username;
+                    
+                    // Use Discord username as name if available
+                    if (discordData.username) {
+                        userData.name = discordData.username;
+                    }
+                    
+                    // Add Discord avatar URL
+                    if (discordData.avatar && discordData.id) {
+                        userData.discordAvatar = `https://cdn.discordapp.com/avatars/${discordData.id}/${discordData.avatar}.png`;
+                    } else if (discordData.id) {
+                        // Default Discord avatar (use discriminator if available, otherwise use id)
+                        const avatarNum = discordData.discriminator ? (parseInt(discordData.discriminator) % 5) : (parseInt(discordData.id) % 5);
+                        userData.discordAvatar = `https://cdn.discordapp.com/embed/avatars/${avatarNum}.png`;
+                    }
+                    
+                    console.log('✅ Discord data added to user profile:', {
+                        email: userData.email,
+                        username: userData.discordUsername,
+                        avatar: userData.discordAvatar ? 'Set' : 'Not set'
+                    });
+                } catch (e) {
+                    console.error('❌ Error parsing Discord user data:', e);
+                }
+            }
+            
+            // Add Google data if available
+            if (googleUser && loginMethod === 'google') {
+                try {
+                    const googleData = JSON.parse(googleUser);
+                    
+                    // Set email (required)
+                    if (googleData.email) {
+                        userData.email = googleData.email;
+                    }
+                    
+                    // Set Google identity
+                    userData.googleId = googleData.id;
+                    userData.googleUsername = googleData.username || googleData.name;
+                    
+                    // Use Google name if available
+                    if (googleData.name) {
+                        userData.name = googleData.name;
+                    }
+                    
+                    // Add Google avatar URL
+                    if (googleData.avatar) {
+                        userData.googleAvatar = googleData.avatar;
+                    }
+                    
+                    console.log('✅ Google data added to user profile:', {
+                        email: userData.email,
+                        username: userData.googleUsername,
+                        avatar: userData.googleAvatar ? 'Set' : 'Not set'
+                    });
+                } catch (e) {
+                    console.error('❌ Error parsing Google user data:', e);
+                }
+            }
+            
+            if (!discordUser && !googleUser) {
+                console.warn('⚠️  No OAuth user data found');
+            }
+            
+            try {
+                localStorage.setItem('pathgen_user', JSON.stringify(userData));
+                console.log('✅ User data saved to localStorage');
+                
+                // Redirect to subscription page
+                console.log('🔄 Redirecting to /subscribe.html...');
+                window.location.href = '/subscribe.html';
+            } catch (error) {
+                console.error('❌ Error saving user data:', error);
+                alert('Error saving your information. Please try again.');
+            }
+        }
+
+        // Check if already logged in
+        window.onload = async () => {
+            // Check if user is already set up (do this first to avoid unnecessary OAuth processing)
+            const existingUser = localStorage.getItem('pathgen_user');
+            const setupComplete = localStorage.getItem('setupComplete');
+            
+            if (existingUser && setupComplete === 'true') {
+                // Already logged in and set up, redirect to home
+                console.log('✅ User already set up, redirecting to home...');
+                window.location.href = '/index.html';
+                return;
+            }
+            
+            // Check which OAuth method was used
+            const loginMethod = localStorage.getItem('loginMethod');
+            
+            // Only handle OAuth callback if we have a code in the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const hasOAuthCode = urlParams.get('code');
+            
+            if (hasOAuthCode) {
+                // Handle OAuth callback based on login method
+                if (loginMethod === 'google') {
+                    await handleGoogleCallback();
+                } else {
+                    // Default to Discord for backwards compatibility
+                    await handleDiscordCallback();
+                }
+            }
+            
+            // DISABLED: Allow access without login method
+            // if (!loginMethod) {
+            //     window.location.href = '/login.html';
+            // }
+        };
+    </script>
+</body>
+</html>

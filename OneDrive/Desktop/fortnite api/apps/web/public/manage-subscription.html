@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Logo.png">
+    <link rel="shortcut icon" type="image/png" href="/Logo.png">
+    <link rel="apple-touch-icon" href="/Logo.png">
+    <title>Manage Subscription - PathGen AI</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pathgen.dev/manage-subscription">
+    <meta property="og:title" content="Manage Subscription - PathGen AI">
+    <meta property="og:description" content="Manage your PathGen AI subscription and billing.">
+    <meta property="og:image" content="https://pathgen.dev/embed.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://pathgen.dev/manage-subscription">
+    <meta name="twitter:title" content="Manage Subscription - PathGen AI">
+    <meta name="twitter:description" content="Manage your PathGen AI subscription and billing.">
+    <meta name="twitter:image" content="https://pathgen.dev/embed.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0A0A0A;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Full Page Gradient Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.1) 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Header Styles */
+        .header {
+            position: relative;
+            z-index: 100;
+            padding: 20px 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(12px);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1000px;
+            margin: 60px auto;
+            padding: 0 40px;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-size: 1.25rem;
+            color: #A0A0A0;
+            margin-bottom: 48px;
+        }
+
+        /* Subscription Card */
+        .subscription-card {
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 32px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .subscription-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .plan-name {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 8px;
+        }
+
+        .plan-status {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            background: rgba(34, 197, 94, 0.2);
+            color: #22C55E;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .plan-status.canceled {
+            background: rgba(239, 68, 68, 0.2);
+            color: #EF4444;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .subscription-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .detail-label {
+            font-size: 0.875rem;
+            color: #A0A0A0;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            font-size: 1.125rem;
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            border: none;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #0A0A0A;
+            color: white;
+            border: 1.5px solid transparent;
+            position: relative;
+            background-clip: padding-box;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50px;
+            padding: 1.5px;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-danger {
+            background: transparent;
+            color: #EF4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .info-box {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 32px;
+        }
+
+        .info-box-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 8px;
+        }
+
+        .info-box-text {
+            font-size: 0.875rem;
+            color: #A0A0A0;
+            line-height: 1.6;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #FFFFFF;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 0 20px;
+                margin: 40px auto;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .subscription-card {
+                padding: 24px;
+            }
+
+            .subscription-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">
+                <span>Pathgen v2</span>
+            </a>
+            <div style="display: flex; gap: 24px; align-items: center;">
+                <a href="/subscribe.html" style="color: #A0A0A0; text-decoration: none; font-weight: 500;">Pricing</a>
+                <a href="/settings.html" style="color: #A0A0A0; text-decoration: none; font-weight: 500;">Settings</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1 class="page-title">Manage Subscription</h1>
+        <p class="page-subtitle">View and manage your subscription details, billing, and payment methods.</p>
+
+        <div id="subscriptionContent">
+            <div class="subscription-card">
+                <div class="subscription-header">
+                    <div>
+                        <div class="plan-name" id="planName">Loading...</div>
+                        <div class="plan-status" id="planStatus">Active</div>
+                    </div>
+                </div>
+
+                <div class="subscription-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Plan</div>
+                        <div class="detail-value" id="planDetails">PathGen Pro</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Price</div>
+                        <div class="detail-value" id="planPrice">$6.99/month</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Next Billing Date</div>
+                        <div class="detail-value" id="nextBilling">Loading...</div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">💡 Manage Your Subscription</div>
+                    <div class="info-box-text">
+                        Click "Manage in Stripe Portal" to update your payment method, view billing history, 
+                        cancel your subscription, or update your billing information. All changes are secure 
+                        and handled by Stripe.
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" id="manageButton" onclick="openStripePortal()">
+                        Manage in Stripe Portal
+                    </button>
+                    <a href="/subscribe.html" class="btn btn-secondary">
+                        Change Plan
+                    </a>
+                </div>
+            </div>
+
+            <div class="subscription-card" id="noSubscription" style="display: none;">
+                <div class="subscription-header">
+                    <div>
+                        <div class="plan-name">No Active Subscription</div>
+                        <div class="plan-status canceled">Free Plan</div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">📋 Upgrade to Pro</div>
+                    <div class="info-box-text">
+                        You're currently on the free plan. Upgrade to PathGen Pro to unlock unlimited AI coaching, 
+                        replay analysis, and all premium features.
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <a href="/subscribe.html" class="btn btn-primary">
+                        Upgrade to Pro
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load subscription data from localStorage
+        function loadSubscriptionData() {
+            const subscriptionStr = localStorage.getItem('pathgenSubscription');
+            const userDataStr = localStorage.getItem('pathgen_user');
+            
+            if (!subscriptionStr || !userDataStr) {
+                document.getElementById('subscriptionContent').innerHTML = document.getElementById('noSubscription').outerHTML;
+                document.getElementById('noSubscription').style.display = 'block';
+                return;
+            }
+
+            try {
+                const subscription = JSON.parse(subscriptionStr);
+                const userData = JSON.parse(userDataStr);
+
+                // Update UI with subscription data
+                if (subscription.type === 'free' || !subscription.type) {
+                    document.getElementById('subscriptionContent').innerHTML = document.getElementById('noSubscription').outerHTML;
+                    document.getElementById('noSubscription').style.display = 'block';
+                    return;
+                }
+
+                // Display subscription info
+                document.getElementById('planName').textContent = subscription.plan || 'PathGen Pro';
+                document.getElementById('planDetails').textContent = subscription.base || 'PathGen Pro';
+                document.getElementById('planPrice').textContent = subscription.total || '$6.99/month';
+                
+                if (subscription.startDate) {
+                    const startDate = new Date(subscription.startDate);
+                    const nextBilling = new Date(startDate);
+                    nextBilling.setMonth(nextBilling.getMonth() + 1);
+                    document.getElementById('nextBilling').textContent = nextBilling.toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
+                } else {
+                    document.getElementById('nextBilling').textContent = 'N/A';
+                }
+
+                // Store customer ID if available (from Stripe checkout session)
+                if (subscription.stripeCustomerId) {
+                    window.stripeCustomerId = subscription.stripeCustomerId;
+                }
+
+            } catch (error) {
+                console.error('Error loading subscription:', error);
+                document.getElementById('subscriptionContent').innerHTML = document.getElementById('noSubscription').outerHTML;
+                document.getElementById('noSubscription').style.display = 'block';
+            }
+        }
+
+        // Open Stripe Customer Portal
+        async function openStripePortal() {
+            const button = document.getElementById('manageButton');
+            const originalText = button.textContent;
+            
+            try {
+                button.disabled = true;
+                button.innerHTML = '<span class="loading"></span> Opening Portal...';
+
+                // Get customer ID from localStorage or prompt user
+                const subscriptionStr = localStorage.getItem('pathgenSubscription');
+                let customerId = null;
+
+                if (subscriptionStr) {
+                    const subscription = JSON.parse(subscriptionStr);
+                    customerId = subscription.stripeCustomerId;
+                }
+
+                // If no customer ID, try to get from user email
+                if (!customerId) {
+                    const userDataStr = localStorage.getItem('pathgen_user');
+                    if (userDataStr) {
+                        const userData = JSON.parse(userDataStr);
+                        // In a real app, you'd look up the customer ID from your database
+                        // For now, we'll need to get it from the checkout session
+                        alert('Customer ID not found. Please complete a purchase first, or contact support.');
+                        button.disabled = false;
+                        button.textContent = originalText;
+                        return;
+                    }
+                }
+
+                if (!customerId) {
+                    alert('Unable to find your subscription. Please ensure you\'re logged in and have an active subscription.');
+                    button.disabled = false;
+                    button.textContent = originalText;
+                    return;
+                }
+
+                // Call backend to create portal session
+                const response = await fetch('/api/stripe/create-portal-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        customerId: customerId,
+                        returnUrl: window.location.href,
+                    }),
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Failed to create portal session');
+                }
+
+                const data = await response.json();
+                
+                // Redirect to Stripe Customer Portal
+                if (data.url) {
+                    window.location.href = data.url;
+                } else {
+                    throw new Error('No portal URL received');
+                }
+
+            } catch (error) {
+                console.error('Error opening portal:', error);
+                alert('Failed to open subscription portal. Please try again or contact support.\n\nError: ' + error.message);
+                button.disabled = false;
+                button.textContent = originalText;
+            }
+        }
+
+        // Load data on page load
+        window.onload = loadSubscriptionData;
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,53 @@
+{
+    "outputDirectory": "dist",
+    "headers": [
+        {
+            "source": "/admin(.*)",
+            "headers": [
+                {
+                    "key": "Cross-Origin-Embedder-Policy",
+                    "value": "credentialless"
+                },
+                {
+                    "key": "Cross-Origin-Opener-Policy",
+                    "value": "same-origin"
+                }
+            ]
+        },
+        {
+            "source": "/cdn-proxy/(.*)",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=31536000, immutable"
+                },
+                {
+                    "key": "Access-Control-Allow-Origin",
+                    "value": "*"
+                }
+            ]
+        }
+    ],
+    "rewrites": [
+        {
+            "source": "/cdn-proxy/temp/uploads/:uid/:file",
+            "destination": "https://firebasestorage.googleapis.com/v0/b/fp2p-bcd48.firebasestorage.app/o/temp%2Fuploads%2F:uid%2F:file?alt=media"
+        },
+        {
+            "source": "/cdn-proxy/:folder/:file",
+            "destination": "https://firebasestorage.googleapis.com/v0/b/fp2p-bcd48.firebasestorage.app/o/:folder%2F:file?alt=media"
+        },
+        {
+            "source": "/api/captions/:action",
+            "destination": "/api/captions?action=:action"
+        },
+        {
+            "source": "/api/stripe/:action",
+            "destination": "/api/stripe?action=:action"
+        },
+        {
+            "source": "/((?!api/|cdn-proxy/|assets/|pfps/|thumbnails/).*)",
+            "destination": "/index.html"
+        }
+    ]
+}

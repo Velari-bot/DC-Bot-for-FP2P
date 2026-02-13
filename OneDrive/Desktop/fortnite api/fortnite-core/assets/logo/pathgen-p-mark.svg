@@ -1,0 +1,171 @@
+<!--
+  Pathgen "P" Mark - Primary Logo
+  Monochrome geometric P with gem-like facets and cosmic sparkles
+  
+  Structure:
+  - <defs>: Filters (blur), masks, gradients
+  - <g id="glyph">: The P letterform with facets
+  - <g id="sparkles">: Decorative highlights (can be toggled)
+  
+  Color Palette:
+  - #000000 (black) - Primary glyph
+  - #F2F2F2 (light grey) - Facets/highlights
+  - #BDBDBD (mid grey) - Secondary facets
+  - #FFFFFF (white) - Sparkles
+  
+  Usage:
+  - Default size: 100×100
+  - Scales cleanly to 32px minimum
+  - Sparkles can be hidden via CSS: #sparkles { display: none; }
+-->
+<svg 
+  xmlns="http://www.w3.org/2000/svg" 
+  viewBox="0 0 100 100" 
+  role="img"
+  aria-label="Pathgen logo"
+  data-logo-version="1.0"
+>
+  <defs>
+    <!-- Subtle blur for sparkles (cosmic glow effect) -->
+    <filter id="sparkleBlur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+    </filter>
+    
+    <!-- Mask to clip sparkles inside bowl (optional usage) -->
+    <mask id="bowlMask">
+      <circle cx="62" cy="35" r="20" fill="white"/>
+    </mask>
+    
+    <!-- Subtle gradient for depth (optional) -->
+    <linearGradient id="glyphGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#000000"/>
+      <stop offset="100%" stop-color="#1a1a1a"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Main P Glyph with Facets -->
+  <g id="glyph" data-component="letterform">
+    
+    <!-- P Stem - Rounded rectangular bar -->
+    <rect 
+      x="20" 
+      y="20" 
+      width="16" 
+      height="60" 
+      rx="8" 
+      ry="8" 
+      fill="#000000"
+    />
+    
+    <!-- P Bowl - Circular top with gem cut -->
+    <path 
+      d="M 36 20 
+         H 50 
+         A 24 24 0 0 1 50 58
+         H 36 
+         V 20 Z"
+      fill="#000000"
+    />
+    
+    <!-- Internal Facet 1 - Upper diamond (gem-like cut) -->
+    <path 
+      d="M 45 28 
+         L 58 32 
+         L 54 40 
+         L 42 38 Z"
+      fill="#F2F2F2"
+      opacity="0.3"
+    />
+    
+    <!-- Internal Facet 2 - Lower triangle (depth) -->
+    <path 
+      d="M 44 42 
+         L 56 46 
+         L 48 52 Z"
+      fill="#BDBDBD"
+      opacity="0.25"
+    />
+    
+    <!-- Internal Facet 3 - Side highlight (polish) -->
+    <path 
+      d="M 38 26 
+         L 42 24 
+         L 42 34 
+         L 38 36 Z"
+      fill="#F2F2F2"
+      opacity="0.2"
+    />
+  </g>
+  
+  <!-- Sparkles - Cosmic highlights (can be animated) -->
+  <g id="sparkles" data-component="highlights" opacity="0.85">
+    
+    <!-- Sparkle 1 - Top right of bowl (largest) -->
+    <circle 
+      cx="64" 
+      cy="26" 
+      r="2.5" 
+      fill="#FFFFFF"
+      filter="url(#sparkleBlur)"
+      data-sparkle="1"
+      class="sparkle-1"
+    />
+    
+    <!-- Sparkle 2 - Right edge of bowl (medium) -->
+    <circle 
+      cx="70" 
+      cy="38" 
+      r="1.8" 
+      fill="#FFFFFF"
+      filter="url(#sparkleBlur)"
+      data-sparkle="2"
+      class="sparkle-2"
+    />
+    
+    <!-- Sparkle 3 - Inside bowl (small) -->
+    <circle 
+      cx="52" 
+      cy="35" 
+      r="1.2" 
+      fill="#FFFFFF"
+      opacity="0.8"
+      filter="url(#sparkleBlur)"
+      data-sparkle="3"
+      class="sparkle-3"
+    />
+    
+    <!-- Sparkle 4 - Upper bowl (tiny) -->
+    <circle 
+      cx="58" 
+      cy="28" 
+      r="0.9" 
+      fill="#FFFFFF"
+      opacity="0.7"
+      data-sparkle="4"
+      class="sparkle-4"
+    />
+    
+    <!-- Sparkle 5 - Mid stem accent (small) -->
+    <circle 
+      cx="24" 
+      cy="48" 
+      r="1.5" 
+      fill="#FFFFFF"
+      filter="url(#sparkleBlur)"
+      data-sparkle="5"
+      class="sparkle-5"
+    />
+    
+    <!-- Sparkle 6 - Lower bowl (tiny) -->
+    <circle 
+      cx="60" 
+      cy="50" 
+      r="1.0" 
+      fill="#FFFFFF"
+      opacity="0.6"
+      data-sparkle="6"
+      class="sparkle-6"
+    />
+  </g>
+</svg>
+

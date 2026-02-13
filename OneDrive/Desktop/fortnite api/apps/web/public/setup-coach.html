@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Logo.png">
+    <link rel="shortcut icon" type="image/png" href="/Logo.png">
+    <link rel="apple-touch-icon" href="/Logo.png">
+    <title>Setup Your Coach - Pathgen v2</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pathgen.dev/setup-coach">
+    <meta property="og:title" content="Setup Coach - PathGen AI">
+    <meta property="og:description" content="Configure your AI coach preferences and settings.">
+    <meta property="og:image" content="https://pathgen.dev/embed.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://pathgen.dev/setup-coach">
+    <meta name="twitter:title" content="Setup Coach - PathGen AI">
+    <meta name="twitter:description" content="Configure your AI coach preferences and settings.">
+    <meta name="twitter:image" content="https://pathgen.dev/embed.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #FAFAFA;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Left Sidebar - Light Theme */
+        .sidebar {
+            width: 260px;
+            background: #FFFFFF;
+            border-right: 1px solid #E8E8E8;
+            display: flex;
+            flex-direction: column;
+            padding: 24px 16px;
+            flex-shrink: 0;
+        }
+
+        .workspace-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: #F9F9F9;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            cursor: pointer;
+            border: 1px solid #E8E8E8;
+        }
+
+        .workspace-header:hover {
+            background: #F5F5F5;
+        }
+
+        .workspace-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            color: white;
+        }
+
+        .workspace-name {
+            flex: 1;
+            font-weight: 600;
+            font-size: 14px;
+            color: #0A0A0A;
+        }
+
+        .workspace-arrow {
+            color: #999;
+            font-size: 12px;
+        }
+
+        /* Navigation Sections */
+        .nav-section {
+            margin-bottom: 28px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            padding: 0 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: #F5F5F5;
+            color: #0A0A0A;
+        }
+
+        .nav-item.active {
+            background: #F0EDFF;
+            color: #8B5CF6;
+        }
+
+        .nav-icon {
+            font-size: 16px;
+        }
+
+        /* Bottom Section */
+        .sidebar-bottom {
+            margin-top: auto;
+        }
+
+        .upgrade-card {
+            background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+        }
+
+        .upgrade-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .upgrade-subtitle {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 12px;
+        }
+
+        .upgrade-btn {
+            width: 100%;
+            padding: 8px;
+            background: white;
+            color: #8B5CF6;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .upgrade-btn:hover {
+            background: #F5F5F5;
+            transform: translateY(-1px);
+        }
+
+        .help-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 6px;
+        }
+
+        .help-item:hover {
+            background: #F5F5F5;
+        }
+
+        .help-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .icon-tutorial {
+            background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+        }
+
+        .icon-docs {
+            background: linear-gradient(135deg, #F97316 0%, #EF4444 100%);
+        }
+
+        .help-text {
+            flex: 1;
+        }
+
+        .help-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #0A0A0A;
+        }
+
+        .help-desc {
+            font-size: 11px;
+            color: #999;
+        }
+
+        /* Main Panel - Light Theme */
+        .main-panel {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background: #FAFAFA;
+        }
+
+        /* Welcome Message - Light */
+        .welcome-toast {
+            background: #FFFFFF;
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-bottom: 32px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid #E8E8E8;
+        }
+
+        .toast-text {
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* Main Title - Dark on Light */
+        .main-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #0A0A0A;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        /* Setup Steps */
+        .setup-steps {
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .step {
+            background: #121212;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: all 0.2s;
+        }
+
+        .step:hover {
+            border-color: #8B5CF6;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.15);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .step-icon {
+            font-size: 24px;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #FFFFFF;
+            flex: 1;
+        }
+
+        .step-description {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .step-button {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background: #8B5CF6;
+            color: white;
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+        }
+
+        .step-button:hover {
+            background: #7C3AED;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        .step-button.secondary {
+            background: #1A1A1A;
+            color: #E0E0E0;
+            border: 1px solid #333;
+            box-shadow: none;
+        }
+
+        .step-button.secondary:hover {
+            background: #222;
+            border-color: #444;
+        }
+
+        .step-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            background: #1A1A1A;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 80px;
+            }
+
+            .workspace-name,
+            .workspace-arrow,
+            .nav-label,
+            .nav-item span,
+            .upgrade-card,
+            .help-text {
+                display: none;
+            }
+
+            .nav-item {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                padding: 12px;
+                border-right: none;
+                border-bottom: 1px solid #222;
+            }
+
+            .main-panel {
+                padding: 24px 20px;
+            }
+
+            .main-title {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Left Sidebar -->
+    <div class="sidebar">
+        <!-- Workspace Header -->
+        <div class="workspace-header">
+            <div class="workspace-icon">P</div>
+            <span class="workspace-name">My Coach</span>
+            <span class="workspace-arrow">▼</span>
+        </div>
+
+        <!-- Coach Hub Section -->
+        <div class="nav-section">
+            <div class="nav-label">Coach Hub</div>
+            <div class="nav-item">
+                <span class="nav-icon">💬</span>
+                <span>My Coach</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span>Progress Reports</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">🎯</span>
+                <span>Match History</span>
+            </div>
+        </div>
+
+        <!-- Manage Section -->
+        <div class="nav-section">
+            <div class="nav-label">Manage</div>
+            <div class="nav-item active">
+                <span class="nav-icon">⚙️</span>
+                <span>Playstyle Model</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">🎙️</span>
+                <span>Voice Settings</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">👥</span>
+                <span>Team Sync</span>
+            </div>
+        </div>
+
+        <!-- Bottom Section -->
+        <div class="sidebar-bottom">
+            <!-- Upgrade Card -->
+            <div class="upgrade-card">
+                <div class="upgrade-title">Get 50% discount</div>
+                <div class="upgrade-subtitle">Upgrade your plan today</div>
+                <button class="upgrade-btn" onclick="window.location.href='/subscribe.html'">Upgrade</button>
+            </div>
+
+            <!-- Help Items -->
+            <div class="help-item" onclick="window.location.href='/tutorial.html'">
+                <div class="help-icon icon-tutorial">▶</div>
+                <div class="help-text">
+                    <div class="help-title">Tutorials</div>
+                    <div class="help-desc">Learn the basics</div>
+                </div>
+            </div>
+
+            <div class="help-item" onclick="window.open('https://docs.pathgen.gg', '_blank')">
+                <div class="help-icon icon-docs">📄</div>
+                <div class="help-text">
+                    <div class="help-title">Docs</div>
+                    <div class="help-desc">Get the details</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Panel -->
+    <div class="main-panel">
+        <!-- Welcome Toast -->
+        <div class="welcome-toast">
+            <span class="toast-text">
+                Welcome! Build your Fortnite AI Coach — no credit card needed 👋 — <span id="userName">Coach</span>
+            </span>
+        </div>
+
+        <!-- Main Title -->
+        <h1 class="main-title">Build Your First Coach</h1>
+
+        <!-- Setup Steps -->
+        <div class="setup-steps">
+            
+            <!-- Step 1: Add Playstyle -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <span class="step-icon">🎮</span>
+                    <h2 class="step-title">Add Your Playstyle</h2>
+                </div>
+                <p class="step-description">
+                    Upload clips or describe how you play. Your coach will start learning your unique style and patterns.
+                </p>
+                <button class="step-button" onclick="uploadClips()">
+                    Upload Gameplay or Describe Style
+                </button>
+            </div>
+
+            <!-- Step 2: Customize Coach -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <span class="step-icon">🧠</span>
+                    <h2 class="step-title">Customize Your Coach</h2>
+                </div>
+                <p class="step-description">
+                    Choose your coach's personality and focus—aggressive, strategic, or balanced.
+                </p>
+                <button class="step-button" onclick="editCoach()">
+                    Edit Coach Profile
+                </button>
+            </div>
+
+            <!-- Step 3: Start Chatting -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <span class="step-icon">💬</span>
+                    <h2 class="step-title">Start Chatting</h2>
+                </div>
+                <p class="step-description">
+                    Ask your coach for tips, drills, or feedback. Try: "How do I win more close-range fights?"
+                </p>
+                <button class="step-button" onclick="openChat()">
+                    Open Coach Chat
+                </button>
+                <div class="step-status">No messages yet</div>
+            </div>
+
+            <!-- Step 4: Invite Teammates -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <span class="step-icon">👥</span>
+                    <h2 class="step-title">Invite Teammates</h2>
+                </div>
+                <p class="step-description">
+                    Add up to 3 teammates to share coaching insights and team strategies.
+                </p>
+                <button class="step-button secondary" onclick="inviteTeam()">
+                    Invite Squad
+                </button>
+                <div class="step-status">No teammates invited</div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Get user's first name
+        window.addEventListener('DOMContentLoaded', () => {
+            const userData = localStorage.getItem('pathgen_user');
+            if (userData) {
+                const user = JSON.parse(userData);
+                if (user.firstName) {
+                    document.getElementById('userName').textContent = user.firstName;
+                }
+            }
+        });
+
+        function uploadClips() {
+            alert('🎥 Upload Your Gameplay\n\nYou can upload:\n• Replay files (.replay)\n• Video clips (.mp4)\n• Or describe your playstyle in text\n\nYour AI coach will analyze and learn!');
+            
+            // In production: open file uploader or text input modal
+            console.log('Opening clip uploader...');
+        }
+
+        function editCoach() {
+            alert('🧠 Customize Your Coach\n\nChoose your coach personality:\n• Aggressive (push fights, be proactive)\n• Strategic (macro play, rotations)\n• Balanced (mix of both)\n\nSet focus areas:\n• Building\n• Aim\n• Game sense\n• Positioning');
+            
+            // In production: open coach customization modal
+            console.log('Opening coach editor...');
+        }
+
+        function openChat() {
+            // Redirect to AI chat page
+            window.location.href = '/chat.html';
+        }
+
+        function inviteTeam() {
+            alert('👥 Invite Your Squad\n\nEnter your teammates\' Discord usernames or email addresses.\n\nThey\'ll get access to:\n• Shared coaching insights\n• Team performance analytics\n• Coordinated training plans');
+            
+            // In production: open invite modal
+            console.log('Opening team invite...');
+        }
+
+        // Check if tutorial was completed
+        const tutorialCompleted = localStorage.getItem('tutorialCompleted');    
+        if (!tutorialCompleted) {
+            console.log('Tutorial not completed, user may have skipped');       
+        }
+    </script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+</body>
+</html>
+

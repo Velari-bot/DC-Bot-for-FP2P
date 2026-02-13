@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Logo.png">
+    <link rel="shortcut icon" type="image/png" href="/Logo.png">
+    <link rel="apple-touch-icon" href="/Logo.png">
+    <title>Replay Analyzer - PathGen AI</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pathgen.dev/analyze">
+    <meta property="og:title" content="Replay Analyzer - PathGen AI">
+    <meta property="og:description" content="Upload and analyze your Fortnite replays with AI-powered insights.">
+    <meta property="og:image" content="https://pathgen.dev/embed.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://pathgen.dev/analyze">
+    <meta name="twitter:title" content="Replay Analyzer - PathGen AI">
+    <meta name="twitter:description" content="Upload and analyze your Fortnite replays with AI-powered insights.">
+    <meta name="twitter:image" content="https://pathgen.dev/embed.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Prevent Next.js MutationObserver errors - must run before any other scripts -->
+    <script>
+        (function() {
+            if (typeof window === 'undefined') return;
+            
+            // Disable Next.js hydration
+            window.__NEXT_DATA__ = null;
+            window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = null;
+            
+            // Wrap MutationObserver to prevent errors from Next.js
+            if (typeof MutationObserver !== 'undefined' && window.MutationObserver) {
+                const OriginalMutationObserver = window.MutationObserver;
+                window.MutationObserver = function(callback) {
+                    const wrappedCallback = function(mutations, observer) {
+                        try {
+                            const validMutations = mutations.filter(m => {
+                                return m && m.target && typeof m.target === 'object' && m.target.nodeType === 1;
+                            });
+                            if (validMutations.length > 0) {
+                                callback(validMutations, observer);
+                            }
+                        } catch (e) {
+                            // Silently ignore errors
+                        }
+                    };
+                    const observer = new OriginalMutationObserver(wrappedCallback);
+                    const originalObserve = observer.observe.bind(observer);
+                    observer.observe = function(target, options) {
+                        if (!target || typeof target !== 'object' || target.nodeType !== 1 || !target.isConnected) {
+                            return;
+                        }
+                        try {
+                            return originalObserve(target, options);
+                        } catch (e) {
+                            // Silently ignore
+                        }
+                    };
+                    return observer;
+                };
+                window.MutationObserver.prototype = OriginalMutationObserver.prototype;
+            }
+        })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0A0A0A;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header with Pill Nav Bar */
+        .header {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .nav {
+            backdrop-filter: blur(16px);
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 
+                        0 0 0 1px rgba(255, 255, 255, 0.03),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 0 8px;
+            margin-right: 4px;
+        }
+
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .logo-icon svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin: 0 8px;
+        }
+
+        .nav-link {
+            color: #A0A0A0;
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 6px 14px;
+            border-radius: 25px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link.active {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link .caret {
+            font-size: 8px;
+            margin-left: 1px;
+            opacity: 0.7;
+        }
+
+        .nav-link.external::after {
+            content: '↗';
+            font-size: 10px;
+            opacity: 0.6;
+            margin-left: 2px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-cta {
+            padding: 6px 18px;
+            background: #0A0A0A;
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            border-radius: 50px;
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .nav-cta:hover {
+            background: #151515;
+            border-color: rgba(139, 92, 246, 0.8);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+        }
+
+        .nav-cta::after {
+            content: '→';
+            font-size: 14px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 12px 4px 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            margin-left: 8px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            overflow: hidden;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            min-width: 220px;
+            background: rgba(15, 15, 15, 0.98);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+                        0 0 0 1px rgba(255, 255, 255, 0.05);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            z-index: 200;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: #d1d5db;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(79, 140, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .dropdown-item-icon {
+            font-size: 16px;
+            width: 20px;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 6px 0;
+        }
+
+        .dropdown-item.danger {
+            color: #ef4444;
+        }
+
+        .dropdown-item.danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .dropdown-item.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .dropdown-item.locked:hover {
+            background: transparent;
+            color: #6b7280;
+        }
+
+        #featuresDropdown {
+            left: 0;
+            right: auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: auto;
+            padding: 140px 48px 80px;
+            position: relative;
+        }
+
+        .hero-glow {
+            position: absolute;
+            bottom: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1000px;
+            height: 1000px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, rgba(59, 130, 246, 0.15) 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+            filter: blur(60px);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 28px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #E0E0E0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.375rem;
+            color: #A0A0A0;
+            line-height: 1.6;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 48px 100px;
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 48px;
+            margin-bottom: 40px;
+        }
+
+        .content-card h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 32px;
+            letter-spacing: -0.02em;
+        }
+
+        .content-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .info-card .icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .info-card p {
+            font-size: 0.95rem;
+            color: #A0A0A0;
+            line-height: 1.6;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 48px;
+            margin-bottom: 40px;
+        }
+
+        .file-input-wrapper {
+            margin-bottom: 24px;
+        }
+
+        .file-input-wrapper label {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #FFFFFF;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            width: 100%;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #FFFFFF;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .file-input-wrapper input[type="file"]:hover:not(:disabled) {
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .file-input-wrapper input[type="file"]:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .file-info {
+            margin-top: 12px;
+            font-size: 0.875rem;
+            color: #10B981;
+        }
+
+        .btn-primary {
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            border: none;
+            border-radius: 12px;
+            color: #FFFFFF;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Status Section */
+        .status-section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            margin-bottom: 16px;
+        }
+
+        .status-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .status-icon {
+            font-size: 1.5rem;
+        }
+
+        .status-content {
+            flex: 1;
+        }
+
+        .status-label {
+            font-size: 0.875rem;
+            color: #A0A0A0;
+            margin-bottom: 4px;
+        }
+
+        .status-value {
+            font-family: monospace;
+            color: #FFFFFF;
+            font-size: 0.95rem;
+            word-break: break-all;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #F59E0B;
+        }
+
+        .status-complete {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10B981;
+        }
+
+        .status-warning {
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            color: #FBBF24;
+        }
+
+        .status-failed {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #EF4444;
+        }
+
+        .status-processing {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            color: #E9D5FF;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-top: 8px;
+        }
+
+        /* Results Section */
+        .results-section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .results-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .results-header h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .btn-secondary {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #FFFFFF;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Results Display */
+        .results-container {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .results-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.2s ease;
+        }
+
+        .results-card:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .results-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .results-card-header h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #FFFFFF;
+        }
+
+        .results-card-icon {
+            font-size: 1.5rem;
+        }
+
+        .expand-icon {
+            font-size: 1.25rem;
+            color: #A0A0A0;
+            transition: transform 0.2s ease;
+        }
+
+        .results-card-header[aria-expanded="false"] .expand-icon {
+            transform: rotate(-90deg);
+        }
+
+        .results-card-content {
+            display: grid;
+            gap: 16px;
+        }
+
+        .results-card-content[aria-hidden="true"] {
+            display: none;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .stat-item-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+            color: #A0A0A0;
+        }
+
+        .stat-item-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+
+        .stat-item-value.positive {
+            color: #10B981;
+        }
+
+        .stat-item-value.negative {
+            color: #EF4444;
+        }
+
+        .stat-item-value.neutral {
+            color: #F59E0B;
+        }
+
+        .stat-item-label {
+            font-size: 0.875rem;
+            color: #A0A0A0;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+        }
+
+        .weapons-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .weapon-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .weapon-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .weapon-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            text-align: center;
+        }
+
+        .weapon-details {
+            flex: 1;
+        }
+
+        .weapon-name {
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 4px;
+        }
+
+        .weapon-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 0.875rem;
+            color: #A0A0A0;
+        }
+
+        .building-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+        }
+
+        .material-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .material-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .material-name {
+            font-size: 0.875rem;
+            color: #A0A0A0;
+            margin-bottom: 8px;
+        }
+
+        .material-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+
+        .match-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .info-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .info-item-label {
+            font-size: 0.875rem;
+            color: #A0A0A0;
+            margin-bottom: 8px;
+        }
+
+        .info-item-value {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #FFFFFF;
+        }
+
+        .json-viewer {
+            background: #000000;
+            padding: 24px;
+            border-radius: 12px;
+            overflow: auto;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-height: 600px;
+            font-family: monospace;
+            display: none;
+        }
+
+        .json-toggle {
+            margin-top: 16px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #A0A0A0;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .json-toggle:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #FFFFFF;
+        }
+
+        .json-viewer pre {
+            margin: 0;
+            color: #E5E7EB;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .main-content {
+                padding: 0 24px 100px;
+            }
+            .content-card, .upload-section, .status-section, .results-section {
+                padding: 32px 24px;
+            }
+            .stat-grid, .match-info-grid, .building-stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .weapon-stats {
+                flex-direction: column;
+                gap: 4px;
+            }
+            .chart-container {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img">
+                        <defs>
+                            <filter id="sparkleBlur">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+                            </filter>
+                        </defs>
+                        <g id="glyph">
+                            <rect x="20" y="20" width="16" height="60" rx="8" ry="8" fill="#FFFFFF"/>
+                            <path d="M 36 20 H 50 A 24 24 0 0 1 50 58 H 36 V 20 Z" fill="#FFFFFF"/>
+                            <path d="M 45 28 L 58 32 L 54 40 L 42 38 Z" fill="#000000" opacity="0.3"/>
+                            <path d="M 44 42 L 56 46 L 48 52 Z" fill="#000000" opacity="0.25"/>
+                            <path d="M 38 26 L 42 24 L 42 34 L 38 36 Z" fill="#000000" opacity="0.2"/>
+                        </g>
+                        <g id="sparkles" opacity="0.85">
+                            <circle cx="64" cy="26" r="2.5" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-1"/>
+                            <circle cx="70" cy="38" r="1.8" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-2"/>
+                            <circle cx="52" cy="35" r="1.2" fill="#FFFFFF" opacity="0.8" filter="url(#sparkleBlur)" class="sparkle-3"/>
+                            <circle cx="58" cy="28" r="0.9" fill="#FFFFFF" opacity="0.7" class="sparkle-4"/>
+                            <circle cx="24" cy="48" r="1.5" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-5"/>
+                            <circle cx="60" cy="50" r="1.0" fill="#FFFFFF" opacity="0.6" class="sparkle-6"/>
+                        </g>
+                    </svg>
+                </div>
+                <span>Pathgen v2</span>
+            </a>
+            
+            <div class="nav-center">
+                <a href="/docs.html" class="nav-link">Docs</a>
+                <div class="dropdown">
+                    <a href="#" class="nav-link" onclick="toggleDropdown('features', event)">
+                        Features
+                        <span class="caret">▼</span>
+                    </a>
+                    <div class="dropdown-menu" id="featuresDropdown">
+                        <a href="/analyze" class="dropdown-item">
+                            <span class="dropdown-item-icon">🎮</span>
+                            <span>Replay Parser</span>
+                        </a>
+                        <a href="/masterclass" class="dropdown-item">
+                            <span class="dropdown-item-icon">📖</span>
+                            <span>Masterclass</span>
+                        </a>
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Coach</span>
+                        </a>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">📊</span>
+                            <span>Competitive Insights</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">🎤</span>
+                            <span>Voice</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="/docs.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">📚</span>
+                            <span>Documentation</span>
+                        </a>
+                    </div>
+                </div>
+                <a href="/cih-coaching.html" class="nav-link">CIH Coaching</a>
+                <a href="/nagc-dropmaps.html" class="nav-link">NAGC Drop Maps</a>
+            </div>
+
+            <div class="nav-right">
+                <a href="/subscribe.html" class="nav-link">Pricing</a>
+                <a href="/login.html" class="nav-cta" id="navCTA">Try For Free</a>
+                <div class="dropdown">
+                    <div class="user-info" id="userInfo" onclick="toggleDropdown('settings', event)" style="display: none;">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <span class="user-name" id="userName">User</span>
+                    </div>
+                    <div class="dropdown-menu" id="settingsDropdown">
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Chat</span>
+                        </a>
+                        <a href="/tournaments.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/settings.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">⚙️</span>
+                            <span>Settings</span>
+                        </a>
+                        <a href="/subscribe.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💳</span>
+                            <span>Upgrade to Pro</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item danger" onclick="logout()">
+                            <span class="dropdown-item-icon">🚪</span>
+                            <span>Logout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-glow"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Replay Analyzer</h1>
+            <p class="hero-subtitle">
+                Upload your Fortnite replay files to get comprehensive match analysis powered by Osirion's advanced parsing technology.
+                Gain insights into your gameplay, identify weaknesses, and improve faster.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- What You Get Section -->
+        <div class="content-card">
+            <h2>What You Get</h2>
+            <div class="grid-cards">
+                <div class="info-card">
+                    <div class="icon">📊</div>
+                    <h3>Match Statistics</h3>
+                    <p>Complete match data including eliminations, assists, damage dealt/taken, placement, and zone-specific performance metrics.</p>
+                </div>
+                <div class="info-card">
+                    <div class="icon">🎯</div>
+                    <h3>Shot Events</h3>
+                    <p>Detailed shot-by-shot analysis with weapon data, hit locations, damage values, and critical hit detection for every engagement.</p>
+                </div>
+                <div class="info-card">
+                    <div class="icon">🏗️</div>
+                    <h3>Building Stats</h3>
+                    <p>Track your building performance including materials farmed/collected, builds placed, player building hits, and weakpoints.</p>
+                </div>
+                <div class="info-card">
+                    <div class="icon">⚡</div>
+                    <h3>Zone Performance</h3>
+                    <p>Per-zone statistics showing how you perform in different storm phases, including damage, eliminations, and survival time.</p>
+                </div>
+                <div class="info-card">
+                    <div class="icon">👥</div>
+                    <h3>Player Data</h3>
+                    <p>Comprehensive player information including Epic IDs, usernames, team compositions, and player-specific match statistics.</p>
+                </div>
+                <div class="info-card">
+                    <div class="icon">🔫</div>
+                    <h3>Weapon Analytics</h3>
+                    <p>Weapon usage data, damage output per weapon, accuracy metrics, and weapon-specific performance analysis.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <h2>Upload Replay</h2>
+            <p style="font-size: 1rem; color: #A0A0A0; margin-bottom: 32px;">
+                Select your Fortnite replay file (.replay) to begin analysis. Files are processed securely via Osirion's API.
+            </p>
+            
+            <div class="file-input-wrapper">
+                <label for="replayFile">Select Replay File (.replay)</label>
+                <input type="file" id="replayFile" accept=".replay" />
+                <div id="fileInfo" class="file-info" style="display: none;"></div>
+            </div>
+
+            <button id="uploadBtn" class="btn-primary" onclick="handleUpload()" disabled>
+                <span id="uploadBtnText">Analyze Replay</span>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Status Section -->
+        <div id="statusSection" class="status-section" style="display: none;">
+            <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 24px; letter-spacing: -0.02em;">Analysis Status</h2>
+            <div id="statusContent"></div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="results-section" style="display: none;">
+            <div class="results-header">
+                <h2>Analysis Results</h2>
+                <a id="osirionLink" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="display: none;">
+                    View on Osirion
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 14px; height: 14px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
+                </a>
+            </div>
+            <div id="resultsContainer" class="results-container"></div>
+            <button class="json-toggle" onclick="toggleJSON()">Show Raw JSON Data</button>
+            <div class="json-viewer">
+                <pre id="resultsJSON"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:4000' : '';
+        let selectedFile = null;
+        let pollInterval = null;
+        let pollCount = 0;
+        const maxPolls = 300;
+
+        // File input handler
+        document.getElementById('replayFile').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                selectedFile = e.target.files[0];
+                const fileInfo = document.getElementById('fileInfo');
+                fileInfo.textContent = `✓ Selected: ${selectedFile.name} (${(selectedFile.size / 1024 / 1024).toFixed(2)} MB)`;
+                fileInfo.style.display = 'block';
+                document.getElementById('uploadBtn').disabled = false;
+            }
+        });
+
+        // Upload handler
+        async function handleUpload() {
+            if (!selectedFile) return;
+
+            const uploadBtn = document.getElementById('uploadBtn');
+            const uploadBtnText = document.getElementById('uploadBtnText');
+            uploadBtn.disabled = true;
+            uploadBtnText.textContent = 'Uploading & Analyzing...';
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            try {
+                const response = await fetch(`${API_BASE}/api/analyze/upload`, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const error = await response.json().catch(() => ({ error: 'Upload failed' }));
+                    throw new Error(error.error || 'Upload failed');
+                }
+
+                const data = await response.json();
+                showStatus(data.trackingId, null, 'STATUS_PENDING');
+                pollJobStatus(data.trackingId);
+            } catch (error) {
+                console.error('Upload failed:', error);
+                uploadBtn.disabled = false;
+                uploadBtnText.textContent = 'Analyze Replay';
+                alert(`Upload failed: ${error.message || 'Unknown error'}\n\nPlease check your internet connection and try again.`);
+            }
+        }
+
+        // Poll for job status
+        let consecutiveErrors = 0;
+        const maxConsecutiveErrors = 5;
+        
+        function pollJobStatus(trackingId) {
+            pollCount = 0;
+            consecutiveErrors = 0;
+            pollInterval = setInterval(async () => {
+                pollCount++;
+
+                try {
+                    const response = await fetch(`${API_BASE}/api/analyze/status/${trackingId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    if (!response.ok) {
+                        if (response.status === 404) {
+                            // Not found yet, continue polling
+                            consecutiveErrors = 0;
+                            return;
+                        }
+                        
+                        // Handle 401 errors - might be temporary auth issue
+                        if (response.status === 401) {
+                            consecutiveErrors++;
+                            console.warn(`Status check returned 401 (attempt ${consecutiveErrors}/${maxConsecutiveErrors})`);
+                            
+                            if (consecutiveErrors >= maxConsecutiveErrors) {
+                                clearInterval(pollInterval);
+                                showStatus(trackingId, null, 'STATUS_FAILED');
+                                document.getElementById('uploadBtn').disabled = false;
+                                document.getElementById('uploadBtnText').textContent = 'Analyze Replay';
+                                alert('Authentication error with Osirion API. Please try uploading again or contact support.');
+                                return;
+                            }
+                            // Continue polling on auth errors (might be temporary)
+                            return;
+                        }
+                        
+                        const error = await response.json().catch(() => ({ error: 'Failed to check status' }));
+                        throw new Error(error.error || 'Failed to check status');
+                    }
+
+                    consecutiveErrors = 0; // Reset error count on success
+                    const data = await response.json();
+                    showStatus(trackingId, data.matchId, data.status);
+
+                    // Handle DUPLICATE status - fetch data if matchId exists
+                    if (data.status === 'DUPLICATE' || data.status === 'STATUS_DUPLICATE') {
+                        clearInterval(pollInterval);
+                        document.getElementById('uploadBtn').disabled = false;
+                        document.getElementById('uploadBtnText').textContent = 'Analyze Replay';
+                        
+                        // If we have comprehensiveData, show it even for duplicate status
+                        if (data.comprehensiveData && data.matchId) {
+                            const combinedData = {
+                                ...(data.comprehensiveData || {}),
+                                fightBreakdown: data.fightBreakdown || null,
+                                matchId: data.matchId,
+                                status: 'complete',
+                                isDuplicate: true
+                            };
+                            showResults(combinedData, data.matchId);
+                            
+                            // Add a notice that this is a duplicate (only if it doesn't already exist)
+                            const existingNotice = document.getElementById('duplicate-notice');
+                            if (!existingNotice) {
+                                const resultsSection = document.getElementById('resultsSection');
+                                const notice = document.createElement('div');
+                                notice.id = 'duplicate-notice';
+                                notice.style.cssText = 'margin-top: 16px; padding: 16px; background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 12px;';
+                                notice.innerHTML = `
+                                    <p style="margin: 0; color: #FBBF24; font-size: 0.875rem; font-weight: 500;">
+                                        ⚠️ <strong>Note:</strong> This replay was already analyzed (duplicate detection). 
+                                        Showing existing match data below. 
+                                        <a href="https://osirion.gg/match/${data.matchId}" target="_blank" style="color: #FBBF24; text-decoration: underline; margin-left: 4px;">View on Osirion →</a>
+                                    </p>
+                                `;
+                                const resultsContainer = document.getElementById('resultsContainer');
+                                if (resultsContainer && resultsContainer.parentNode) {
+                                    resultsContainer.parentNode.insertBefore(notice, resultsContainer);
+                                }
+                            }
+                        } else {
+                            // No data available, just show status
+                            const statusContent = document.getElementById('statusContent');
+                            statusContent.innerHTML = `
+                                <div class="status-card">
+                                    <div class="status-item">
+                                        <div class="status-label">
+                                            <span class="status-icon">🆔</span>
+                                            Tracking ID
+                                        </div>
+                                        <div class="status-value">${trackingId}</div>
+                                    </div>
+                                    ${data.matchId ? `
+                                    <div class="status-item">
+                                        <div class="status-label">
+                                            <span class="status-icon">🎮</span>
+                                            Match ID
+                                        </div>
+                                        <div class="status-value">${data.matchId}</div>
+                                    </div>
+                                    ` : ''}
+                                    <div class="status-item">
+                                        <div class="status-label">
+                                            <span class="status-icon">⏳</span>
+                                            Status
+                                        </div>
+                                        <div class="status-value status-badge status-warning">DUPLICATE</div>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 24px; padding: 16px; background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 12px;">
+                                    <p style="margin: 0; color: #FBBF24; font-size: 0.875rem;">
+                                        This replay has already been analyzed. The match ID may already exist in the system. 
+                                        ${data.matchId ? `You can view it on <a href="https://osirion.gg/match/${data.matchId}" target="_blank" style="color: #FBBF24; text-decoration: underline;">Osirion</a>.` : ''}
+                                    </p>
+                                </div>
+                            `;
+                        }
+                        return;
+                    }
+
+                    if (data.status === 'STATUS_COMPLETE') {
+                        clearInterval(pollInterval);
+                        const combinedData = {
+                            ...(data.comprehensiveData || {}),
+                            fightBreakdown: data.fightBreakdown || null,
+                            matchId: data.matchId,
+                            status: 'complete'
+                        };
+                        showResults(combinedData, data.matchId);
+                        document.getElementById('uploadBtn').disabled = false;
+                        document.getElementById('uploadBtnText').textContent = 'Analyze Replay';
+                    } else if (data.status === 'STATUS_FAILED') {
+                        clearInterval(pollInterval);
+                        document.getElementById('uploadBtn').disabled = false;
+                        document.getElementById('uploadBtnText').textContent = 'Analyze Replay';
+                        alert('Analysis failed. Please try uploading again or contact support.');
+                    }
+
+                    if (pollCount >= maxPolls) {
+                        clearInterval(pollInterval);
+                        document.getElementById('uploadBtn').disabled = false;
+                        document.getElementById('uploadBtnText').textContent = 'Analyze Replay';
+                        alert('Analysis is taking longer than expected. The replay may still be processing. Please check back later using the tracking ID.');
+                    }
+                } catch (error) {
+                    consecutiveErrors++;
+                    console.error('Status check failed:', error);
+                    
+                    if (consecutiveErrors >= maxConsecutiveErrors) {
+                        clearInterval(pollInterval);
+                        showStatus(trackingId, null, 'STATUS_FAILED');
+                        document.getElementById('uploadBtn').disabled = false;
+                        document.getElementById('uploadBtnText').textContent = 'Analyze Replay';
+                        
+                        if (error.message?.includes('Failed to fetch') || error.message?.includes('NetworkError')) {
+                            alert('Cannot connect to Osirion API. Please check your internet connection and try again.');
+                        } else {
+                            alert(`Status check failed after ${maxConsecutiveErrors} attempts: ${error.message || 'Unknown error'}`);
+                        }
+                    }
+                }
+            }, 2000);
+        }
+
+        // Show status
+        function showStatus(trackingId, matchId, status) {
+            const statusSection = document.getElementById('statusSection');
+            const statusContent = document.getElementById('statusContent');
+            statusSection.style.display = 'block';
+
+            let statusText = status?.replace('STATUS_', '') || 'PENDING';
+            let statusClass = 'status-pending';
+            let statusEmoji = '⏳';
+
+            if (status === 'STATUS_COMPLETE') {
+                statusText = 'COMPLETE';
+                statusClass = 'status-complete';
+                statusEmoji = '✅';
+            } else if (status === 'STATUS_FAILED') {
+                statusText = 'FAILED';
+                statusClass = 'status-failed';
+                statusEmoji = '❌';
+            } else if (status === 'DUPLICATE' || status === 'STATUS_DUPLICATE') {
+                statusText = 'DUPLICATE';
+                statusClass = 'status-warning';
+                statusEmoji = '⚠️';
+            } else if (status === 'STATUS_PROCESSING') {
+                statusText = 'PROCESSING (Parsing replay...)';
+                statusEmoji = '⚙️';
+            } else if (status === 'STATUS_PENDING') {
+                statusText = 'PENDING (Uploading...)';
+                statusEmoji = '⏳';
+            }
+
+            statusContent.innerHTML = `
+                <div class="status-item">
+                    <div class="status-icon">🆔</div>
+                    <div class="status-content">
+                        <div class="status-label">Tracking ID</div>
+                        <div class="status-value">${trackingId}</div>
+                    </div>
+                </div>
+                ${matchId ? `
+                <div class="status-item">
+                    <div class="status-icon">🎮</div>
+                    <div class="status-content">
+                        <div class="status-label">Match ID</div>
+                        <div class="status-value">${matchId}</div>
+                    </div>
+                </div>
+                ` : ''}
+                <div class="status-item">
+                    <div class="status-icon">${statusEmoji}</div>
+                    <div class="status-content">
+                        <div class="status-label">Status</div>
+                        <div class="status-badge ${statusClass}">${statusText}</div>
+                    </div>
+                </div>
+                ${(status === 'STATUS_PENDING' || status === 'STATUS_PROCESSING') ? `
+                <div class="status-processing">
+                    ⏳ <strong>Processing...</strong> Osirion is parsing your replay file. This typically takes 1-3 minutes. We'll automatically update when complete.
+                </div>
+                ` : ''}
+            `;
+        }
+
+        // Show results with structured UI
+        function showResults(data, matchId) {
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const resultsJSON = document.getElementById('resultsJSON');
+            const osirionLink = document.getElementById('osirionLink');
+
+            resultsSection.style.display = 'block';
+            resultsJSON.textContent = JSON.stringify(data, null, 2);
+
+            if (matchId) {
+                osirionLink.href = `https://osirion.gg/match/${matchId}`;
+                osirionLink.style.display = 'inline-flex';
+            }
+
+            // Build structured UI
+            let html = '';
+
+            // Match Info Card
+            const matchInfo = data.matchInfo || {};
+            // Calculate duration from lengthMs (milliseconds) to seconds
+            const matchDurationSeconds = matchInfo.lengthMs ? matchInfo.lengthMs / 1000 : 0;
+            html += `
+                <div class="results-card">
+                    <div class="results-card-header" onclick="toggleCard(this)" aria-expanded="true">
+                        <h3><span class="results-card-icon">🎮</span> Match Information</h3>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="results-card-content" aria-hidden="false">
+                        <div class="match-info-grid">
+                            <div class="info-item">
+                                <div class="info-item-label">Map</div>
+                                <div class="info-item-value">${matchInfo.mapPath ? matchInfo.mapPath.split('/').pop() || 'Unknown' : 'Unknown'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Game Mode</div>
+                                <div class="info-item-value">${matchInfo.gameMode || matchInfo.mnemonic || 'Unknown'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Duration</div>
+                                <div class="info-item-value">${formatDuration(matchDurationSeconds)}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Match ID</div>
+                                <div class="info-item-value" style="font-size: 0.875rem; word-break: break-all;">${matchId || 'N/A'}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Player Performance Card
+            const players = data.players?.players || [];
+            if (players.length > 0) {
+                // Find the replay owner (the player who uploaded the replay)
+                let player = players.find(p => p.isReplayOwner === true);
+                // If no replay owner found, use the first player
+                if (!player) {
+                    player = players[0];
+                }
+                
+                // Extract correct field names from Osirion API
+                const eliminations = player.eliminations || 0;
+                const damageDone = player.damageDone || 0;
+                const damageTaken = player.damageTakenFromPlayers || 0;
+                const placement = player.placement || 100;
+                const timeAlive = player.timeAlive || 0; // in seconds
+                const hits = player.hits || 0;
+                const shots = player.shots || 0;
+                const accuracy = shots > 0 ? (hits / shots * 100) : 0;
+                
+                html += `
+                    <div class="results-card">
+                        <div class="results-card-header" onclick="toggleCard(this)" aria-expanded="true">
+                            <h3><span class="results-card-icon">👤</span> Player Performance</h3>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="results-card-content" aria-hidden="false">
+                            <div class="stat-grid">
+                                <div class="stat-item">
+                                    <div class="stat-item-header">💀 Kills</div>
+                                    <div class="stat-item-value ${getPerformanceClass(eliminations, 5, 10)}">${eliminations}</div>
+                                    <div class="stat-item-label">Eliminations</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-item-header">⚔️ Damage</div>
+                                    <div class="stat-item-value ${getPerformanceClass(damageDone, 500, 1000)}">${damageDone.toFixed(0)}</div>
+                                    <div class="stat-item-label">Damage Dealt</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-item-header">🛡️ Taken</div>
+                                    <div class="stat-item-value negative">${damageTaken.toFixed(0)}</div>
+                                    <div class="stat-item-label">Damage Taken</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-item-header">🏆 Placement</div>
+                                    <div class="stat-item-value ${getPlacementClass(placement)}">#${placement}</div>
+                                    <div class="stat-item-label">Final Rank</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-item-header">⏱️ Survival</div>
+                                    <div class="stat-item-value">${formatDuration(timeAlive)}</div>
+                                    <div class="stat-item-label">Time Survived</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-item-header">🎯 Accuracy</div>
+                                    <div class="stat-item-value ${getAccuracyClass(accuracy)}">${accuracy.toFixed(1)}%</div>
+                                    <div class="stat-item-label">${hits} / ${shots} shots</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Weapons Stats Card
+            const weapons = data.weapons?.weapons || [];
+            if (weapons.length > 0) {
+                html += `
+                    <div class="results-card">
+                        <div class="results-card-header" onclick="toggleCard(this)" aria-expanded="true">
+                            <h3><span class="results-card-icon">🔫</span> Weapon Performance</h3>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="results-card-content" aria-hidden="false">
+                            <div class="weapons-list">
+                `;
+                
+                weapons.slice(0, 10).forEach(weapon => {
+                    // Use correct field names from Osirion API
+                    const shots = weapon.shots || weapon.shotsFired || 0;
+                    const hits = weapon.hits || weapon.shotsHit || 0;
+                    const accuracy = shots > 0 ? ((hits / shots) * 100).toFixed(1) : 0;
+                    const eliminations = weapon.eliminations || 0;
+                    const damage = weapon.damageDone || weapon.damageDealt || 0;
+                    html += `
+                        <div class="weapon-item">
+                            <div class="weapon-info">
+                                <div class="weapon-icon">${getWeaponIcon(weapon.weaponName)}</div>
+                                <div class="weapon-details">
+                                    <div class="weapon-name">${weapon.weaponName || 'Unknown Weapon'}</div>
+                                    <div class="weapon-stats">
+                                        <span>💀 ${eliminations} kills</span>
+                                        <span>🎯 ${accuracy}% accuracy</span>
+                                        <span>⚔️ ${damage.toFixed(0)} damage</span>
+                                        <span>🔫 ${shots} shots</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="weaponsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Building Stats Card - get data from player object instead
+            // Reuse players array from above
+            if (players && players.length > 0) {
+                // Find the replay owner (reuse the same player variable if already found)
+                let buildingPlayer = players.find(p => p.isReplayOwner === true);
+                if (!buildingPlayer) {
+                    buildingPlayer = players[0];
+                }
+                
+                const woodCollected = buildingPlayer.woodCollected || 0;
+                const stoneCollected = buildingPlayer.stoneCollected || 0;
+                const metalCollected = buildingPlayer.metalCollected || 0;
+                const totalBuilds = (buildingPlayer.woodBuildsPlaced || 0) + (buildingPlayer.stoneBuildsPlaced || 0) + (buildingPlayer.metalBuildsPlaced || 0);
+                
+                html += `
+                    <div class="results-card">
+                        <div class="results-card-header" onclick="toggleCard(this)" aria-expanded="true">
+                            <h3><span class="results-card-icon">🏗️</span> Building Statistics</h3>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="results-card-content" aria-hidden="false">
+                            <div class="building-stats-grid">
+                                <div class="material-card">
+                                    <div class="material-icon">🪵</div>
+                                    <div class="material-name">Wood Collected</div>
+                                    <div class="material-value">${woodCollected.toLocaleString()}</div>
+                                </div>
+                                <div class="material-card">
+                                    <div class="material-icon">🧱</div>
+                                    <div class="material-name">Brick Collected</div>
+                                    <div class="material-value">${stoneCollected.toLocaleString()}</div>
+                                </div>
+                                <div class="material-card">
+                                    <div class="material-icon">⚙️</div>
+                                    <div class="material-name">Metal Collected</div>
+                                    <div class="material-value">${metalCollected.toLocaleString()}</div>
+                                </div>
+                                <div class="material-card">
+                                    <div class="material-icon">🏗️</div>
+                                    <div class="material-name">Structures Built</div>
+                                    <div class="material-value">${totalBuilds.toLocaleString()}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Movement/Rotation Summary Card
+            if (data.movementEvents || data.events) {
+                html += `
+                    <div class="results-card">
+                        <div class="results-card-header" onclick="toggleCard(this)" aria-expanded="false">
+                            <h3><span class="results-card-icon">📍</span> Movement & Rotations</h3>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="results-card-content" aria-hidden="true">
+                            <div class="stat-grid">
+                                <div class="stat-item">
+                                    <div class="stat-item-header">🚶 Movement Events</div>
+                                    <div class="stat-item-value">${(data.movementEvents?.movementEvents || []).length}</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-item-header">🎯 Shot Events</div>
+                                    <div class="stat-item-value">${(data.shotEvents?.hitscanEvents || []).length}</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-item-header">⚔️ Engagements</div>
+                                    <div class="stat-item-value">${(data.fightBreakdown?.fights || []).length || 0}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            resultsContainer.innerHTML = html;
+
+            // Render charts after DOM is fully updated
+            // Use requestAnimationFrame to ensure DOM is ready
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    if (weapons.length > 0) {
+                        try {
+                            renderWeaponsChart(weapons.slice(0, 8));
+                        } catch (error) {
+                            console.error('Error rendering chart:', error);
+                        }
+                    }
+                }, 200);
+            });
+        }
+
+        // Helper functions
+        function formatDuration(seconds) {
+            if (!seconds) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function getPerformanceClass(value, good, excellent) {
+            if (value >= excellent) return 'positive';
+            if (value >= good) return 'neutral';
+            return 'negative';
+        }
+
+        function getPlacementClass(placement) {
+            if (placement <= 10) return 'positive';
+            if (placement <= 25) return 'neutral';
+            return 'negative';
+        }
+
+        function getAccuracyClass(accuracy) {
+            if (accuracy >= 50) return 'positive';
+            if (accuracy >= 30) return 'neutral';
+            return 'negative';
+        }
+
+        function getWeaponIcon(weaponName) {
+            if (!weaponName) return '🔫';
+            const name = weaponName.toLowerCase();
+            if (name.includes('assault') || name.includes('scar')) return '🔫';
+            if (name.includes('shotgun') || name.includes('pump')) return '💥';
+            if (name.includes('sniper')) return '🎯';
+            if (name.includes('smg')) return '⚡';
+            if (name.includes('pistol')) return '🔫';
+            if (name.includes('rocket') || name.includes('rpg')) return '🚀';
+            return '🔫';
+        }
+
+        function toggleCard(header) {
+            const expanded = header.getAttribute('aria-expanded') === 'true';
+            const content = header.nextElementSibling;
+            header.setAttribute('aria-expanded', !expanded);
+            content.setAttribute('aria-hidden', expanded);
+        }
+
+        function toggleJSON() {
+            const jsonViewer = document.querySelector('.json-viewer');
+            const toggleBtn = document.querySelector('.json-toggle');
+            if (jsonViewer.style.display === 'none' || !jsonViewer.style.display) {
+                jsonViewer.style.display = 'block';
+                toggleBtn.textContent = 'Hide Raw JSON Data';
+            } else {
+                jsonViewer.style.display = 'none';
+                toggleBtn.textContent = 'Show Raw JSON Data';
+            }
+        }
+
+        function renderWeaponsChart(weapons) {
+            const ctx = document.getElementById('weaponsChart');
+            if (!ctx) {
+                console.warn('Chart canvas element not found');
+                return;
+            }
+
+            // Ensure the canvas is actually in the DOM
+            if (!ctx.isConnected) {
+                console.warn('Chart canvas is not connected to DOM');
+                return;
+            }
+
+            // Destroy existing chart if it exists
+            if (window.weaponsChartInstance) {
+                try {
+                    window.weaponsChartInstance.destroy();
+                } catch (e) {
+                    console.warn('Error destroying existing chart:', e);
+                }
+            }
+
+            const labels = weapons.map(w => w.weaponName || 'Unknown');
+            const killsData = weapons.map(w => w.eliminations || 0);
+            const damageData = weapons.map(w => (w.damageDone || w.damageDealt || 0) / 100); // Scale down for visibility
+
+            // Configure Chart.js defaults for dark theme
+            if (typeof Chart !== 'undefined') {
+                Chart.defaults.color = '#A0A0A0';
+                Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+            } else {
+                console.error('Chart.js is not loaded');
+                return;
+            }
+
+            try {
+                window.weaponsChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Kills',
+                            data: killsData,
+                            backgroundColor: 'rgba(139, 92, 246, 0.7)',
+                            borderColor: 'rgba(139, 92, 246, 1)',
+                            borderWidth: 2,
+                            borderRadius: 6,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Damage (hundreds)',
+                            data: damageData,
+                            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 2,
+                            borderRadius: 6,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            labels: { 
+                                color: '#FFFFFF',
+                                font: { size: 12, weight: '500' },
+                                padding: 12
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(10, 10, 10, 0.95)',
+                            titleColor: '#FFFFFF',
+                            bodyColor: '#E5E7EB',
+                            borderColor: 'rgba(255, 255, 255, 0.2)',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: true
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { 
+                                color: '#A0A0A0',
+                                font: { size: 11 }
+                            },
+                            grid: { 
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                display: true
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            position: 'left',
+                            ticks: { 
+                                color: '#A0A0A0',
+                                font: { size: 11 }
+                            },
+                            grid: { 
+                                color: 'rgba(255, 255, 255, 0.05)',
+                                display: true
+                            },
+                            title: {
+                                display: true,
+                                text: 'Kills',
+                                color: '#A0A0A0',
+                                font: { size: 12 }
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            position: 'right',
+                            ticks: { 
+                                color: '#A0A0A0',
+                                font: { size: 11 }
+                            },
+                            grid: { 
+                                display: false 
+                            },
+                            title: {
+                                display: true,
+                                text: 'Damage (×100)',
+                                color: '#A0A0A0',
+                                font: { size: 12 }
+                            }
+                        }
+                    }
+                }
+                });
+            } catch (error) {
+                console.error('Error creating chart:', error);
+                // Fallback: show error message in chart container
+                const container = ctx.parentElement;
+                if (container) {
+                    container.innerHTML = '<div style="padding: 20px; text-align: center; color: #A0A0A0;">Unable to load chart visualization</div>';
+                }
+            }
+        }
+
+        // Show user info if logged in
+        function showUserInfo(userData) {
+            const navCTA = document.getElementById('navCTA');
+            const userInfo = document.getElementById('userInfo');
+            const userAvatar = document.getElementById('userAvatar');
+            const userName = document.getElementById('userName');
+
+            if (navCTA) navCTA.style.display = 'none';
+            if (userInfo) userInfo.style.display = 'flex';
+
+            if (userData.discordAvatar && userAvatar) {
+                const img = document.createElement('img');
+                img.src = userData.discordAvatar;
+                img.alt = 'Avatar';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.borderRadius = '50%';
+                img.style.objectFit = 'cover';
+                img.onerror = function() {
+                    const initial = (userData.name || userData.email || userData.discordUsername || 'U').charAt(0).toUpperCase();
+                    userAvatar.textContent = initial;
+                    userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+                };
+                userAvatar.innerHTML = '';
+                userAvatar.appendChild(img);
+            } else if (userAvatar) {
+                const initial = (userData.name || userData.email || userData.discordUsername || 'U').charAt(0).toUpperCase();
+                userAvatar.textContent = initial;
+                userAvatar.style.background = 'linear-gradient(135deg, #8B5CF6, #3B82F6)';
+            }
+            
+            const displayName = userData.name || userData.discordUsername || userData.email?.split('@')[0] || 'User';
+            if (userName) userName.textContent = displayName;
+        }
+
+        function checkAuth() {
+            const userData = localStorage.getItem('pathgen_user') || localStorage.getItem('discordUser');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    showUserInfo(user);
+                    return true;
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                }
+            }
+            return false;
+        }
+
+        function toggleDropdown(type, event) {
+            if (event) event.preventDefault();
+            
+            const dropdowns = {
+                features: document.getElementById('featuresDropdown'),
+                settings: document.getElementById('settingsDropdown')
+            };
+            
+            const currentDropdown = dropdowns[type];
+            if (!currentDropdown) return;
+            
+            Object.entries(dropdowns).forEach(([key, dropdown]) => {
+                if (key !== type && dropdown) {
+                    dropdown.classList.remove('show');
+                }
+            });
+            
+            currentDropdown.classList.toggle('show');
+            
+            if (event) event.stopPropagation();
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('pathgen_user');
+                localStorage.removeItem('discordUser');
+                localStorage.removeItem('setupComplete');
+                window.location.href = '/login.html';
+            }
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (pollInterval) {
+                clearInterval(pollInterval);
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // TEMPORARILY LOCKED - Gameplay Analysis add-on is not available for purchase
+            const mainContent = document.querySelector('.main-content');
+            if (mainContent) {
+                mainContent.innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px; max-width: 600px; margin: 0 auto;">
+                        <div style="font-size: 64px; margin-bottom: 24px;">🔒</div>
+                        <h1 style="color: #ffffff; font-size: 2rem; font-weight: 700; margin-bottom: 16px;">Temporarily Unavailable</h1>
+                        <p style="color: #9ca3af; font-size: 1rem; line-height: 1.6; margin-bottom: 32px;">
+                            Gameplay Analysis is currently unavailable for purchase. We're working on improvements and will make it available again soon.
+                        </p>
+                        <a href="/subscribe.html" style="display: inline-block; padding: 12px 24px; background: #8B5CF6; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; transition: background 0.2s;">
+                            View Other Plans →
+                        </a>
+                    </div>
+                `;
+            }
+            return;
+            
+            checkAuth();
+        });
+    </script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+    <script src="/js/subscription-modal.js"></script>
+    <script src="/js/addon-guard.js"></script>
+</body>
+</html>

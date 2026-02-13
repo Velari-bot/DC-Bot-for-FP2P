@@ -1,0 +1,36 @@
+{
+  "name": "fortnite-api-stack",
+  "version": "1.0.0",
+  "description": "Fortnite API Stack - Modern microservices architecture for replay analysis",
+  "private": true,
+  "scripts": {
+    "dev": "cd apps/web && npm run dev",
+    "dev:web": "cd apps/web && npm run dev",
+    "dev:api": "cd packages/papi && npm run dev",
+    "dev:worker": "cd packages/worker && npm run dev",
+    "dev:monitor": "cd packages/cron-monitor && npm run dev",
+    "build": "cd apps/web && npm install && npm run build",
+    "build:web": "cd apps/web && npm install && npm run build",
+    "build:api": "npm run build --prefix packages/papi",
+    "build:worker": "npm run build --prefix packages/worker",
+    "build:monitor": "npm run build --prefix packages/cron-monitor",
+    "install:all": "npm install && cd apps/web && npm install && cd ../../packages/papi && npm install && cd ../worker && npm install && cd ../cron-monitor && npm install",
+    "vercel-build": "cd apps/web && npm install && npm run build",
+    "docker:up": "docker-compose up --build",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f"
+  },
+  "dependencies": {
+    "next": "^14.0.4"
+  },
+  "keywords": [
+    "fortnite",
+    "replay",
+    "analysis",
+    "microservices",
+    "nextjs",
+    "fastify"
+  ],
+  "author": "",
+  "license": "MIT"
+}

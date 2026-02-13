@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Logo.png">
+    <link rel="shortcut icon" type="image/png" href="/Logo.png">
+    <link rel="apple-touch-icon" href="/Logo.png">
+    <title>FAQ - PathGen v2</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pathgen.dev/faq">
+    <meta property="og:title" content="FAQ - PathGen AI">
+    <meta property="og:description" content="Frequently asked questions about PathGen AI and how it works.">
+    <meta property="og:image" content="https://pathgen.dev/embed.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://pathgen.dev/faq">
+    <meta name="twitter:title" content="FAQ - PathGen AI">
+    <meta name="twitter:description" content="Frequently asked questions about PathGen AI and how it works.">
+    <meta name="twitter:image" content="https://pathgen.dev/embed.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0A0A0A;
+            color: #E5E5E5;
+            line-height: 1.6;
+            padding: 100px 20px 40px;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Ambient background visuals to match app aesthetic */
+        .ai-bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+            background-size: 36px 36px;
+            -webkit-mask-image: radial-gradient(60% 50% at 50% 40%, rgba(0,0,0,0.8), transparent 70%);
+                    mask-image: radial-gradient(60% 50% at 50% 40%, rgba(0,0,0,0.8), transparent 70%);
+            pointer-events: none;
+        }
+        .ai-bg-orb {
+            position: fixed;
+            filter: blur(60px);
+            opacity: 0.4;
+            border-radius: 9999px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .ai-bg-orb.orb-1 {
+            width: 420px;
+            height: 420px;
+            left: -120px;
+            top: 140px;
+            background: radial-gradient(circle at 30% 30%, rgba(139, 92, 246, 0.6), rgba(139, 92, 246, 0) 60%);
+        }
+        .ai-bg-orb.orb-2 {
+            width: 520px;
+            height: 520px;
+            right: -160px;
+            bottom: -80px;
+            background: radial-gradient(circle at 70% 60%, rgba(59, 130, 246, 0.55), rgba(59, 130, 246, 0) 60%);
+        }
+
+        /* Header with Pill Nav Bar */
+        .header {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            transition: top 0.3s ease;
+        }
+
+        .nav {
+            backdrop-filter: blur(16px);
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 
+                        0 0 0 1px rgba(255, 255, 255, 0.03),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 0 8px;
+            margin-right: 4px;
+        }
+
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .logo-icon svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin: 0 8px;
+        }
+
+        .nav-link {
+            color: #A0A0A0;
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 6px 14px;
+            border-radius: 25px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link .caret {
+            font-size: 8px;
+            margin-left: 1px;
+            opacity: 0.7;
+        }
+
+        .nav-link.external::after {
+            content: '↗';
+            font-size: 10px;
+            opacity: 0.6;
+            margin-left: 2px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-cta {
+            padding: 6px 18px;
+            background: #0A0A0A;
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            border-radius: 50px;
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .nav-cta:hover {
+            background: #151515;
+            border-color: rgba(139, 92, 246, 0.8);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+        }
+
+        .nav-cta::after {
+            content: '→';
+            font-size: 14px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 12px 4px 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            margin-left: 8px;
+            cursor: pointer;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        /* Dropdowns */
+        .dropdown { position: relative; }
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            min-width: 220px;
+            background: rgba(15, 15, 15, 0.98);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+                        0 0 0 1px rgba(255, 255, 255, 0.05);
+            opacity: 0; visibility: hidden; transform: translateY(-10px);
+            transition: all 0.2s ease; z-index: 200;
+        }
+        .dropdown-menu.show { opacity:1; visibility:visible; transform: translateY(0); }
+        .dropdown-item {
+            display:flex; align-items:center; gap:12px;
+            padding:10px 14px; border-radius:10px; color:#d1d5db;
+            font-size:14px; cursor:pointer; transition:all 0.2s ease; text-decoration:none;
+        }
+        .dropdown-item:hover { background: rgba(79, 140, 255, 0.1); color:#fff; }
+        .dropdown-item-icon { font-size:16px; width:20px; }
+        .dropdown-divider { height:1px; background:rgba(255,255,255,0.1); margin:6px 0; }
+        .dropdown-item.danger { color:#ef4444; }
+        .dropdown-item.danger:hover { background: rgba(239,68,68,0.1); }
+        .dropdown-item.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .dropdown-item.locked:hover {
+            background: transparent;
+            color: #6b7280;
+        }
+        #featuresDropdown { left:0; right:auto; }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, #999 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #888;
+            margin-bottom: 3rem;
+        }
+
+        .faq-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .question {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .question::before {
+            content: 'Q:';
+            color: #888;
+            font-weight: 700;
+        }
+
+        .answer {
+            color: #B0B0B0;
+            line-height: 1.7;
+        }
+
+        .answer strong {
+            color: #fff;
+        }
+
+        .answer ul {
+            margin: 0.75rem 0 0.75rem 1.5rem;
+        }
+
+        .answer li {
+            margin-bottom: 0.5rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .highlight {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="ai-bg-orb orb-1"></div>
+    <div class="ai-bg-orb orb-2"></div>
+    <div class="ai-bg-grid"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <!-- Pathgen Monochrome P Mark -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img">
+                        <defs>
+                            <filter id="sparkleBlur">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+                            </filter>
+                        </defs>
+                        
+                        <!-- P Glyph with Facets -->
+                        <g id="glyph">
+                            <rect x="20" y="20" width="16" height="60" rx="8" ry="8" fill="#FFFFFF"/>
+                            <path d="M 36 20 H 50 A 24 24 0 0 1 50 58 H 36 V 20 Z" fill="#FFFFFF"/>
+                            <path d="M 45 28 L 58 32 L 54 40 L 42 38 Z" fill="#000000" opacity="0.3"/>
+                            <path d="M 44 42 L 56 46 L 48 52 Z" fill="#000000" opacity="0.25"/>
+                            <path d="M 38 26 L 42 24 L 42 34 L 38 36 Z" fill="#000000" opacity="0.2"/>
+                        </g>
+                        
+                        <!-- Cosmic Sparkles -->
+                        <g id="sparkles" opacity="0.85">
+                            <circle cx="64" cy="26" r="2.5" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-1"/>
+                            <circle cx="70" cy="38" r="1.8" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-2"/>
+                            <circle cx="52" cy="35" r="1.2" fill="#FFFFFF" opacity="0.8" filter="url(#sparkleBlur)" class="sparkle-3"/>
+                            <circle cx="58" cy="28" r="0.9" fill="#FFFFFF" opacity="0.7" class="sparkle-4"/>
+                            <circle cx="24" cy="48" r="1.5" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-5"/>
+                            <circle cx="60" cy="50" r="1.0" fill="#FFFFFF" opacity="0.6" class="sparkle-6"/>
+                        </g>
+                    </svg>
+                </div>
+                <span>Pathgen v2</span>
+            </a>
+            
+            <div class="nav-center">
+                <a href="/docs.html" class="nav-link">Docs</a>
+                <div class="dropdown">
+                    <a href="#" class="nav-link" onclick="toggleDropdown('features', event)">
+                        Features
+                        <span class="caret">▼</span>
+                    </a>
+                    <div class="dropdown-menu" id="featuresDropdown">
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Coach</span>
+                        </a>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">📊</span>
+                            <span>Competitive Insights</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">🎤</span>
+                            <span>Voice</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <a href="/cih-coaching.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">🎯</span>
+                            <span>CIH Coaching</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/docs.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">📚</span>
+                            <span>Documentation</span>
+                        </a>
+                    </div>
+                </div>
+                <a href="/cih-coaching.html" class="nav-link">CIH Coaching</a>
+                <a href="/nagc-dropmaps.html" class="nav-link">NAGC Drop Maps</a>
+            </div>
+
+            <div class="nav-right">
+                <a href="/subscribe.html" class="nav-link">Pricing</a>
+                <a href="/login.html" class="nav-cta" id="navCTA" onclick="window.location.href='/login.html'; return true;">Try For Free</a>
+                <div class="dropdown">
+                    <div class="user-info" id="userInfo" onclick="toggleDropdown('settings', event)" style="display: none;">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <span class="user-name" id="userName">User</span>
+                    </div>
+                    <div class="dropdown-menu" id="settingsDropdown">
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Chat</span>
+                        </a>
+                        <a href="/tournaments.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/support.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">📧</span>
+                            <span>Support</span>
+                        </a>
+                        <a href="/faq.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">❓</span>
+                            <span>FAQ</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/settings.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">⚙️</span>
+                            <span>Settings</span>
+                        </a>
+                        <a href="/subscribe.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💳</span>
+                            <span>Upgrade to Pro</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item danger" onclick="logout()">
+                            <span class="dropdown-item-icon">🚪</span>
+                            <span>Logout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Frequently Asked Questions</h1>
+        <p class="subtitle">Everything you need to know about PathGen v2</p>
+
+        <!-- Usage Limits -->
+        <div class="faq-section">
+            <h2 class="section-title">💬 Usage Limits</h2>
+            
+            <div class="faq-item">
+                <div class="question">What are the message limits for the Free tier?</div>
+                <div class="answer">
+                    <strong>Free Tier:</strong> 5 messages per day with the AI coach. Your limit resets every 24 hours at midnight UTC.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">What are the limits for Pro users?</div>
+                <div class="answer">
+                    <strong>Pro Tier ($6.99/month):</strong>
+                    <ul>
+                        <li><strong>200 messages per month</strong> with the AI coach</li>
+                        <li>Chat history saved</li>
+                        <li>Better AI responses</li>
+                        <li>Access to all base features</li>
+                    </ul>
+                    Your monthly limit resets on the same day each month as your subscription date.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">How does Voice Interaction work?</div>
+                <div class="answer">
+                    <strong>Voice Add-on ($1.99/month):</strong>
+                    <ul>
+                        <li><strong>550 interactions per month</strong></li>
+                        <li><strong>60 minutes total per month</strong> (3,600 seconds) of voice coaching</li>
+                        <li><strong>30 minutes max per session</strong></li>
+                        <li>Real-time voice responses from your AI coach</li>
+                        <li>Perfect for in-game coaching or hands-free learning</li>
+                    </ul>
+                    Free users do not have access to voice interaction. Upgrade to Pro and add the Voice Add-on to unlock this feature.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">What happens if I hit my usage limit?</div>
+                <div class="answer">
+                    If you reach your daily or monthly limit, you'll see a message letting you know. 
+                    <strong>Free users:</strong> Wait 24 hours for daily reset, or upgrade to Pro.<br>
+                    <strong>Pro users:</strong> Wait for your monthly reset, or add additional features.<br>
+                    Your usage counter is always visible at the bottom of the chat.
+                </div>
+            </div>
+        </div>
+
+        <!-- Accuracy & Updates -->
+        <div class="faq-section">
+            <h2 class="section-title">🎯 Accuracy & Fortnite Updates</h2>
+            
+            <div class="faq-item">
+                <div class="question">How accurate is the coaching advice?</div>
+                <div class="answer">
+                    PathGen v2 is trained on competitive Fortnite strategies, pro player tactics, and current meta analysis. 
+                    However, <strong>AI coaching should complement, not replace, practice and experience</strong>. 
+                    The AI provides guidance based on proven strategies but may not account for every unique situation in-game.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">Is PathGen updated for the current Fortnite season?</div>
+                <div class="answer">
+                    Yes! PathGen v2 is updated regularly to reflect the <strong>current Fortnite meta, weapons, map changes, and competitive strategies</strong>. 
+                    We monitor patch notes and update the AI's knowledge base to ensure relevant, up-to-date advice.
+                    <br><br>
+                    <strong>Current Season:</strong> Chapter 5 Season 1 (OG Season)<br>
+                    <strong>Last Updated:</strong> December 2025
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">Can PathGen help with Zero Build mode?</div>
+                <div class="answer">
+                    Absolutely! PathGen adapts advice based on your game mode preferences:
+                    <ul>
+                        <li>Zero Build strategies (positioning, gunplay, rotations)</li>
+                        <li>Build Mode tactics (piece control, edits, box fights)</li>
+                        <li>Competitive ranked advice</li>
+                        <li>Creative practice routines</li>
+                    </ul>
+                    Just ask and specify which mode you're playing!
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">Does PathGen work for controller players?</div>
+                <div class="answer">
+                    Yes! PathGen provides tailored advice for:
+                    <ul>
+                        <li><strong>Controller players:</strong> Aim assist optimization, build binds, sensitivity</li>
+                        <li><strong>Keyboard & Mouse players:</strong> Keybinds, edit speed, crosshair placement</li>
+                    </ul>
+                    Mention your input method for the best personalized advice.
+                </div>
+            </div>
+        </div>
+
+        <!-- Billing & Refunds -->
+        <div class="faq-section">
+            <h2 class="section-title">💳 Billing & Refunds</h2>
+            
+            <div class="faq-item">
+                <div class="question">How does billing work?</div>
+                <div class="answer">
+                    <strong>Pro Subscription ($6.99/month):</strong> Billed monthly via Stripe. You can cancel anytime from your account settings.
+                    <br><br>
+                    <strong>Add-ons:</strong> Voice Interaction ($1.99/month), Gameplay Analysis ($1.50/month), and Competitive Insights ($0.75/month) are billed separately and can be added/removed at any time.
+                    <br><br>
+                    All payments are processed securely through Stripe. We don't store your payment information.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">What is your refund policy?</div>
+                <div class="answer">
+                    <strong>7-Day Money-Back Guarantee:</strong> If you're not satisfied within the first 7 days of your subscription, contact us at <strong>support@pathgen.dev</strong> for a full refund.
+                    <br><br>
+                    <strong>After 7 days:</strong> Refunds are handled on a case-by-case basis. We're committed to making sure you're happy with PathGen.
+                    <br><br>
+                    <strong>Usage-based refunds:</strong> If you've used less than 10% of your monthly quota and want to cancel within the first 14 days, we'll issue a prorated refund.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">Can I cancel my subscription anytime?</div>
+                <div class="answer">
+                    <strong>Yes, absolutely!</strong> You can cancel your Pro subscription or any add-ons at any time from:
+                    <ul>
+                        <li>Settings → Manage Subscription</li>
+                        <li>Or through the Stripe Customer Portal</li>
+                    </ul>
+                    When you cancel, you'll keep access until the end of your current billing period.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">Do you offer discounts or student pricing?</div>
+                <div class="answer">
+                    Currently, we offer:
+                    <ul>
+                        <li><strong>50% off first month</strong> for new Pro subscribers</li>
+                        <li>Special pricing for content creators and competitive teams (contact us)</li>
+                    </ul>
+                    We're working on student and bulk pricing options. Stay tuned!
+                </div>
+            </div>
+        </div>
+
+        <!-- Features & Technical -->
+        <div class="faq-section">
+            <h2 class="section-title">⚙️ Features & Technical</h2>
+            
+            <div class="faq-item">
+                <div class="question">What AI model does PathGen use?</div>
+                <div class="answer">
+                    <ul>
+                        <li><strong>Free users:</strong> GPT-4o-mini (fast, efficient responses)</li>
+                        <li><strong>Pro users:</strong> GPT-4o (advanced reasoning, better coaching)</li>
+                        <li><strong>Voice:</strong> Whisper (transcription) + GPT-4o-mini + TTS (speech)</li>
+                    </ul>
+                    We automatically select the best model based on your query complexity.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">Can I upload replays for analysis?</div>
+                <div class="answer">
+                    <strong>Replay analysis is coming soon!</strong> You'll be able to:
+                    <ul>
+                        <li>Upload Fortnite replay files (.replay)</li>
+                        <li>Get AI-powered VOD review</li>
+                        <li>Identify mistakes and improvement areas</li>
+                        <li>Track your progress over time</li>
+                    </ul>
+                    This feature will be available to Pro subscribers in a future update.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">Does PathGen work on mobile?</div>
+                <div class="answer">
+                    Yes! PathGen v2 is fully responsive and works on:
+                    <ul>
+                        <li>Desktop browsers (Chrome, Firefox, Safari, Edge)</li>
+                        <li>Mobile browsers (iOS Safari, Android Chrome)</li>
+                        <li>Tablets</li>
+                    </ul>
+                    The voice feature requires microphone access, which works on most modern mobile browsers.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">Is my data private and secure?</div>
+                <div class="answer">
+                    <strong>Yes!</strong> We take your privacy seriously:
+                    <ul>
+                        <li>Chat history is stored securely in Firebase</li>
+                        <li>We don't sell or share your data</li>
+                        <li>All payments processed through Stripe (we never see your card)</li>
+                        <li>Voice recordings are only used for transcription, not stored permanently</li>
+                    </ul>
+                    See our <a href="/privacy.html" style="color: #4A9EFF; text-decoration: underline;">Privacy Policy</a> for full details.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">Can I delete my chat history?</div>
+                <div class="answer">
+                    Yes! Go to <strong>Settings → Clear Chat History</strong> to delete all your conversations. 
+                    You can also delete your entire account from Settings if needed.
+                </div>
+            </div>
+        </div>
+
+        <!-- Support & Contact -->
+        <div class="faq-section">
+            <h2 class="section-title">📧 Support & Contact</h2>
+            
+            <div class="faq-item">
+                <div class="question">How do I contact support?</div>
+                <div class="answer">
+                    Reach us at: <strong>support@pathgen.dev</strong>
+                    <br><br>
+                    We typically respond within 24 hours (faster for Pro users). For billing issues, please include your account email.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">Can I suggest new features?</div>
+                <div class="answer">
+                    Absolutely! We love hearing from our community. Send feature requests to <strong>support@pathgen.dev</strong> or join our Discord community (coming soon).
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">Is there a PathGen Discord or community?</div>
+                <div class="answer">
+                    We're building a PathGen community Discord where you can:
+                    <ul>
+                        <li>Share improvement tips with other players</li>
+                        <li>Get early access to new features</li>
+                        <li>Participate in coaching sessions</li>
+                        <li>Report bugs and request features</li>
+                    </ul>
+                    Stay tuned for the announcement!
+                </div>
+            </div>
+        </div>
+
+        <!-- Troubleshooting -->
+        <div class="faq-section">
+            <h2 class="section-title">🔧 Troubleshooting</h2>
+            
+            <div class="faq-item">
+                <div class="question">The AI isn't responding. What should I do?</div>
+                <div class="answer">
+                    Try these steps:
+                    <ol style="margin-left: 1.5rem;">
+                        <li>Check your internet connection</li>
+                        <li>Refresh the page (Ctrl+R or Cmd+R)</li>
+                        <li>Check if you've hit your usage limit (shown at bottom of chat)</li>
+                        <li>Try logging out and back in</li>
+                        <li>If the issue persists, contact support@pathgen.dev</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">Voice feature isn't working. Help?</div>
+                <div class="answer">
+                    Common fixes:
+                    <ul>
+                        <li>Allow microphone permissions when prompted</li>
+                        <li>Use a supported browser (Chrome, Edge, Firefox)</li>
+                        <li>Check that you have Voice Add-on enabled (Pro users only)</li>
+                        <li>Make sure you're not on Free tier daily limit (30 seconds/day)</li>
+                        <li>Try using headphones to reduce background noise</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">I'm getting charged but can't access Pro features. Why?</div>
+                <div class="answer">
+                    This usually means your payment is still processing. Check:
+                    <ul>
+                        <li>Go to Settings → Manage Subscription</li>
+                        <li>Verify your payment went through in Stripe</li>
+                        <li>Log out and log back in to refresh your account</li>
+                        <li>Wait 5-10 minutes for our system to update</li>
+                    </ul>
+                    Still not working? Email us at <strong>support@pathgen.dev</strong> with your account email and we'll fix it immediately.
+                </div>
+            </div>
+        </div>
+
+        <a href="/index.html" class="back-link">← Back to Home</a>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+    <script src="/js/auth-guard.js"></script>
+    <script>
+        // Navbar functions
+        function toggleDropdown(type, event) {
+            if (event) event.preventDefault();
+            
+            const dropdowns = {
+                features: document.getElementById('featuresDropdown'),
+                settings: document.getElementById('settingsDropdown')
+            };
+            
+            const currentDropdown = dropdowns[type];
+            if (!currentDropdown) return;
+            
+            // Close other dropdowns
+            Object.entries(dropdowns).forEach(([key, dropdown]) => {
+                if (key !== type && dropdown) {
+                    dropdown.classList.remove('show');
+                }
+            });
+            
+            // Toggle current dropdown
+            currentDropdown.classList.toggle('show');
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('pathgen_user');
+                localStorage.removeItem('discordUser');
+                localStorage.removeItem('setupComplete');
+                window.location.href = '/login.html';
+            }
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
+
+        // Update user info in navbar
+        function updateUserInfo() {
+            try {
+                const userDataStr = localStorage.getItem('pathgen_user') || localStorage.getItem('discordUser') || localStorage.getItem('firebaseUser');
+                if (userDataStr) {
+                    const userData = JSON.parse(userDataStr);
+                    const userInfo = document.getElementById('userInfo');
+                    const userAvatar = document.getElementById('userAvatar');
+                    const userName = document.getElementById('userName');
+                    const navCTA = document.getElementById('navCTA');
+                    
+                    if (userInfo && userAvatar && userName) {
+                        const name = userData.username || userData.name || userData.displayName || userData.email?.split('@')[0] || 'User';
+                        const firstLetter = name.charAt(0).toUpperCase();
+                        
+                        userAvatar.textContent = firstLetter;
+                        userName.textContent = name;
+                        userInfo.style.display = 'flex';
+                        if (navCTA) navCTA.style.display = 'none';
+                    }
+                }
+            } catch (e) {
+                console.error('Error updating user info:', e);
+            }
+        }
+
+        // Initialize user info on load
+        window.addEventListener('DOMContentLoaded', updateUserInfo);
+    </script>
+</body>
+</html>
+

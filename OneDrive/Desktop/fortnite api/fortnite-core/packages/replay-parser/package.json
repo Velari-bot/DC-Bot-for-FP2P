@@ -1,0 +1,24 @@
+{
+  "name": "@fortnite-core/replay-parser",
+  "version": "1.0.0",
+  "description": "Replay parser for Fortnite replays",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@fortnite-core/database": "*",
+    "binary-parser": "^2.2.1",
+    "dotenv": "^16.3.1",
+    "fortnite-replay-parser": "^1.4.8",
+    "fs-extra": "^11.2.0",
+    "replay-reader": "^3.1.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.7"
+  }
+}

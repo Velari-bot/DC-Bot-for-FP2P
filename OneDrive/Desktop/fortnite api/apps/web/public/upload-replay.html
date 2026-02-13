@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Logo.png">
+    <link rel="shortcut icon" type="image/png" href="/Logo.png">
+    <link rel="apple-touch-icon" href="/Logo.png">
+    <title>Upload Replay - PathGen</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pathgen.dev/upload-replay">
+    <meta property="og:title" content="Upload Replay - PathGen AI">
+    <meta property="og:description" content="Upload your Fortnite replay files for AI analysis.">
+    <meta property="og:image" content="https://pathgen.dev/embed.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://pathgen.dev/upload-replay">
+    <meta name="twitter:title" content="Upload Replay - PathGen AI">
+    <meta name="twitter:description" content="Upload your Fortnite replay files for AI analysis.">
+    <meta name="twitter:image" content="https://pathgen.dev/embed.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0A0A0A;
+            color: #FFFFFF;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #A0A0A0;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #E0E0E0;
+            font-weight: 500;
+        }
+
+        input[type="file"],
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            color: #FFFFFF;
+            font-size: 14px;
+        }
+
+        input[type="file"] {
+            cursor: pointer;
+        }
+
+        input[type="file"]:hover {
+            border-color: rgba(139, 92, 246, 0.6);
+        }
+
+        .file-info {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
+            border: none;
+            border-radius: 8px;
+            color: #FFFFFF;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .status.success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #10B981;
+            display: block;
+        }
+
+        .status.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #EF4444;
+            display: block;
+        }
+
+        .status.info {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #3B82F6;
+            display: block;
+        }
+
+        .job-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+
+        .job-info strong {
+            color: #8B5CF6;
+        }
+
+        .check-status-btn {
+            margin-top: 10px;
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+        }
+
+        .check-status-btn:hover {
+            background: rgba(139, 92, 246, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Replay for Analysis</h1>
+        <p class="subtitle">Upload your Fortnite replay file or video clip for AI-powered gameplay analysis</p>
+
+        <form id="uploadForm">
+            <div class="form-group">
+                <label for="file">Replay File or Video Clip</label>
+                <input type="file" id="file" name="file" accept=".replay,.mp4,.mov,.avi" required>
+                <div class="file-info" id="fileInfo"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="playerId">Player ID</label>
+                <input type="text" id="playerId" name="playerId" placeholder="player123" required>
+            </div>
+
+            <div class="form-group">
+                <label for="type">File Type</label>
+                <select id="type" name="type" style="width: 100%; padding: 12px; background: rgba(30, 30, 30, 0.8); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 8px; color: #FFFFFF;">
+                    <option value="replay">Replay File (.replay)</option>
+                    <option value="clip">Video Clip (.mp4, .mov, .avi)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                    <input type="checkbox" id="rawData" name="rawData" style="width: auto; cursor: pointer;">
+                    <span>Extract raw data only (no analysis)</span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn" id="uploadBtn">Upload & Analyze</button>
+        </form>
+
+        <div class="status" id="status"></div>
+        <div class="job-info" id="jobInfo" style="display: none;"></div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('file');
+        const fileInfo = document.getElementById('fileInfo');
+        const uploadForm = document.getElementById('uploadForm');
+        const statusDiv = document.getElementById('status');
+        const jobInfoDiv = document.getElementById('jobInfo');
+        const uploadBtn = document.getElementById('uploadBtn');
+
+        let currentJobId = null;
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                fileInfo.textContent = `Selected: ${file.name} (${sizeMB} MB)`;
+            }
+        });
+
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            const file = fileInput.files[0];
+            const playerId = document.getElementById('playerId').value;
+            const type = document.getElementById('type').value;
+            const rawData = document.getElementById('rawData').checked;
+
+            if (!file) {
+                showStatus('Please select a file', 'error');
+                return;
+            }
+
+            formData.append('file', file);
+            formData.append('playerId', playerId);
+            formData.append('type', type);
+            if (rawData) {
+                formData.append('raw', 'true');
+            }
+
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = rawData ? 'Extracting raw data...' : 'Uploading...';
+            showStatus(rawData ? 'Extracting raw data from file...' : 'Uploading file...', 'info');
+
+            try {
+                const endpoint = rawData ? 'http://localhost:3001/api/extract' : 'http://localhost:3001/api/analyze';
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    if (rawData) {
+                        // Show raw data results
+                        showStatus('Raw data extracted successfully!', 'success');
+                        showRawData(data);
+                        uploadBtn.textContent = 'Upload & Analyze';
+                    } else {
+                        currentJobId = data.job_id;
+                        showStatus('Upload successful! Analysis queued.', 'success');
+                        showJobInfo(data);
+                        uploadBtn.textContent = 'Upload & Analyze';
+                    }
+                } else {
+                    showStatus(`Error: ${data.error || 'Upload failed'}`, 'error');
+                    uploadBtn.textContent = 'Upload & Analyze';
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}. Make sure the analysis service is running on port 3001.`, 'error');
+                uploadBtn.textContent = 'Upload & Analyze';
+            } finally {
+                uploadBtn.disabled = false;
+            }
+        });
+
+        function showStatus(message, type) {
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+
+        function showJobInfo(data) {
+            jobInfoDiv.innerHTML = `
+                <strong>Job ID:</strong> ${data.job_id}<br>
+                <strong>Status:</strong> ${data.status}<br>
+                <button class="btn check-status-btn" onclick="checkStatus('${data.job_id}')">Check Analysis Status</button>
+            `;
+            jobInfoDiv.style.display = 'block';
+        }
+
+        function showRawData(data) {
+            const metadata = data.metadata || {};
+            const players = data.players || {};
+            const playerCount = Object.keys(players).length;
+            
+            let metadataHtml = '';
+            if (metadata.match_id) {
+                metadataHtml += `<strong>Match ID:</strong> ${metadata.match_id}<br>`;
+            }
+            if (metadata.total_players) {
+                metadataHtml += `<strong>Total Players:</strong> ${metadata.total_players}<br>`;
+            }
+            if (metadata.game_mode && metadata.game_mode !== 'unknown') {
+                metadataHtml += `<strong>Game Mode:</strong> ${metadata.game_mode}<br>`;
+            }
+            
+            let warningHtml = '';
+            if (data.parser_warning || metadata.parser_note) {
+                warningHtml = `<div style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 8px; padding: 12px; margin-bottom: 16px; color: #EF4444;">
+                    <strong>⚠️ Parser Limitation:</strong><br>
+                    ${data.parser_warning || metadata.parser_note || 'Data may be inaccurate due to basic parsing method.'}
+                </div>`;
+            }
+            
+            const statsHtml = `
+                ${warningHtml}
+                <strong>File:</strong> ${data.file}<br>
+                <strong>Type:</strong> ${data.type}<br>
+                ${metadataHtml}
+                <strong>Duration:</strong> ${data.duration.toFixed(2)}s<br>
+                <strong>Total Events:</strong> ${data.total_events}<br>
+                <strong>Unique Players Tracked:</strong> ${playerCount}<br><br>
+                <strong>Event Breakdown:</strong><br>
+                • Eliminations: ${data.stats.eliminations}<br>
+                • Deaths: ${data.stats.deaths}<br>
+                • Damage Dealt Events: ${data.stats.damage_dealt}<br>
+                • Damage Taken Events: ${data.stats.damage_taken}<br>
+                • Position Updates: ${data.stats.position_updates}<br>
+                • Storm Updates: ${data.stats.storm_updates}<br><br>
+                <button class="btn check-status-btn" onclick="downloadRawData()">Download Raw Data JSON</button>
+            `;
+            jobInfoDiv.innerHTML = statsHtml;
+            jobInfoDiv.style.display = 'block';
+            
+            // Store raw data for download
+            window.rawData = data;
+        }
+
+        function downloadRawData() {
+            if (!window.rawData) return;
+            
+            const dataStr = JSON.stringify(window.rawData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `replay-raw-data-${Date.now()}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        window.downloadRawData = downloadRawData;
+
+        async function checkStatus(jobId) {
+            showStatus('Checking status...', 'info');
+            
+            try {
+                const response = await fetch(`http://localhost:3001/api/analyze/${jobId}`);
+                const data = await response.json();
+
+                if (data.status === 'complete') {
+                    showStatus('Analysis complete!', 'success');
+                    jobInfoDiv.innerHTML = `
+                        <strong>Job ID:</strong> ${data.job_id}<br>
+                        <strong>Status:</strong> ${data.status}<br><br>
+                        <strong>Summary:</strong><br>
+                        ${data.analysis.summary}<br><br>
+                        <strong>Insights:</strong><br>
+                        ${data.analysis.insights.map(i => `• ${i}`).join('<br>')}<br><br>
+                        <strong>Drills:</strong><br>
+                        ${data.analysis.drills.map(d => `• ${d.title} (${d.difficulty}): ${d.description}`).join('<br>')}
+                    `;
+                } else if (data.status === 'processing') {
+                    showStatus('Analysis is still processing...', 'info');
+                    setTimeout(() => checkStatus(jobId), 3000);
+                } else {
+                    showStatus(`Status: ${data.status}`, 'info');
+                }
+            } catch (error) {
+                showStatus(`Error checking status: ${error.message}`, 'error');
+            }
+        }
+
+        window.checkStatus = checkStatus;
+    </script>
+</body>
+</html>
+

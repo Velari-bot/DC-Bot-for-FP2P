@@ -1,0 +1,229 @@
+/**
+ * Subtle Ad Styling for PathGen
+ * Only shows for free tier users
+ */
+
+/* Banner Ad - Bottom of Page */
+.pathgen-ad-banner {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: rgba(10, 10, 10, 0.95) !important;
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 8px;
+    z-index: 99999 !important; /* Very high z-index to ensure it's on top */
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 106px !important; /* Small banner bar (90px ad + 16px padding) */
+    max-height: 106px !important; /* Lock height to banner size */
+    height: 106px !important; /* Fixed height for banner */
+    width: 100% !important;
+    box-sizing: border-box;
+    visibility: visible !important;
+    opacity: 1 !important;
+    overflow: hidden !important; /* Prevent content overflow */
+}
+
+.pathgen-ad-banner ins {
+    max-width: 728px;
+    width: 100%;
+    min-height: 50px;
+    display: block !important;
+    /* Allow ad to expand to its natural height */
+    height: auto;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Ensure AdSense iframes and containers are visible */
+.pathgen-ad-banner iframe,
+.pathgen-ad-banner div[id*="aswift"],
+.pathgen-ad-banner div[id*="google_ads"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    max-width: 728px !important;
+    width: 100% !important;
+    height: 90px !important; /* Fixed banner height */
+    max-height: 90px !important; /* Lock to banner size */
+    min-height: 90px !important; /* Banner height */
+    overflow: hidden !important;
+    z-index: 1 !important;
+    position: relative !important;
+}
+
+/* Ensure AdSense wrapper divs don't hide content */
+.pathgen-ad-banner div[id*="aswift"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: 90px !important; /* Fixed banner height */
+    max-height: 90px !important; /* Lock to banner size */
+    min-height: 90px !important; /* Banner height */
+    overflow: hidden !important;
+    position: relative !important;
+}
+
+/* Ensure AdSense iframe has explicit dimensions */
+.pathgen-ad-banner iframe {
+    width: 728px !important;
+    height: 90px !important; /* Banner height */
+    max-width: 728px !important;
+    max-height: 90px !important; /* Lock to banner size */
+    min-width: 728px !important;
+    min-height: 90px !important; /* Banner height */
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    border: none !important;
+}
+
+/* Sidebar Ad - Desktop Only */
+.pathgen-ad-sidebar {
+    position: sticky;
+    top: 100px;
+    background: rgba(10, 10, 10, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 20px 0;
+    max-width: 300px;
+    width: 100%;
+}
+
+.pathgen-ad-sidebar ins {
+    display: block;
+    width: 100%;
+}
+
+/* In-Content Ad */
+.pathgen-ad-incontent {
+    margin: 40px auto;
+    padding: 20px;
+    background: rgba(10, 10, 10, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    max-width: 728px;
+    text-align: center;
+}
+
+.pathgen-ad-incontent ins {
+    display: block;
+    width: 100%;
+}
+
+/* Ensure ad label is visible but doesn't interfere */
+.pathgen-ad-label {
+    margin-bottom: 4px;
+}
+
+/* Hide ads on mobile for banner (too intrusive) */
+@media (max-width: 768px) {
+    .pathgen-ad-banner {
+        display: none !important; /* Hide banner on mobile */
+    }
+
+    .pathgen-ad-sidebar {
+        display: none; /* Already hidden via JS, but CSS backup */
+    }
+
+    .pathgen-ad-incontent {
+        margin: 20px 10px;
+        padding: 12px;
+    }
+}
+
+/* Fade in animation */
+@keyframes fadeInAd {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pathgen-ad-banner,
+.pathgen-ad-sidebar,
+.pathgen-ad-incontent {
+    animation: fadeInAd 0.4s ease-out;
+}
+
+/* Ad label (subtle) */
+.pathgen-ad-label {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+/* Make ads less prominent but still visible */
+.pathgen-ad-banner ins,
+.pathgen-ad-sidebar ins,
+.pathgen-ad-incontent ins {
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
+}
+
+.pathgen-ad-banner:hover ins,
+.pathgen-ad-sidebar:hover ins,
+.pathgen-ad-incontent:hover ins {
+    opacity: 1;
+}
+
+/* Ensure body has padding when banner ad is present */
+body:has(.pathgen-ad-banner) {
+    padding-bottom: 106px; /* Small banner bar height (90px + 16px padding) */
+}
+
+/* Fallback for browsers that don't support :has() */
+body .pathgen-ad-banner {
+    /* This ensures the ad container is always visible */
+}
+
+/* Alternative: Use Carbon Ads for gaming/tech audience */
+.pathgen-carbon-ad {
+    background: rgba(10, 10, 10, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 20px 0;
+    max-width: 300px;
+}
+
+.pathgen-carbon-ad #carbonads {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.pathgen-carbon-ad .carbon-wrap {
+    display: flex;
+    flex-direction: column;
+}
+
+.pathgen-carbon-ad .carbon-img {
+    margin-bottom: 10px;
+}
+
+.pathgen-carbon-ad .carbon-text {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+.pathgen-carbon-ad .carbon-poweredby {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+

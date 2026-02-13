@@ -1,0 +1,27 @@
+Landing center = securing the positioning inside the center of each circle and each new spawning circle's center to not need to move from storm. It is risky but cuts moving time for more time spent at gathering info.
+
+Early Game:
+- Land near the center but in less crowded spots (POIs such as Restored Reels that are close to center).
+- Loot quickly and gather materials.
+
+Mid Game:
+- Move toward the center as soon as the first circle appears.
+- Build a small base of strong material (best to build brick as metal should be saved for later, tarping in endgame etc. Wooden builds are too weak and when contested around and dmg bleeds through from surroundings.)
+- Stay ready to rotate if the next circle shifts. Keep Flowberry Fizz or mobilities ready.
+
+Late Game:
+- Conserve materials; don't overbuild.
+- Watch for enemies rotating in as the zone minimizes in size
+- Continue to hold an edit from under a cone and see through to spectate your surroundings and take information.
+
+Final Circles:
+- Hold your position, letting others fight it out. If YOU fight, then you are likely to be exposed, as esp. you are in a 360 situation.
+- Move to the new center with caution. Don't rotate at center of the zone pulling. AT the far end or far front of it ONLY. In the middle of it happening, players who have to cross and want the zone front (for example) will risk being fired on. ONLY when zone stops pulling in the last 5-7 seconds must you quickly and safely reach center (once it looks like everyone has settled after zone has nearly finished pulling in ready for the next circle).
+- Be ready to engage reactively when necessary. Only when you are keyed or under surge.
+
+General Tips:
+- Stay aware of the storm and adjust positioning.
+- Communicate with your team (if applicable) to time rotates.
+- Use natural cover when possible to save materials.
+- Safely open edits and engage to accumulate surge damage and close so they do not open fire back at you before the entire lobby does.
+

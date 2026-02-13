@@ -1,0 +1,29 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/api" },
+    { "path": "./packages/data-ingestion" },
+    { "path": "./packages/database" },
+    { "path": "./packages/manifest-parser" },
+    { "path": "./packages/pak-parser" },
+    { "path": "./packages/replay-parser" },
+    { "path": "./packages/scheduler" }
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "module": "CommonJS",
+    "target": "ES2022",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
+  }
+}

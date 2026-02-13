@@ -1,0 +1,5 @@
+cd /home/container
+ls -la
+ls -la dist
+ls -la public
+quit

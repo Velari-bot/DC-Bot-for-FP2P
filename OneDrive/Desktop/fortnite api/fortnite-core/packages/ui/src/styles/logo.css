@@ -1,0 +1,81 @@
+/**
+ * Pathgen Logo - Sparkle Animation Styles
+ * 
+ * Subtle cosmic twinkle effect for logo sparkles.
+ * Respects prefers-reduced-motion automatically via React component.
+ * 
+ * Usage:
+ * - Add .logo-sparkle-animate class to SVG to enable animations
+ * - Individual sparkles animate with staggered delays
+ */
+
+/* Sparkle animation keyframes */
+@keyframes sparkle {
+  0% {
+    opacity: 0.3;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-6px) scale(1.2);
+  }
+  100% {
+    opacity: 0.3;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Apply animations only when .logo-sparkle-animate is present */
+.logo-sparkle-animate .sparkle-1 {
+  animation: sparkle 1200ms ease-in-out infinite;
+  animation-delay: 0ms;
+}
+
+.logo-sparkle-animate .sparkle-2 {
+  animation: sparkle 1400ms ease-in-out infinite;
+  animation-delay: 200ms;
+}
+
+.logo-sparkle-animate .sparkle-3 {
+  animation: sparkle 1100ms ease-in-out infinite;
+  animation-delay: 400ms;
+}
+
+.logo-sparkle-animate .sparkle-4 {
+  animation: sparkle 1300ms ease-in-out infinite;
+  animation-delay: 600ms;
+}
+
+.logo-sparkle-animate .sparkle-5 {
+  animation: sparkle 1000ms ease-in-out infinite;
+  animation-delay: 300ms;
+}
+
+.logo-sparkle-animate .sparkle-6 {
+  animation: sparkle 1500ms ease-in-out infinite;
+  animation-delay: 500ms;
+}
+
+/* Respect reduced motion preference (fallback if React check fails) */
+@media (prefers-reduced-motion: reduce) {
+  .logo-sparkle-animate [class^="sparkle-"] {
+    animation: none !important;
+  }
+}
+
+/* Logo hover effect (optional) */
+.pathgen-logo {
+  transition: transform 200ms ease-out;
+}
+
+.pathgen-logo:hover {
+  transform: scale(1.05);
+}
+
+/* Disable hover on touch devices */
+@media (hover: none) {
+  .pathgen-logo:hover {
+    transform: none;
+  }
+}
+

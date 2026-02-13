@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournaments - PathGen AI</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Logo.png">
+    <link rel="shortcut icon" type="image/png" href="/Logo.png">
+    <link rel="apple-touch-icon" href="/Logo.png">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pathgen.dev/tournaments">
+    <meta property="og:title" content="Tournaments - PathGen AI">
+    <meta property="og:description" content="Stay updated with the latest Fortnite tournaments, competitive events, and FNCS schedules.">
+    <meta property="og:image" content="https://pathgen.dev/embed.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://pathgen.dev/tournaments">
+    <meta name="twitter:title" content="Tournaments - PathGen AI">
+    <meta name="twitter:description" content="Stay updated with the latest Fortnite tournaments, competitive events, and FNCS schedules.">
+    <meta name="twitter:image" content="https://pathgen.dev/embed.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0A0A0A;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header with Pill Nav Bar */
+        .header {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .nav {
+            backdrop-filter: blur(16px);
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 
+                        0 0 0 1px rgba(255, 255, 255, 0.03),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 0 8px;
+            margin-right: 4px;
+        }
+
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .logo-icon svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin: 0 8px;
+        }
+
+        .nav-link {
+            color: #A0A0A0;
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 6px 14px;
+            border-radius: 25px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-link.active {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link .caret {
+            font-size: 8px;
+            margin-left: 1px;
+            opacity: 0.7;
+        }
+
+        .nav-link.external::after {
+            content: '↗';
+            font-size: 10px;
+            opacity: 0.6;
+            margin-left: 2px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-cta {
+            padding: 6px 18px;
+            background: #0A0A0A;
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            border-radius: 50px;
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .nav-cta:hover {
+            background: #151515;
+            border-color: rgba(139, 92, 246, 0.8);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+        }
+
+        .nav-cta::after {
+            content: '→';
+            font-size: 14px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 12px 4px 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            margin-left: 8px;
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+        }
+
+        /* Dropdowns */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            min-width: 220px;
+            background: rgba(15, 15, 15, 0.98);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+                        0 0 0 1px rgba(255, 255, 255, 0.05);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            z-index: 200;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: #d1d5db;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(79, 140, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .dropdown-item-icon {
+            font-size: 16px;
+            width: 20px;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 6px 0;
+        }
+
+        .dropdown-item.danger {
+            color: #ef4444;
+        }
+
+        .dropdown-item.danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .dropdown-item.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .dropdown-item.locked:hover {
+            background: transparent;
+            color: #6b7280;
+        }
+
+        #featuresDropdown {
+            left: 0;
+            right: auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 140px 48px 80px;
+            overflow: hidden;
+        }
+
+        /* Purple-Blue Gradient Glow */
+        .hero-glow {
+            position: absolute;
+            bottom: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1000px;
+            height: 1000px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, rgba(59, 130, 246, 0.15) 30%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+            filter: blur(60px);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 880px;
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 28px;
+            color: #FFFFFF;
+            letter-spacing: -0.03em;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #A0A0A0;
+            line-height: 1.7;
+            margin-bottom: 48px;
+            max-width: 680px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Background Dashboard Previews */
+        .dashboard-previews {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .preview-card {
+            position: absolute;
+            background: #151515;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 24px;
+            width: 340px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
+            opacity: 0.4;
+        }
+
+        .preview-left {
+            left: 8%;
+            top: 22%;
+            transform: rotate(-8deg) perspective(1000px) rotateY(8deg);
+        }
+
+        .preview-right {
+            right: 8%;
+            top: 28%;
+            transform: rotate(8deg) perspective(1000px) rotateY(-8deg);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            background: #2a2a2a;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .card-icon svg {
+            width: 20px;
+            height: 20px;
+            display: block;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            color: #C5C5C5;
+            font-weight: 600;
+        }
+
+        .card-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            color: #A0A0A0;
+            font-size: 0.9rem;
+        }
+
+        .card-menu-item.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: #FFFFFF;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 24px 60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-title {
+            position: relative;
+            padding-bottom: 12px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #8B5CF6, #3B82F6);
+            border-radius: 2px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: #9ca3af;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Tournament Grid */
+        .tournaments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .tournaments-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Tournament Card */
+        .tournament-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 32px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tournament-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), rgba(59, 130, 246, 0.5), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tournament-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.2));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .tournament-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(139, 92, 246, 0.3);
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.2);
+        }
+
+        .tournament-card:hover::before {
+            opacity: 1;
+        }
+
+        .tournament-card:hover::after {
+            opacity: 1;
+        }
+
+        .tournament-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .tournament-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .tournament-session {
+            font-size: 13px;
+            color: #9ca3af;
+            font-weight: 500;
+        }
+
+        .tournament-badge {
+            padding: 6px 14px;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #8B5CF6;
+            text-transform: uppercase;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1);
+        }
+
+        .tournament-info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .info-icon {
+            font-size: 16px;
+            width: 20px;
+        }
+
+        .info-label {
+            color: #6b7280;
+            min-width: 80px;
+        }
+
+        .info-value {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .tournament-timing {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+
+        .timing-main {
+            font-size: 15px;
+            font-weight: 600;
+            color: #8B5CF6;
+            margin-bottom: 4px;
+        }
+
+        .timing-countdown {
+            font-size: 13px;
+            color: #9ca3af;
+        }
+
+        .tournament-description {
+            font-size: 14px;
+            color: #d1d5db;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(139, 92, 246, 0.08);
+            border-radius: 12px;
+            border-left: 4px solid #8B5CF6;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            position: relative;
+        }
+
+        .tournament-description::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.4), transparent);
+        }
+
+        .tournament-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: rgba(139, 92, 246, 0.08);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-2px);
+            border-color: rgba(139, 92, 246, 0.4);
+            background: rgba(139, 92, 246, 0.12);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.15);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .scoring-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .scoring-header {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .scoring-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .scoring-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: rgba(79, 140, 255, 0.05);
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .scoring-place {
+            color: #9ca3af;
+        }
+
+        .scoring-points {
+            color: #4f8cff;
+            font-weight: 600;
+        }
+
+        .rewards-section {
+            margin-top: 16px;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+        }
+
+        .rewards-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #8B5CF6;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .reward-item {
+            font-size: 14px;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .reward-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .qualification-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        .tournament-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-tournament {
+            flex: 1;
+            padding: 10px 20px;
+            background: #4f8cff;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-tournament:hover {
+            background: #3b7ce0;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 140, 255, 0.4);
+        }
+
+        .btn-tournament.secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        .btn-tournament.secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: #4f8cff;
+        }
+
+        .disclaimer {
+            font-size: 11px;
+            color: #6b7280;
+            font-style: italic;
+            margin-top: 12px;
+            padding: 8px 12px;
+            background: rgba(255, 165, 0, 0.05);
+            border-radius: 8px;
+            border-left: 2px solid #ffa500;
+        }
+
+        .sessions-timeline {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .timeline-header {
+            font-size: 13px;
+            font-weight: 600;
+            color: #9ca3af;
+            margin-bottom: 12px;
+        }
+
+        .timeline-items {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .timeline-item {
+            padding: 6px 12px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            font-size: 12px;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .timeline-item:hover {
+            background: rgba(79, 140, 255, 0.1);
+            border-color: #4f8cff;
+            color: #4f8cff;
+        }
+
+        .timeline-item.active {
+            background: rgba(79, 140, 255, 0.2);
+            border-color: #4f8cff;
+            color: #4f8cff;
+        }
+
+        /* Loading State */
+        .loading-container {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(139, 92, 246, 0.2);
+            border-top-color: #8B5CF6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .empty-text {
+            font-size: 16px;
+            color: #6b7280;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .main-content {
+                padding: 40px 16px 40px;
+            }
+
+            .page-title {
+                font-size: 36px;
+            }
+
+            .page-subtitle {
+                font-size: 16px;
+            }
+
+            .tournament-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .scoring-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tournament-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo span {
+                font-size: 0.8rem;
+            }
+
+            .region-tabs {
+                gap: 6px;
+            }
+
+            .region-tab {
+                padding: 6px 14px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <!-- Pathgen Monochrome P Mark -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img">
+                        <defs>
+                            <filter id="sparkleBlur">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+                            </filter>
+                        </defs>
+                        
+                        <!-- P Glyph with Facets -->
+                        <g id="glyph">
+                            <rect x="20" y="20" width="16" height="60" rx="8" ry="8" fill="#FFFFFF"/>
+                            <path d="M 36 20 H 50 A 24 24 0 0 1 50 58 H 36 V 20 Z" fill="#FFFFFF"/>
+                            <path d="M 45 28 L 58 32 L 54 40 L 42 38 Z" fill="#000000" opacity="0.3"/>
+                            <path d="M 44 42 L 56 46 L 48 52 Z" fill="#000000" opacity="0.25"/>
+                            <path d="M 38 26 L 42 24 L 42 34 L 38 36 Z" fill="#000000" opacity="0.2"/>
+                        </g>
+                        
+                        <!-- Cosmic Sparkles -->
+                        <g id="sparkles" opacity="0.85">
+                            <circle cx="64" cy="26" r="2.5" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-1"/>
+                            <circle cx="70" cy="38" r="1.8" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-2"/>
+                            <circle cx="52" cy="35" r="1.2" fill="#FFFFFF" opacity="0.8" filter="url(#sparkleBlur)" class="sparkle-3"/>
+                            <circle cx="58" cy="28" r="0.9" fill="#FFFFFF" opacity="0.7" class="sparkle-4"/>
+                            <circle cx="24" cy="48" r="1.5" fill="#FFFFFF" filter="url(#sparkleBlur)" class="sparkle-5"/>
+                            <circle cx="60" cy="50" r="1.0" fill="#FFFFFF" opacity="0.6" class="sparkle-6"/>
+                        </g>
+                    </svg>
+                </div>
+                <span>Pathgen v2</span>
+            </a>
+            
+            <div class="nav-center">
+                <a href="/docs.html" class="nav-link">Docs</a>
+                <div class="dropdown">
+                    <a href="#" class="nav-link" onclick="toggleDropdown('features', event)">
+                        Features
+                        <span class="caret">▼</span>
+                    </a>
+                    <div class="dropdown-menu" id="featuresDropdown">
+                        <a href="/analyze" class="dropdown-item">
+                            <span class="dropdown-item-icon">🎮</span>
+                            <span>Replay Parser</span>
+                        </a>
+                        <a href="/masterclass" class="dropdown-item">
+                            <span class="dropdown-item-icon">📖</span>
+                            <span>Masterclass</span>
+                        </a>
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Coach</span>
+                        </a>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">📊</span>
+                            <span>Competitive Insights</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-item locked">
+                            <span class="dropdown-item-icon">🎤</span>
+                            <span>Voice</span>
+                            <span style="margin-left: auto; font-size: 12px;">🔒</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="/docs.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">📚</span>
+                            <span>Documentation</span>
+                        </a>
+                    </div>
+                </div>
+                <a href="/cih-coaching.html" class="nav-link">CIH Coaching</a>
+                <a href="/nagc-dropmaps.html" class="nav-link">NAGC Drop Maps</a>
+            </div>
+
+            <div class="nav-right">
+                <a href="/subscribe.html" class="nav-link">Pricing</a>
+                <a href="/login.html" class="nav-cta" id="navCTA">Try For Free</a>
+                <div class="dropdown">
+                    <div class="user-info" id="userInfo" onclick="toggleDropdown('settings', event)">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <span class="user-name" id="userName">User</span>
+                    </div>
+                    <div class="dropdown-menu" id="settingsDropdown">
+                        <a href="/chat.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💬</span>
+                            <span>AI Chat</span>
+                        </a>
+                        <a href="/tournaments.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">🏆</span>
+                            <span>Tournaments</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/settings.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">⚙️</span>
+                            <span>Settings</span>
+                        </a>
+                        <a href="/subscribe.html" class="dropdown-item">
+                            <span class="dropdown-item-icon">💳</span>
+                            <span>Upgrade to Pro</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item danger" onclick="logout()">
+                            <span class="dropdown-item-icon">🚪</span>
+                            <span>Logout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Purple-Blue Gradient Glow -->
+        <div class="hero-glow"></div>
+
+        <!-- Background Dashboard Previews -->
+        <div class="dashboard-previews">
+            <!-- Left Preview Card -->
+            <div class="preview-card preview-left">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <!-- Pathgen Monochrome P Mark -->
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" style="width: 20px; height: 20px;">
+                            <defs>
+                                <filter id="tournamentSparkleBlur">
+                                    <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+                                </filter>
+                            </defs>
+                            <g id="glyph">
+                                <rect x="20" y="20" width="16" height="60" rx="8" ry="8" fill="#FFFFFF"/>
+                                <path d="M 36 20 H 50 A 24 24 0 0 1 50 58 H 36 V 20 Z" fill="#FFFFFF"/>
+                                <path d="M 45 28 L 58 32 L 54 40 L 42 38 Z" fill="#000000" opacity="0.3"/>
+                                <path d="M 44 42 L 56 46 L 48 52 Z" fill="#000000" opacity="0.25"/>
+                                <path d="M 38 26 L 42 24 L 42 34 L 38 36 Z" fill="#000000" opacity="0.2"/>
+                            </g>
+                            <g id="sparkles" opacity="0.85">
+                                <circle cx="64" cy="26" r="2.5" fill="#FFFFFF" filter="url(#tournamentSparkleBlur)"/>
+                                <circle cx="70" cy="38" r="1.8" fill="#FFFFFF" filter="url(#tournamentSparkleBlur)"/>
+                                <circle cx="52" cy="35" r="1.2" fill="#FFFFFF" opacity="0.8" filter="url(#tournamentSparkleBlur)"/>
+                                <circle cx="58" cy="28" r="0.9" fill="#FFFFFF" opacity="0.7"/>
+                                <circle cx="24" cy="48" r="1.5" fill="#FFFFFF" filter="url(#tournamentSparkleBlur)"/>
+                                <circle cx="60" cy="50" r="1.0" fill="#FFFFFF" opacity="0.6"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="card-title">Pathgen Dashboard</div>
+                </div>
+                <div class="card-menu-item">
+                    <span>💬 AI Chat</span>
+                </div>
+                <div class="card-menu-item active">
+                    <span>🏆 Tournaments</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>📊 Analytics</span>
+                </div>
+            </div>
+
+            <!-- Right Preview Card -->
+            <div class="preview-card preview-right">
+                <div class="card-header">
+                    <div class="card-icon">🏆</div>
+                    <div class="card-title">Upcoming Events</div>
+                </div>
+                <div class="card-menu-item">
+                    <span>FNCS Qualifiers</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Cash Cups</span>
+                </div>
+                <div class="card-menu-item">
+                    <span>Regional Events</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-content">
+            <h1 class="hero-title" id="tournamentHeroTitle">Dominate the Competition</h1>
+            <p class="hero-subtitle" id="tournamentHeroSubtitle">
+                Track upcoming tournaments, view schedules, and prepare for competitive events across all regions. 
+                Stay ahead of the competition with real-time updates and insights.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+
+        <!-- Tournaments Grid -->
+        <div class="tournaments-grid" id="tournamentsGrid">
+            <!-- Loading State -->
+            <div class="loading-container" id="loadingState">
+                <div class="loading-spinner"></div>
+                <div style="color: #9ca3af;">Loading tournaments...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle dropdown
+        function toggleDropdown(type, event) {
+            if (event) event.preventDefault();
+            
+            const dropdowns = {
+                features: document.getElementById('featuresDropdown'),
+                settings: document.getElementById('settingsDropdown')
+            };
+            
+            const currentDropdown = dropdowns[type];
+            if (!currentDropdown) return;
+            
+            // Close other dropdowns
+            Object.entries(dropdowns).forEach(([key, dropdown]) => {
+                if (key !== type && dropdown) {
+                    dropdown.classList.remove('show');
+                }
+            });
+            
+            // Toggle current dropdown
+            currentDropdown.classList.toggle('show');
+            
+            if (event) event.stopPropagation();
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
+
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('pathgen_user');
+                localStorage.removeItem('discordUser');
+                localStorage.removeItem('setupComplete');
+                window.location.href = '/login.html';
+            }
+        }
+
+        // Check auth on page load
+        // Hero text variations for tournaments page
+        const tournamentHeroVariations = [
+            {
+                title: "Dominate the Competition",
+                subtitle: "Track upcoming tournaments, view schedules, and prepare for competitive events across all regions. Stay ahead of the competition with real-time updates and insights."
+            },
+            {
+                title: "Compete at the Highest Level",
+                subtitle: "Never miss a tournament. Get instant notifications, detailed schedules, and prize pool information for every competitive Fortnite event."
+            },
+            {
+                title: "Win More. Climb Faster.",
+                subtitle: "Stay informed about FNCS, Cash Cups, and regional tournaments. Plan your practice, track your progress, and dominate the leaderboards."
+            }
+        ];
+
+        let tournamentHeroIndex = 0;
+
+        function cycleTournamentHeroText() {
+            tournamentHeroIndex = (tournamentHeroIndex + 1) % tournamentHeroVariations.length;
+            const variation = tournamentHeroVariations[tournamentHeroIndex];
+
+            const titleEl = document.getElementById('tournamentHeroTitle');
+            const subtitleEl = document.getElementById('tournamentHeroSubtitle');
+
+            if (titleEl && subtitleEl) {
+                // Fade out
+                titleEl.style.transition = 'opacity 0.4s ease';
+                subtitleEl.style.transition = 'opacity 0.4s ease';
+                titleEl.style.opacity = '0';
+                subtitleEl.style.opacity = '0';
+
+                setTimeout(() => {
+                    titleEl.textContent = variation.title;
+                    subtitleEl.textContent = variation.subtitle;
+
+                    // Fade in
+                    titleEl.style.opacity = '1';
+                    subtitleEl.style.opacity = '1';
+                }, 400);
+            }
+        }
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Animate tournament cards on scroll
+        function initScrollAnimations() {
+            const cards = document.querySelectorAll('.tournament-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = `opacity 0.6s ease ${index * 0.05}s, transform 0.6s ease ${index * 0.05}s`;
+                observer.observe(card);
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // Cycle hero text every 10 seconds
+            if (document.getElementById('tournamentHeroTitle')) {
+                setInterval(cycleTournamentHeroText, 10000);
+            }
+            checkAuth();
+            loadTournaments();
+        });
+
+        function checkAuth() {
+            const user = localStorage.getItem('pathgen_user');
+            if (user) {
+                try {
+                    const userData = JSON.parse(user);
+                    showUserInfo(userData);
+                } catch (e) {}
+            }
+        }
+
+        function showUserInfo(userData) {
+            const navCTA = document.getElementById('navCTA');
+            const userInfo = document.getElementById('userInfo');
+            const userAvatar = document.getElementById('userAvatar');
+            const userName = document.getElementById('userName');
+
+            if (navCTA) navCTA.style.display = 'none';
+            if (userInfo) userInfo.style.display = 'flex';
+            
+            // Set avatar - use Discord avatar, Google avatar, or generic avatar if available
+            const avatarUrl = userData.discordAvatar || userData.googleAvatar || userData.avatar;
+            if (avatarUrl && userAvatar) {
+                userAvatar.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.textContent='${(userData.name || userData.email || userData.googleUsername || 'U').charAt(0).toUpperCase()}';" />`;
+            } else if (userAvatar) {
+                const initial = (userData.name || userData.email || userData.googleUsername || 'U').charAt(0).toUpperCase();
+                userAvatar.textContent = initial;
+            }
+            
+            const displayName = userData.name || userData.discordUsername || userData.googleUsername || userData.email?.split('@')[0] || 'User';
+            if (userName) userName.textContent = displayName;
+        }
+
+        let allTournaments = [];
+
+        const tournamentsData = [
+            {
+                id: 1,
+                name: 'Reload Quick Cup (Reload)',
+                session: 'Session 2 - Round 1',
+                region: 'NAC',
+                format: 'Duos',
+                maxPlayers: 40,
+                matches: 3,
+                platforms: ['Mobile', 'PC', 'PlayStation', 'Switch', 'Xbox'],
+                date: 'November 14, 2025 at 19:00',
+                duration: '45 minutes',
+                startsIn: '20 hours',
+                description: 'Go Go Go! Each Reload Quick Cup kicks off with Round 1, a 45-minute session where duos can play up to three matches, with only the best match counting on the leaderboard. Only your first five eliminations in each match will contribute to your match score. The top duos in each region advance to Round 2 and are sorted into one of three groups based on their Round 1 point total: Group 1 (15+ points), Group 2 (10-14 points), and Group 3 (1-9 points).',
+                scoring: {
+                    placement: [
+                        { place: '1st', points: '10 (+1)' },
+                        { place: '2nd', points: '9 (+1)' },
+                        { place: '3rd', points: '8 (+1)' },
+                        { place: '4th', points: '7 (+1)' },
+                        { place: '5th', points: '6 (+1)' },
+                        { place: '6th', points: '5 (+1)' },
+                        { place: '7th', points: '4 (+1)' },
+                        { place: '8th', points: '3 (+1)' },
+                        { place: '9th', points: '2 (+1)' },
+                        { place: '10th', points: '1 (+1)' }
+                    ],
+                    eliminations: [
+                        { count: '1-5', points: '1 each' }
+                    ]
+                },
+                qualification: 'Get 15 points for Group 1',
+                rewards: 'Cash prizes for Victory Royale in Round 3',
+                payout: '21 hours',
+                sessions: ['Session 1', 'Session 2', 'Session 3'],
+                rounds: ['Round 1', 'Round 2 - Group 1', 'Round 2 - Group 2', 'Round 2 - Group 3', 'Round 3']
+            },
+            {
+                id: 2,
+                name: 'Duos Victory Cash Cup',
+                session: 'Day 2 - Round 1',
+                region: 'NAC',
+                format: 'Duos',
+                maxPlayers: 80,
+                matches: 7,
+                platforms: ['Mobile', 'PC', 'PlayStation', 'Switch', 'Xbox'],
+                date: 'November 15, 2025 at 19:00',
+                duration: '2 hours',
+                startsIn: '1 day',
+                description: "It's time to duo up and compete for the opportunity to win a cash prize! Reach Round 2 where every duo who earns a Victory Royale in Round 2 will earn $200 USD - good luck and have fun!",
+                scoring: {
+                    placement: [
+                        { place: '1st', points: '65 (+9)' },
+                        { place: '2nd', points: '56 (+4)' },
+                        { place: '3rd', points: '52 (+4)' },
+                        { place: '5th', points: '44 (+4)' },
+                        { place: '10th', points: '32 (+2)' },
+                        { place: '20th', points: '12 (+2)' }
+                    ],
+                    eliminations: [
+                        { count: 'Each', points: '2 points' }
+                    ]
+                },
+                qualification: 'Reach Top 400',
+                rewards: '$200 USD for Victory Royale in Round 2',
+                payout: '1 day',
+                sessions: ['Day 1', 'Day 2', 'Day 3'],
+                rounds: ['Round 1', 'Round 2']
+            },
+            {
+                id: 3,
+                name: 'Solo Series Victory Cash Cup',
+                session: 'Session 2',
+                region: 'NAC',
+                format: 'Solo',
+                maxPlayers: 80,
+                matches: 10,
+                platforms: ['Mobile', 'PC', 'PlayStation', 'Switch', 'Xbox'],
+                date: 'November 19, 2025 at 19:00',
+                duration: '3 hours',
+                startsIn: '5 days',
+                description: "Drop into the Solo Series Victory Cash Cup! This tournament has two qualifying sessions, with each player's points being added across the two sessions. The top 1,000 players in EU and NAC, and the top 500 players in OCE, ASIA, ME, BR, and NAW will advance and be able to queue up for the final. The winner of each match in the final will win $200! Good luck and have fun!",
+                scoring: {
+                    placement: [
+                        { place: '1st', points: '60 (+7)' },
+                        { place: '2nd', points: '53 (+4)' },
+                        { place: '3rd', points: '49 (+2)' },
+                        { place: '5th', points: '46 (+1)' },
+                        { place: '10th', points: '41 (+1)' },
+                        { place: '20th', points: '31 (+1)' },
+                        { place: '30th', points: '21 (+1)' },
+                        { place: '40th', points: '11 (+1)' },
+                        { place: '50th', points: '1 (+1)' }
+                    ],
+                    eliminations: [
+                        { count: 'Each', points: '2 points' }
+                    ]
+                },
+                qualification: 'Top 1,000 (NAC/EU) or Top 500 (Other regions)',
+                rewards: '$200 for each Victory Royale in Finals',
+                payout: 'After Finals',
+                sessions: ['Session 1', 'Session 2', 'Cumulative Leaderboard', 'Finals'],
+                rounds: []
+            },
+            {
+                id: 4,
+                name: 'Squads Victory Cash Cup',
+                session: 'Day 2 - Round 1',
+                region: 'NAC',
+                format: 'Squads',
+                maxPlayers: 80,
+                matches: 7,
+                platforms: ['Mobile', 'PC', 'PlayStation', 'Switch', 'Xbox'],
+                date: 'November 16, 2025 at 19:00',
+                duration: '2 hours',
+                startsIn: '2 days',
+                description: "It's time to squad up and compete for the opportunity to win a cash prize! Reach Round 2 where every squad who earns a Victory Royale in Round 2 will earn $400 USD - good luck and have fun!",
+                scoring: {
+                    placement: [
+                        { place: '1st', points: '60 (+10)' },
+                        { place: '2nd', points: '50 (+5)' },
+                        { place: '3rd', points: '45 (+5)' },
+                        { place: '5th', points: '35 (+5)' },
+                        { place: '10th', points: '18 (+3)' },
+                        { place: '15th', points: '3 (+3)' }
+                    ],
+                    eliminations: [
+                        { count: 'Each', points: '1 point' }
+                    ]
+                },
+                qualification: 'Reach Top 200',
+                rewards: '$400 USD for Victory Royale in Round 2',
+                payout: '2 days',
+                sessions: ['Day 1', 'Day 2', 'Day 3'],
+                rounds: ['Round 1', 'Round 2']
+            }
+        ];
+
+        function loadTournaments() {
+            allTournaments = tournamentsData;
+            displayTournaments();
+            // Initialize scroll animations after tournaments are displayed
+            setTimeout(initScrollAnimations, 100);
+        }
+
+        function displayTournaments() {
+            const grid = document.getElementById('tournamentsGrid');
+            grid.innerHTML = '';
+
+            if (allTournaments.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🏆</div>
+                        <div class="empty-title">No Tournaments Found</div>
+                        <div class="empty-text">Check back later for upcoming events</div>
+                    </div>
+                `;
+                return;
+            }
+
+            allTournaments.forEach(tournament => {
+                const card = createTournamentCard(tournament);
+                grid.appendChild(card);
+            });
+        }
+
+        function createTournamentCard(t) {
+            const card = document.createElement('div');
+            card.className = 'tournament-card';
+
+            const scoringHTML = `
+                <div class="scoring-section">
+                    <div class="scoring-header">📊 Scoring Rules</div>
+                    <div class="scoring-grid">
+                        ${t.scoring.placement.slice(0, 6).map(s => `
+                            <div class="scoring-item">
+                                <span class="scoring-place">${s.place}</span>
+                                <span class="scoring-points">${s.points}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div style="margin-top: 12px; font-size: 13px; color: #9ca3af;">
+                        <strong style="color: #4f8cff;">Eliminations:</strong> ${t.scoring.eliminations[0].points}
+                    </div>
+                </div>
+            `;
+
+            const sessionsHTML = t.sessions.length > 0 || t.rounds.length > 0 ? `
+                <div class="sessions-timeline">
+                    <div class="timeline-header">Tournament Structure</div>
+                    <div class="timeline-items">
+                        ${t.sessions.map(s => `<div class="timeline-item">${s}</div>`).join('')}
+                        ${t.rounds.map(r => `<div class="timeline-item">${r}</div>`).join('')}
+                    </div>
+                </div>
+            ` : '';
+
+            card.innerHTML = `
+                <div class="tournament-header">
+                    <div>
+                        <div class="tournament-title">${t.name}</div>
+                        <div class="tournament-session">${t.session}</div>
+                    </div>
+                    <div class="tournament-badge">${t.region}</div>
+                </div>
+
+                <div class="tournament-timing">
+                    <div class="timing-main">📅 ${t.date}</div>
+                    <div class="timing-countdown">⏱️ Starts in ${t.startsIn} • Duration: ${t.duration}</div>
+                </div>
+
+                <div class="tournament-info">
+                    <div class="info-row">
+                        <span class="info-icon">👥</span>
+                        <span class="info-label">Format:</span>
+                        <span class="info-value">${t.format} (max ${t.maxPlayers} players)</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-icon">🎮</span>
+                        <span class="info-label">Matches:</span>
+                        <span class="info-value">${t.matches} matches</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-icon">🖥️</span>
+                        <span class="info-label">Platforms:</span>
+                        <span class="info-value">${t.platforms.join(', ')}</span>
+                    </div>
+                </div>
+
+                <div class="tournament-description">
+                    ${t.description}
+                </div>
+
+                <div class="tournament-stats">
+                    <div class="stat-box">
+                        <div class="stat-value">${t.maxPlayers}</div>
+                        <div class="stat-label">Max Players</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">${t.matches}</div>
+                        <div class="stat-label">Matches</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">${t.duration}</div>
+                        <div class="stat-label">Duration</div>
+                    </div>
+                </div>
+
+                ${scoringHTML}
+
+                <div class="rewards-section">
+                    <div class="rewards-title">💰 Rewards & Prizes</div>
+                    <div class="reward-item">${t.rewards}</div>
+                    <div style="font-size: 12px; color: #6b7280; margin-top: 8px;">
+                        Payout in ${t.payout}
+                    </div>
+                </div>
+
+                <div style="margin-top: 16px;">
+                    <div class="qualification-badge">
+                        ✅ Qualification: ${t.qualification}
+                    </div>
+                </div>
+
+                ${sessionsHTML}
+
+                <div class="disclaimer">
+                    ⚠️ This description is provided by Epic Games and could be outdated
+                </div>
+
+                <div class="tournament-actions">
+                    <button class="btn-tournament" onclick="viewDetails(${t.id})">
+                        View Full Details
+                    </button>
+                    <button class="btn-tournament secondary" onclick="shareTourn ament(${t.id})">
+                        📤 Share
+                    </button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function viewDetails(id) {
+            const tournament = allTournaments.find(t => t.id === id);
+            if (tournament) {
+                alert(`Full details for: ${tournament.name}\n\nWould redirect to detailed tournament page.`);
+                // window.location.href = `/tournament/${id}`;
+            }
+        }
+
+        function shareTournament(id) {
+            const tournament = allTournaments.find(t => t.id === id);
+            if (tournament) {
+                const url = `${window.location.origin}/tournaments.html?id=${id}`;
+                navigator.clipboard.writeText(url);
+                alert('Tournament link copied to clipboard!');
+            }
+        }
+    </script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+    <script src="/js/subscription-modal.js"></script>
+    <script src="/js/addon-guard.js"></script>
+</body>
+</html>
+

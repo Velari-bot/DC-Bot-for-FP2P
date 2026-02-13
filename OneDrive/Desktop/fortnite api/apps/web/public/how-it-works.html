@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Logo.png">
+    <link rel="shortcut icon" type="image/png" href="/Logo.png">
+    <link rel="apple-touch-icon" href="/Logo.png">
+    <title>How It Works - PathGen AI</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pathgen.dev/how-it-works">
+    <meta property="og:title" content="How It Works - PathGen AI">
+    <meta property="og:description" content="Learn how PathGen AI analyzes your gameplay and provides coaching insights.">
+    <meta property="og:image" content="https://pathgen.dev/embed.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://pathgen.dev/how-it-works">
+    <meta name="twitter:title" content="How It Works - PathGen AI">
+    <meta name="twitter:description" content="Learn how PathGen AI analyzes your gameplay and provides coaching insights.">
+    <meta name="twitter:image" content="https://pathgen.dev/embed.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0A0A0A;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-top: 120px;
+            padding-bottom: 100px;
+        }
+
+        /* Header with Pill Nav Bar */
+        .header {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .nav {
+            backdrop-filter: blur(16px);
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 
+                        0 0 0 1px rgba(255, 255, 255, 0.03),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 0 8px;
+            margin-right: 4px;
+        }
+
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin: 0 8px;
+        }
+
+        .nav-link {
+            color: #A0A0A0;
+            text-decoration: none;
+            font-size: 0.875rem;
+            padding: 6px 14px;
+            border-radius: 25px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 8px;
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            color: #FFFFFF;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 48px 60px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            color: #FFFFFF;
+            letter-spacing: -0.03em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #A0A0A0;
+            line-height: 1.7;
+            margin-bottom: 60px;
+        }
+
+        /* Content Sections */
+        .content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 48px;
+        }
+
+        .section {
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 24px;
+        }
+
+        .section-content {
+            font-size: 1.1rem;
+            color: #D1D5DB;
+            line-height: 1.8;
+            margin-bottom: 32px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.2s ease;
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 12px;
+        }
+
+        .feature-description {
+            font-size: 0.95rem;
+            color: #A0A0A0;
+            line-height: 1.6;
+        }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .step-item {
+            counter-increment: step-counter;
+            margin-bottom: 32px;
+            padding-left: 60px;
+            position: relative;
+        }
+
+        .step-item::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #FFFFFF;
+            font-size: 1.1rem;
+        }
+
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 8px;
+        }
+
+        .step-description {
+            font-size: 1rem;
+            color: #D1D5DB;
+            line-height: 1.7;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 60px 48px;
+            background: rgba(139, 92, 246, 0.05);
+            border-radius: 24px;
+            margin-top: 80px;
+        }
+
+        .cta-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 16px;
+        }
+
+        .cta-description {
+            font-size: 1.1rem;
+            color: #A0A0A0;
+            margin-bottom: 32px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            color: #FFFFFF;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img">
+                        <defs>
+                            <filter id="sparkleBlur">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="0.8"/>
+                            </filter>
+                        </defs>
+                        <g id="glyph">
+                            <rect x="20" y="20" width="16" height="60" rx="8" ry="8" fill="#FFFFFF"/>
+                            <path d="M 36 20 H 50 A 24 24 0 0 1 50 58 H 36 V 20 Z" fill="#FFFFFF"/>
+                            <path d="M 45 28 L 58 32 L 54 40 L 42 38 Z" fill="#000000" opacity="0.3"/>
+                            <path d="M 44 42 L 56 46 L 48 52 Z" fill="#000000" opacity="0.25"/>
+                            <path d="M 38 26 L 42 24 L 42 34 L 38 36 Z" fill="#000000" opacity="0.2"/>
+                        </g>
+                        <g id="sparkles" opacity="0.85">
+                            <circle cx="64" cy="26" r="2.5" fill="#FFFFFF" filter="url(#sparkleBlur)"/>
+                            <circle cx="70" cy="38" r="1.8" fill="#FFFFFF" filter="url(#sparkleBlur)"/>
+                            <circle cx="52" cy="35" r="1.2" fill="#FFFFFF" opacity="0.8" filter="url(#sparkleBlur)"/>
+                            <circle cx="58" cy="28" r="0.9" fill="#FFFFFF" opacity="0.7"/>
+                            <circle cx="24" cy="48" r="1.5" fill="#FFFFFF" filter="url(#sparkleBlur)"/>
+                            <circle cx="60" cy="50" r="1.0" fill="#FFFFFF" opacity="0.6"/>
+                        </g>
+                    </svg>
+                </div>
+                <span>Pathgen v2</span>
+            </a>
+            <div class="nav-center">
+                <a href="/docs.html" class="nav-link">Docs</a>
+                <a href="/how-it-works.html" class="nav-link active">How It Works</a>
+                <a href="/faq.html" class="nav-link">FAQ</a>
+            </div>
+            <div class="nav-right">
+                <a href="/subscribe.html" class="nav-link">Pricing</a>
+                <a href="/login.html" class="nav-cta">Try For Free</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 class="hero-title">How PathGen Works</h1>
+        <p class="hero-subtitle">
+            Your AI-powered Fortnite coach that helps you improve faster with personalized training, 
+            real-time analysis, and competitive insights.
+        </p>
+    </section>
+
+    <!-- Main Content -->
+    <div class="content">
+        <!-- How It Works Steps -->
+        <section class="section">
+            <h2 class="section-title">Getting Started</h2>
+            <ol class="step-list">
+                <li class="step-item">
+                    <div class="step-title">Sign Up & Choose Your Plan</div>
+                    <div class="step-description">
+                        Create your free account or upgrade to Pro for unlimited coaching. 
+                        Add optional features like Voice Interaction, Gameplay Analysis, or Competitive Insights.
+                    </div>
+                </li>
+                <li class="step-item">
+                    <div class="step-title">Start Chatting with Your AI Coach</div>
+                    <div class="step-description">
+                        Ask questions about Fortnite gameplay, mechanics, strategy, or competitive meta. 
+                        Get instant, personalized advice tailored to your playstyle and skill level.
+                    </div>
+                </li>
+                <li class="step-item">
+                    <div class="step-title">Use Voice Mode (Optional)</div>
+                    <div class="step-description">
+                        Hold the microphone button to speak your questions. Get real-time voice responses 
+                        with tactical coaching tips, just like having a coach in your ear during practice.
+                    </div>
+                </li>
+                <li class="step-item">
+                    <div class="step-title">Upload Replays for Analysis (Pro Feature)</div>
+                    <div class="step-description">
+                        Upload your Fortnite replay files to get detailed analysis of your gameplay, 
+                        identify mistakes, and receive specific improvement recommendations.
+                    </div>
+                </li>
+                <li class="step-item">
+                    <div class="step-title">Track Your Progress</div>
+                    <div class="step-description">
+                        Monitor your improvement over time with usage tracking, conversation history, 
+                        and personalized training recommendations based on your questions.
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <!-- Features -->
+        <section class="section">
+            <h2 class="section-title">Key Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <div class="feature-title">AI Text Chat</div>
+                    <div class="feature-description">
+                        Get instant answers to your Fortnite questions. Ask about mechanics, strategy, 
+                        loadouts, rotations, or competitive meta. Our AI coach provides detailed, 
+                        actionable advice.
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎤</div>
+                    <div class="feature-title">Voice Interaction</div>
+                    <div class="feature-description">
+                        Speak your questions and get voice responses. Perfect for quick coaching during 
+                        practice sessions. Push-to-talk mode for hands-free operation.
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <div class="feature-title">Replay Analysis</div>
+                    <div class="feature-description">
+                        Upload your Fortnite replay files for detailed analysis. Identify mistakes, 
+                        learn from your gameplay, and get specific improvement recommendations.
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Competitive Insights</div>
+                    <div class="feature-description">
+                        Stay ahead with real-time updates from tournaments, forums, and top Fortnite 
+                        analysts. Track meta changes, tournament schedules, and competitive trends.
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-title">Personalized Training</div>
+                    <div class="feature-description">
+                        Get coaching tailored to your playstyle, input method (controller vs KBM), 
+                        and game mode (Build vs Zero Build). Adaptive advice that grows with you.
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <div class="feature-title">Progress Tracking</div>
+                    <div class="feature-description">
+                        Monitor your usage, track your questions, and see your improvement over time. 
+                        Access your conversation history and training recommendations.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How AI Works -->
+        <section class="section">
+            <h2 class="section-title">How Our AI Coach Works</h2>
+            <div class="section-content">
+                <p>
+                    PathGen uses advanced AI technology powered by OpenAI to provide personalized Fortnite coaching. 
+                    Our system is specifically trained on Fortnite gameplay, mechanics, and competitive strategies.
+                </p>
+                <p style="margin-top: 24px;">
+                    <strong>What the AI knows:</strong>
+                </p>
+                <ul style="margin-top: 16px; margin-left: 24px; color: #D1D5DB; line-height: 1.8;">
+                    <li>Fortnite mechanics (piece control, edits, movement, aim)</li>
+                    <li>Competitive meta (POIs, loadouts, storm patterns, rotations)</li>
+                    <li>Coaching patterns (identifying mistakes, suggesting improvements)</li>
+                    <li>Replay analysis (spotting errors, evaluating gameplay)</li>
+                </ul>
+                <p style="margin-top: 24px;">
+                    <strong>Important:</strong> The AI coach provides guidance and advice based on Fortnite knowledge, 
+                    but cannot guarantee wins or specific outcomes. Your performance depends on practice, skill, and 
+                    many factors beyond AI coaching.
+                </p>
+            </div>
+        </section>
+
+        <!-- Limits & Usage -->
+        <section class="section">
+            <h2 class="section-title">Usage Limits & Tiers</h2>
+            <div class="section-content">
+                <p>
+                    PathGen offers different tiers to fit your needs:
+                </p>
+                <div style="margin-top: 32px;">
+                    <h3 style="font-size: 1.5rem; font-weight: 600; color: #FFFFFF; margin-bottom: 16px;">Free Tier</h3>
+                    <ul style="margin-left: 24px; color: #D1D5DB; line-height: 1.8;">
+                        <li>5 messages per day</li>
+                        <li>No voice interaction</li>
+                        <li>No replay analysis</li>
+                        <li>Perfect for trying out PathGen</li>
+                    </ul>
+                </div>
+                <div style="margin-top: 32px;">
+                    <h3 style="font-size: 1.5rem; font-weight: 600; color: #FFFFFF; margin-bottom: 16px;">Pro Tier ($6.99/month)</h3>
+                    <ul style="margin-left: 24px; color: #D1D5DB; line-height: 1.8;">
+                        <li>200 messages per month</li>
+                        <li>Chat history saved</li>
+                        <li>Better AI responses</li>
+                        <li>Access to all base features</li>
+                    </ul>
+                </div>
+                <div style="margin-top: 32px;">
+                    <h3 style="font-size: 1.5rem; font-weight: 600; color: #FFFFFF; margin-bottom: 16px;">Add-Ons</h3>
+                    <ul style="margin-left: 24px; color: #D1D5DB; line-height: 1.8;">
+                        <li><strong>Voice Interaction</strong> (+$1.99/mo): 60 minutes/month of voice coaching</li>
+                        <li><strong>Gameplay Analysis</strong> (+$1.50/mo): 15 replay analyses per month</li>
+                        <li><strong>Competitive Insights</strong> (+$0.75/mo): Unlimited tournament and meta insights</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Privacy & Data -->
+        <section class="section">
+            <h2 class="section-title">Privacy & Data</h2>
+            <div class="section-content">
+                <p>
+                    Your conversations with PathGen are processed by OpenAI's API to generate responses. 
+                    We store your chat history, usage data, and subscription information securely in Firebase.
+                </p>
+                <p style="margin-top: 24px;">
+                    <strong>What we store:</strong>
+                </p>
+                <ul style="margin-top: 16px; margin-left: 24px; color: #D1D5DB; line-height: 1.8;">
+                    <li>Your chat conversations (for history and context)</li>
+                    <li>Usage statistics (messages sent, voice time used)</li>
+                    <li>Subscription and payment information</li>
+                    <li>Account information (email, username)</li>
+                </ul>
+                <p style="margin-top: 24px;">
+                    <strong>What we don't store:</strong>
+                </p>
+                <ul style="margin-top: 16px; margin-left: 24px; color: #D1D5DB; line-height: 1.8;">
+                    <li>Your replay files (processed and deleted after analysis)</li>
+                    <li>Voice recordings (transcribed and deleted immediately)</li>
+                    <li>Payment card details (handled securely by Stripe)</li>
+                </ul>
+                <p style="margin-top: 24px;">
+                    For more details, see our <a href="/privacy.html" style="color: #8B5CF6; text-decoration: none;">Privacy Policy</a>.
+                </p>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <h2 class="cta-title">Ready to Improve Your Fortnite Game?</h2>
+            <p class="cta-description">
+                Start your free trial today and get personalized coaching from your AI Fortnite coach.
+            </p>
+            <a href="/login.html" class="cta-button">Try For Free</a>
+        </section>
+    </div>
+</body>
+</html>
+

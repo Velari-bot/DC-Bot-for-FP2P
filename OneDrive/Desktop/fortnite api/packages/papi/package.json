@@ -1,0 +1,27 @@
+{
+  "name": "@fortnite-api/papi",
+  "version": "1.0.0",
+  "description": "Fastify API for Fortnite replay analysis",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "fastify": "^4.24.3",
+    "@fastify/multipart": "^8.0.0",
+    "@fastify/cors": "^8.4.0",
+    "bullmq": "^4.15.2",
+    "ioredis": "^5.3.2",
+    "pg": "^8.11.3",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/pg": "^8.10.9",
+    "typescript": "^5.3.3",
+    "tsx": "^4.7.0"
+  }
+}

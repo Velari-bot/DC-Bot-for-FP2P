@@ -21,6 +21,8 @@ class UserModel {
       discordUserId,
       email,
       powerRanking = 0,
+      earnings = 0,
+      followers = 0,
       masterclassLevel = null,
       subscriptionId = null,
       subscriptionStatus = null,
@@ -32,18 +34,20 @@ class UserModel {
       discordUserId,
       email,
       powerRanking: parseInt(powerRanking) || 0,
+      earnings: parseFloat(earnings) || 0,
+      followers: parseInt(followers) || 0,
       masterclassLevel,
       subscriptionId,
       subscriptionStatus,
       expiresAt,
       updatedAt: new Date(),
-      createdAt: this.users.has(podiaUserId) 
-        ? this.users.get(podiaUserId).createdAt 
+      createdAt: this.users.has(podiaUserId)
+        ? this.users.get(podiaUserId).createdAt
         : new Date()
     };
 
     this.users.set(podiaUserId, user);
-    
+
     // In production, save to database:
     // if (this.db) {
     //   await this.db.collection('users').updateOne(
@@ -61,12 +65,12 @@ class UserModel {
    */
   async getUserByPodiaId(podiaUserId) {
     const user = this.users.get(podiaUserId);
-    
+
     // In production, query database:
     // if (this.db) {
     //   return await this.db.collection('users').findOne({ podiaUserId });
     // }
-    
+
     return user || null;
   }
 
@@ -79,12 +83,12 @@ class UserModel {
         return user;
       }
     }
-    
+
     // In production, query database:
     // if (this.db) {
     //   return await this.db.collection('users').findOne({ discordUserId });
     // }
-    
+
     return null;
   }
 
@@ -99,9 +103,9 @@ class UserModel {
 
     user.powerRanking = parseInt(powerRanking) || 0;
     user.updatedAt = new Date();
-    
+
     this.users.set(podiaUserId, user);
-    
+
     // In production, update database:
     // if (this.db) {
     //   await this.db.collection('users').updateOne(
@@ -127,9 +131,9 @@ class UserModel {
     user.subscriptionStatus = subscriptionData.status || null;
     user.expiresAt = subscriptionData.expiresAt || null;
     user.updatedAt = new Date();
-    
+
     this.users.set(podiaUserId, user);
-    
+
     // In production, update database:
     // if (this.db) {
     //   await this.db.collection('users').updateOne(
@@ -161,9 +165,9 @@ class UserModel {
     user.subscriptionStatus = null;
     user.expiresAt = null;
     user.updatedAt = new Date();
-    
+
     this.users.set(podiaUserId, user);
-    
+
     // In production, update database:
     // if (this.db) {
     //   await this.db.collection('users').updateOne(
@@ -217,14 +221,47 @@ class UserModel {
 
     user.discordUserId = discordUserId;
     user.updatedAt = new Date();
-    
+
     this.users.set(podiaUserId, user);
-    
+
     // In production, update database:
     // if (this.db) {
     //   await this.db.collection('users').updateOne(
     //     { podiaUserId },
     //     { $set: { discordUserId, updatedAt: new Date() } }
+    //   );
+    // }
+
+    return user;
+  }
+
+  /**
+   * Update user's skill metrics (PR, earnings, followers)
+   */
+  async updateSkillMetrics(podiaUserId, metrics) {
+    const user = await this.getUserByPodiaId(podiaUserId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    if (metrics.powerRanking !== undefined) user.powerRanking = parseInt(metrics.powerRanking) || 0;
+    if (metrics.earnings !== undefined) user.earnings = parseFloat(metrics.earnings) || 0;
+    if (metrics.followers !== undefined) user.followers = parseInt(metrics.followers) || 0;
+
+    user.updatedAt = new Date();
+
+    this.users.set(podiaUserId, user);
+
+    // In production, update database:
+    // if (this.db) {
+    //   await this.db.collection('users').updateOne(
+    //     { podiaUserId },
+    //     { $set: { 
+    //         powerRanking: user.powerRanking, 
+    //         earnings: user.earnings, 
+    //         followers: user.followers,
+    //         updatedAt: user.updatedAt 
+    //     }}
     //   );
     // }
 

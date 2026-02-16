@@ -6,14 +6,16 @@ const Achievement = ({ name, image, link }) => {
   return (
     <div data-aos="zoom-in">
       <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden hover:border-[#FACC24]/50 transition-all group cursor-pointer">
-        <div className="overflow-hidden">
+        <div className="overflow-hidden aspect-video relative">
           <Image
             src={image}
             alt={name}
             preview={{
               mask: <span className="text-white font-medium">Click to view</span>,
             }}
-            className="w-full h-auto transition-transform duration-300 group-hover:scale-110"
+            width="100%"
+            height="100%"
+            className="transition-transform duration-300 group-hover:scale-110 object-cover"
           />
         </div>
       </div>

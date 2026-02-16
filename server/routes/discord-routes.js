@@ -38,8 +38,8 @@ class DiscordRoutes {
 
     // Health check
     router.get('/health', (req, res) => {
-      res.json({ 
-        status: 'ok', 
+      res.json({
+        status: 'ok',
         discordReady: this.discordBot.isReady,
         timestamp: new Date().toISOString()
       });
@@ -54,14 +54,14 @@ class DiscordRoutes {
       // Verify webhook signature
       const signature = req.headers['x-podia-signature'];
       const webhookSecret = process.env.PODIA_WEBHOOK_SECRET;
-      
+
       if (webhookSecret && signature) {
         const isValid = this.podiaService.verifyWebhookSignature(
           req.body,
           signature,
           webhookSecret
         );
-        
+
         if (!isValid) {
           return res.status(401).json({ error: 'Invalid signature' });
         }
@@ -76,16 +76,16 @@ class DiscordRoutes {
         case 'subscription.updated':
           await this.handleSubscriptionUpdate(event.data);
           break;
-        
+
         case 'subscription.canceled':
         case 'subscription.expired':
           await this.handleSubscriptionCancellation(event.data);
           break;
-        
+
         case 'user.updated':
           await this.handleUserUpdate(event.data);
           break;
-        
+
         default:
           console.log(`Unhandled webhook event type: ${event.type}`);
       }
@@ -109,7 +109,7 @@ class DiscordRoutes {
 
       // Get all active subscriptions (masterclasses + coaching)
       const activeSubscriptions = await this.podiaService.getActiveSubscriptions(podiaUserId);
-      
+
       if (activeSubscriptions.length === 0) {
         console.log(`No active subscriptions for user ${podiaUserId}`);
         return;
@@ -117,7 +117,7 @@ class DiscordRoutes {
 
       // Get or create user record
       let user = await this.userModel.getUserByPodiaId(podiaUserId);
-      
+
       // Get Discord ID from Podia or existing record
       let discordUserId = user?.discordUserId;
       if (!discordUserId) {
@@ -143,7 +143,9 @@ class DiscordRoutes {
 
       // Process each active subscription
       const powerRanking = user?.powerRanking || 0;
-      
+      const earnings = user?.earnings || 0;
+      const followers = user?.followers || 0;
+
       for (const subscription of activeSubscriptions) {
         if (!subscription.productConfig) {
           console.warn(`No product config found for subscription ${subscription.subscriptionId}`);
@@ -154,7 +156,9 @@ class DiscordRoutes {
         await this.discordBot.processProductAccess(
           discordUserId,
           subscription.productId,
-          powerRanking
+          powerRanking,
+          earnings,
+          followers
         );
       }
 
@@ -216,7 +220,7 @@ class DiscordRoutes {
 
       if (discordUserId) {
         await this.userModel.linkDiscordAccount(podiaUserId, discordUserId);
-        
+
         // Check if user has active subscription and process access
         const user = await this.userModel.getUserByPodiaId(podiaUserId);
         if (user?.masterclassLevel) {
@@ -235,12 +239,12 @@ class DiscordRoutes {
   async syncUser(req, res) {
     try {
       const { podiaUserId } = req.params;
-      
+
       // Get subscription from Podia
       const subscription = await this.podiaService.getActiveMasterclassSubscription(podiaUserId);
-      
+
       if (!subscription) {
-        return res.json({ 
+        return res.json({
           message: 'No active masterclass subscription found',
           hasSubscription: false
         });
@@ -248,7 +252,7 @@ class DiscordRoutes {
 
       // Get Discord ID
       const discordUserId = await this.podiaService.getUserDiscordId(podiaUserId);
-      
+
       if (!discordUserId) {
         return res.json({
           message: 'No Discord account linked',
@@ -276,7 +280,9 @@ class DiscordRoutes {
       const result = await this.discordBot.processUserAccess(
         discordUserId,
         subscription.level,
-        powerRanking
+        powerRanking,
+        user.earnings || 0,
+        user.followers || 0
       );
 
       res.json({
@@ -296,20 +302,23 @@ class DiscordRoutes {
   async updatePowerRanking(req, res) {
     try {
       const { podiaUserId } = req.params;
-      const { powerRanking } = req.body;
+      const { powerRanking, earnings, followers } = req.body;
 
-      if (!powerRanking && powerRanking !== 0) {
-        return res.status(400).json({ error: 'Power ranking is required' });
-      }
+      const metrics = {};
+      if (powerRanking !== undefined) metrics.powerRanking = powerRanking;
+      if (earnings !== undefined) metrics.earnings = earnings;
+      if (followers !== undefined) metrics.followers = followers;
 
-      const user = await this.userModel.updatePowerRanking(podiaUserId, powerRanking);
-      
+      const user = await this.userModel.updateSkillMetrics(podiaUserId, metrics);
+
       // If user has active subscription, update their access
       if (user.masterclassLevel && user.discordUserId) {
         await this.discordBot.processUserAccess(
           user.discordUserId,
           user.masterclassLevel,
-          user.powerRanking
+          user.powerRanking,
+          user.earnings,
+          user.followers
         );
       }
 
@@ -333,13 +342,15 @@ class DiscordRoutes {
       }
 
       const user = await this.userModel.linkDiscordAccount(podiaUserId, discordUserId);
-      
+
       // If user has active subscription, process access
       if (user.masterclassLevel) {
         await this.discordBot.processUserAccess(
           discordUserId,
           user.masterclassLevel,
-          user.powerRanking
+          user.powerRanking,
+          user.earnings || 0,
+          user.followers || 0
         );
       }
 
@@ -357,7 +368,7 @@ class DiscordRoutes {
     try {
       const { podiaUserId } = req.params;
       const user = await this.userModel.getUserByPodiaId(podiaUserId);
-      
+
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
       }
@@ -374,7 +385,7 @@ class DiscordRoutes {
    */
   async processUserAccess(podiaUserId, masterclassLevel, powerRanking) {
     const user = await this.userModel.getUserByPodiaId(podiaUserId);
-    
+
     if (!user || !user.discordUserId) {
       throw new Error('User not found or Discord not linked');
     }
@@ -382,7 +393,9 @@ class DiscordRoutes {
     return await this.discordBot.processUserAccess(
       user.discordUserId,
       masterclassLevel,
-      powerRanking
+      powerRanking,
+      user.earnings || 0,
+      user.followers || 0
     );
   }
 
@@ -393,7 +406,7 @@ class DiscordRoutes {
     try {
       const { podiaUserId } = req.params;
       const user = await this.userModel.getUserByPodiaId(podiaUserId);
-      
+
       if (!user || !user.discordUserId) {
         return res.status(404).json({ error: 'User not found or Discord not linked' });
       }

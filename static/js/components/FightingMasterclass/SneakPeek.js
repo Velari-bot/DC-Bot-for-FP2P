@@ -38,6 +38,11 @@ const SneakPeek = () => {
             title: "Fighting Rules",
             description: "Learn the most important fighting rules that every pro player sticks by in every situation they get into. The rules that every player needs to become a consistent fighter",
             thumbnail: `${ASSETS_URL}/fighting/FIGHTING%20RULES.jpg`
+        },
+        {
+            title: "My Kovaak's Routine",
+            description: "The exact Kovaak's warm-up routine I use daily. This routine is updated with every meta change and normally costs $15 — included free in this masterclass.",
+            thumbnail: "https://assets.fortnitepathtopro.com/content/deckzeekovaaks%20(1).jpg"
         }
     ];
     return (

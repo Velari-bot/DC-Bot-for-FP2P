@@ -12,14 +12,14 @@ class DiscordBotService {
     this.config = config;
     this.client = null;
     this.isReady = false;
-    
+
     // Legacy role IDs (for backward compatibility)
     this.ROLES = {
       BEGINNER: '1444829030263165109',
       INTERMEDIATE: '1444829519964930088',
       ADVANCED: '1444829551984378027'
     };
-    
+
     // Friend Group Server IDs (you'll need to add these)
     this.FG_SERVERS = {
       BEGINNER: process.env.DISCORD_FG_BEGINNER_SERVER_ID || '',
@@ -140,7 +140,7 @@ class DiscordBotService {
     try {
       const masterclassProducts = products.getMasterclassProducts();
       const product = masterclassProducts.find(p => p.level === masterclassLevel.toLowerCase());
-      
+
       if (!product) {
         throw new Error(`Invalid masterclass level: ${masterclassLevel}`);
       }
@@ -245,8 +245,8 @@ class DiscordBotService {
   /**
    * Grant access to Friend Group servers based on masterclass and PR
    */
-  async grantFriendGroupAccess(discordUserId, masterclassLevel, powerRanking) {
-    const fgAccess = this.calculateFriendGroupAccess(masterclassLevel, powerRanking);
+  async grantFriendGroupAccess(discordUserId, masterclassLevel, powerRanking, earnings = 0, followers = 0) {
+    const fgAccess = this.calculateFriendGroupAccess(masterclassLevel, powerRanking, earnings, followers);
     const results = [];
 
     for (const fgLevel of fgAccess) {
@@ -260,13 +260,13 @@ class DiscordBotService {
         // Note: Adding a member to a server requires OAuth2 or manual invitation
         // This is a placeholder - you'll need to implement the actual invite/access logic
         // depending on how your FG servers are set up
-        
+
         // If using Discord server invites:
         // await this.addMemberToFGServer(discordUserId, serverId);
-        
+
         // If using a separate bot for FG servers:
         // await this.requestFGServerAccess(discordUserId, serverId, fgLevel);
-        
+
         results.push({ fgLevel, serverId, success: true });
       } catch (error) {
         console.error(`Failed to grant ${fgLevel} FG access to ${discordUserId}:`, error);
@@ -282,15 +282,15 @@ class DiscordBotService {
    */
   async revokeFriendGroupAccess(discordUserId) {
     const results = [];
-    
+
     for (const [fgLevel, serverId] of Object.entries(this.FG_SERVERS)) {
       if (!serverId) continue;
-      
+
       try {
         // Remove member from FG server
         // Implementation depends on your FG server setup
         // await this.removeMemberFromFGServer(discordUserId, serverId);
-        
+
         results.push({ fgLevel, serverId, success: true });
       } catch (error) {
         console.error(`Failed to revoke ${fgLevel} FG access from ${discordUserId}:`, error);
@@ -305,25 +305,38 @@ class DiscordBotService {
    * Calculate which Friend Groups a user should have access to
    * Based on masterclass level and Power Ranking
    */
-  calculateFriendGroupAccess(masterclassLevel, powerRanking) {
+  calculateFriendGroupAccess(masterclassLevel, powerRanking, earnings = 0, followers = 0) {
     const pr = parseInt(powerRanking) || 0;
-    const level = masterclassLevel.toUpperCase();
+    const earn = parseFloat(earnings) || 0;
+    const follow = parseInt(followers) || 0;
+    const level = masterclassLevel ? masterclassLevel.toUpperCase() : 'NONE';
 
-    if (level === 'ADVANCED') {
-      if (pr >= 10000) {
+    // Matchmaking Tiers based on criteria:
+    // PRO: 5k+ PR OR $2.5k+ Earnings OR 50k+ Followers
+    // ELITE: 10k+ PR OR $5k+ Earnings OR 100k+ Followers
+    // GOD: $10k+ Earnings OR 500k+ Followers
+
+    const isPro = pr >= 5000 || earn >= 2500 || follow >= 50000;
+    const isElite = pr >= 10000 || earn >= 5000 || follow >= 100000;
+    const isGod = earn >= 10000 || follow >= 500000;
+
+    // Map these tiers to Friend Groups
+    // For now, we'll map them to the existing BEGINNER, INTERMEDIATE, ADVANCED roles for compatibility
+    // but internally we know they represent the new Matchmaking tiers.
+
+    if (isGod || level === 'ADVANCED') {
+      if (isGod || pr >= 10000) {
         return ['ADVANCED', 'INTERMEDIATE', 'BEGINNER'];
-      } else if (pr >= 1000) {
-        return ['INTERMEDIATE', 'BEGINNER'];
-      } else {
-        return ['BEGINNER'];
       }
-    } else if (level === 'INTERMEDIATE') {
-      if (pr >= 1000) {
+    }
+
+    if (isElite || level === 'ADVANCED' || level === 'INTERMEDIATE') {
+      if (isElite || pr >= 1000) {
         return ['INTERMEDIATE', 'BEGINNER'];
-      } else {
-        return ['BEGINNER'];
       }
-    } else if (level === 'BEGINNER') {
+    }
+
+    if (isPro || level === 'BEGINNER') {
       return ['BEGINNER'];
     }
 
@@ -379,7 +392,7 @@ class DiscordBotService {
       const fgResults = await this.revokeFriendGroupAccess(discordUserId);
 
       console.log(`✅ Revoked all access for ${member.user.tag} (${discordUserId})`);
-      
+
       return {
         success: true,
         rolesRemoved: removedRoles,
@@ -395,7 +408,7 @@ class DiscordBotService {
    * Process user access for a product
    * Main function to handle role assignment and access
    */
-  async processProductAccess(discordUserId, podiaProductId, powerRanking = 0) {
+  async processProductAccess(discordUserId, podiaProductId, powerRanking = 0, earnings = 0, followers = 0) {
     try {
       const product = products.getProductByPodiaId(podiaProductId);
       if (!product) {
@@ -408,7 +421,7 @@ class DiscordBotService {
       // If it's a masterclass, also grant FG access
       let fgResults = [];
       if (product.type === 'masterclass') {
-        fgResults = await this.grantFriendGroupAccess(discordUserId, product.level, powerRanking);
+        fgResults = await this.grantFriendGroupAccess(discordUserId, product.level, powerRanking, earnings, followers);
       }
 
       return {
@@ -427,13 +440,13 @@ class DiscordBotService {
    * Process user access update (legacy method for masterclasses)
    * Main function to handle role assignment and FG access
    */
-  async processUserAccess(discordUserId, masterclassLevel, powerRanking) {
+  async processUserAccess(discordUserId, masterclassLevel, powerRanking, earnings = 0, followers = 0) {
     try {
       // Assign masterclass role
       const roleResult = await this.assignMasterclassRole(discordUserId, masterclassLevel);
-      
+
       // Grant FG access
-      const fgResults = await this.grantFriendGroupAccess(discordUserId, masterclassLevel, powerRanking);
+      const fgResults = await this.grantFriendGroupAccess(discordUserId, masterclassLevel, powerRanking, earnings, followers);
 
       return {
         success: true,

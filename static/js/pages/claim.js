@@ -14,7 +14,7 @@ import {
     getDocs
 } from "firebase/firestore";
 import { auth, db } from "../utils/firebase";
-import { Crown, Calendar, History, LogOut, User, Lock, Mail, Loader2, AlertCircle, BookOpen, PlayCircle, ExternalLink, ShieldCheck, ChevronRight, CreditCard, RefreshCw } from "lucide-react";
+import { Crown, Calendar, History, LogOut, User, Lock, Mail, Loader2, AlertCircle, BookOpen, PlayCircle, ExternalLink, ShieldCheck, ChevronRight, CreditCard, RefreshCw, Trophy, Zap, MapPin, Clock } from "lucide-react";
 
 /**
  * Claim Component
@@ -40,6 +40,7 @@ const Claim = () => {
     const [payments, setPayments] = useState([]);
     const [courses, setCourses] = useState([]);
     const [discordInfo, setDiscordInfo] = useState(null);
+    const [userStats, setUserStats] = useState({ powerRanking: 0, earnings: 0, followers: 0 });
     const [dataLoading, setDataLoading] = useState(false);
     const [portalLoading, setPortalLoading] = useState(false);
 
@@ -199,6 +200,11 @@ const Claim = () => {
                         discordAvatar: userData.discordAvatar
                     });
                 }
+                setUserStats({
+                    powerRanking: userData.powerRanking || 0,
+                    earnings: userData.earnings || 0,
+                    followers: userData.followers || 0
+                });
             } else {
                 // Initialize user doc if not exists
                 await setDoc(userDocRef, {
@@ -468,7 +474,7 @@ const Claim = () => {
                                 ? 'bg-[var(--yellow)] text-black shadow-[0_10px_20px_-5px_rgba(255,193,7,0.3)]'
                                 : 'text-gray-500 hover:bg-white/5 hover:text-white'}`}
                         >
-                            <Crown size={18} /> Stats & Profile
+                            <Zap size={18} /> Play & Matchmaking
                         </button>
 
                         <button
@@ -604,45 +610,140 @@ const Claim = () => {
                         )}
 
                         {view === 'profile' && (
-                            <section data-aos="fade-up" className="max-w-4xl">
-                                <h1 className="text-3xl md:text-5xl font-black text-white mb-12 tracking-tight">Performance Summary</h1>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    {/* CREDITS CARD */}
-                                    <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-10 overflow-hidden relative group hover:border-[var(--yellow)]/30 transition-all duration-500 shadow-2xl">
+                            <section data-aos="fade-up" className="max-w-6xl">
+                                {/* Breadcrumb */}
+                                <div className="flex items-center gap-2 mb-6 text-[10px] font-black uppercase tracking-[0.3em] text-gray-600">
+                                    <span className="hover:text-white cursor-pointer transition-colors" onClick={() => setView('courses')}>Dashboard</span>
+                                    <ChevronRight size={10} />
+                                    <span className="text-[var(--yellow)]">Play</span>
+                                </div>
+
+                                <h1 className="text-3xl md:text-5xl font-black text-white mb-12 tracking-tight">Play & Matchmaking</h1>
+
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                                    {/* MATCHMAKING LEVEL CARD */}
+                                    <div className="lg:col-span-1 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-10 overflow-hidden relative group hover:border-[var(--yellow)]/30 transition-all duration-500 shadow-2xl flex flex-col justify-between h-full">
                                         <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:scale-125 transition-transform duration-1000">
-                                            <Crown size={120} />
+                                            <Trophy size={120} />
                                         </div>
                                         <div className="relative z-10">
-                                            <h3 className="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em] mb-6">Available Training Credits</h3>
-                                            <div className="flex items-baseline gap-4">
-                                                <span className="text-7xl font-black text-white tracking-tighter group-hover:text-[var(--yellow)] transition-colors duration-500">{credits}</span>
-                                                <span className="text-sm font-black text-gray-500 uppercase tracking-[0.2em]">Hours</span>
-                                            </div>
-                                            <div className="w-full h-1.5 bg-white/5 rounded-full mt-8 overflow-hidden">
-                                                <div
-                                                    className="h-full bg-[var(--yellow)] rounded-full transition-all duration-1000 shadow-[0_0_15px_rgba(255,193,7,0.4)]"
-                                                    style={{ width: `${Math.min((credits / 10) * 100, 100)}%` }}
-                                                ></div>
+                                            <h3 className="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
+                                                <Zap size={12} className="text-[var(--yellow)]" /> Competitive Performance
+                                            </h3>
+                                            <div className="flex flex-col gap-6">
+                                                <div className="flex flex-col">
+                                                    <span className="text-gray-600 text-[9px] font-black uppercase tracking-[0.2em] mb-1">Matchmaking Rank</span>
+                                                    <span className={`text-6xl font-black tracking-tighter uppercase italic ${(userStats?.earnings >= 10000 || userStats?.followers >= 500000) ? 'text-purple-500' :
+                                                        (userStats?.powerRanking >= 10000 || userStats?.earnings >= 5000 || userStats?.followers >= 100000) ? 'text-red-500' :
+                                                            (userStats?.powerRanking >= 5000 || userStats?.earnings >= 2500 || userStats?.followers >= 50000) ? 'text-[var(--yellow)]' :
+                                                                'text-gray-400'
+                                                        }`}>
+                                                        {(userStats?.earnings >= 10000 || userStats?.followers >= 500000) ? 'GOD' :
+                                                            (userStats?.powerRanking >= 10000 || userStats?.earnings >= 5000 || userStats?.followers >= 100000) ? 'ELITE' :
+                                                                (userStats?.powerRanking >= 5000 || userStats?.earnings >= 2500 || userStats?.followers >= 50000) ? 'PRO' :
+                                                                    'PLAYER'}
+                                                    </span>
+                                                </div>
+
+                                                <div className="grid grid-cols-1 gap-6 pt-6 border-t border-white/5">
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex flex-col">
+                                                            <span className="text-[10px] text-gray-500 font-black uppercase tracking-widest mb-1">Power Ranking</span>
+                                                            <span className="text-xl font-black text-white">{userStats?.powerRanking || 0}</span>
+                                                        </div>
+                                                        <div className="text-[var(--yellow)] font-black text-[10px] uppercase tracking-tighter">Top 0.1%</div>
+                                                    </div>
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex flex-col">
+                                                            <span className="text-[10px] text-gray-500 font-black uppercase tracking-widest mb-1">LIFETIME Earnings</span>
+                                                            <span className="text-xl font-black text-white">${(userStats?.earnings || 0).toLocaleString()}</span>
+                                                        </div>
+                                                        <div className="text-green-500 font-black text-[10px] uppercase tracking-tighter">Verified</div>
+                                                    </div>
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex flex-col">
+                                                            <span className="text-[10px] text-gray-500 font-black uppercase tracking-widest mb-1">Followers</span>
+                                                            <span className="text-xl font-black text-white">{(userStats?.followers || 0).toLocaleString()}</span>
+                                                        </div>
+                                                        <div className="text-blue-500 font-black text-[10px] uppercase tracking-tighter">Creator</div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* PROFILE CARD */}
-                                    <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-10 group hover:border-blue-500/30 transition-all duration-500 shadow-2xl">
-                                        <h3 className="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em] mb-8 flex items-center gap-3">
-                                            <User size={14} /> ID & Connections
-                                        </h3>
-                                        <div className="space-y-8">
-                                            <div>
-                                                <span className="text-gray-600 text-[9px] font-black uppercase tracking-[0.2em] mb-2 block">Account Email</span>
-                                                <div className="text-white font-bold text-lg">{user.email}</div>
+                                    {/* RIGHT SIDE GRID */}
+                                    <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        {/* COMPETITIVE SCRIMS CARD */}
+                                        <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 group hover:border-blue-500/30 transition-all duration-500 shadow-2xl flex flex-col">
+                                            <div className="p-4 bg-blue-500/10 rounded-2xl w-fit mb-8">
+                                                <MapPin size={24} className="text-blue-400" />
                                             </div>
+                                            <h3 className="text-white text-2xl font-black tracking-tight mb-2">Competitive Scrims</h3>
+                                            <p className="text-gray-500 text-xs font-medium mb-8">High-level practice matches hosted by official Path To Pro partners.</p>
 
-                                            <div>
-                                                <span className="text-gray-600 text-[9px] font-black uppercase tracking-[0.2em] mb-2 block">Discord Connection</span>
-                                                {discordInfo ? (
-                                                    <div className="space-y-4">
-                                                        <div className="flex items-center justify-between bg-[#5865F2]/10 border border-[#5865F2]/20 p-4 rounded-xl">
+                                            <div className="space-y-6 mt-auto">
+                                                <div className="flex items-center justify-between bg-white/[0.02] p-4 rounded-2xl border border-white/5">
+                                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Region</span>
+                                                    <span className="text-sm font-black text-white">Europe (EU)</span>
+                                                </div>
+                                                <div className="flex items-center justify-between bg-white/[0.02] p-4 rounded-2xl border border-white/5">
+                                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Scrim Status</span>
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                                                        <span className="text-sm font-black text-green-500">OPEN</span>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center justify-between bg-white/[0.02] p-4 rounded-2xl border border-white/5">
+                                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Next Session</span>
+                                                    <span className="text-sm font-black text-white">6:00 PM CET</span>
+                                                </div>
+                                                <button className="w-full py-4 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 font-black text-[10px] uppercase tracking-widest rounded-xl transition-all border border-blue-500/20">
+                                                    View Schedule
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {/* AVAILABLE PRACTICE CARD */}
+                                        <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 group hover:border-[var(--yellow)]/30 transition-all duration-500 shadow-2xl flex flex-col">
+                                            <div className="p-4 bg-[var(--yellow)]/10 rounded-2xl w-fit mb-8">
+                                                <Clock size={24} className="text-[var(--yellow)]" />
+                                            </div>
+                                            <h3 className="text-white text-2xl font-black tracking-tight mb-2">Available Practice</h3>
+                                            <p className="text-gray-500 text-xs font-medium mb-8">Ongoing training sessions, arena matches, and upcoming events.</p>
+
+                                            <div className="space-y-6 mt-auto">
+                                                <div className="flex items-center justify-between bg-white/[0.02] p-4 rounded-2xl border border-white/5">
+                                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Arena</span>
+                                                    <span className="text-sm font-black text-white">Open 24/7</span>
+                                                </div>
+                                                <div className="flex items-center justify-between bg-white/[0.02] p-4 rounded-2xl border border-white/5">
+                                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Tournaments</span>
+                                                    <span className="text-sm font-black text-[var(--yellow)]">Cup In 2 Hours</span>
+                                                </div>
+                                                <div className="flex items-center justify-between bg-white/[0.02] p-4 rounded-2xl border border-white/5">
+                                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Custom Keys</span>
+                                                    <span className="text-sm font-black text-white">Available</span>
+                                                </div>
+                                                <a href="https://discord.com/invite/fortnitepathtopro" target="_blank" rel="noopener noreferrer" className="w-full py-4 bg-[var(--yellow)] hover:brightness-110 text-black font-black text-[10px] uppercase tracking-widest rounded-xl transition-all text-center flex items-center justify-center gap-2">
+                                                    Join Practice Discord <ExternalLink size={12} />
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        {/* PROFILE CARD - Moved to bottom or keep here? Let's move it to a full width row below */}
+                                        <div className="md:col-span-2 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-10 group hover:border-blue-500/30 transition-all duration-500 shadow-2xl">
+                                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+                                                <div>
+                                                    <h3 className="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em] mb-4 flex items-center gap-3">
+                                                        <User size={14} /> ID & Connections
+                                                    </h3>
+                                                    <div className="flex flex-col md:flex-row gap-8">
+                                                        <div>
+                                                            <span className="text-gray-600 text-[9px] font-black uppercase tracking-[0.2em] mb-1 block">Account Email</span>
+                                                            <div className="text-white font-bold text-lg">{user.email}</div>
+                                                        </div>
+                                                        {discordInfo && (
                                                             <div className="flex items-center gap-4">
                                                                 <div className="w-10 h-10 rounded-full bg-[#5865F2] flex items-center justify-center text-white font-bold text-lg overflow-hidden shrink-0">
                                                                     {discordInfo.discordAvatar ? (
@@ -656,51 +757,34 @@ const Claim = () => {
                                                                     )}
                                                                 </div>
                                                                 <div>
-                                                                    <div className="text-white font-bold truncate max-w-[150px]">{discordInfo.discordTag}</div>
-                                                                    <div className="text-[#5865F2] text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
-                                                                        <ShieldCheck size={12} /> Linked
+                                                                    <div className="text-white font-black text-sm">{discordInfo.discordTag}</div>
+                                                                    <div className="text-[#5865F2] text-[9px] font-black uppercase tracking-widest flex items-center gap-2">
+                                                                        Linked Account
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <button
-                                                                onClick={handleDisconnectDiscord}
-                                                                className="p-2 text-red-500/50 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
-                                                                title="Disconnect Discord"
-                                                            >
-                                                                <LogOut size={16} />
-                                                            </button>
-                                                        </div>
-
-                                                        {/* Manual Sync Button */}
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-4 w-full md:w-auto">
+                                                    {discordInfo ? (
                                                         <button
                                                             onClick={handleSyncRoles}
                                                             disabled={dataLoading}
-                                                            className="w-full py-3 bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                                                            className="flex-1 md:flex-none px-6 py-4 bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all disabled:opacity-50"
                                                         >
                                                             {dataLoading ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
-                                                            Sync Roles & Purchases
+                                                            Sync Roles
                                                         </button>
-                                                    </div>
-                                                ) : (
-                                                    <div>
+                                                    ) : (
                                                         <button
                                                             onClick={handleConnectDiscord}
-                                                            className="w-full py-4 bg-[#5865F2] hover:bg-[#4752C4] text-white font-black text-[10px] uppercase tracking-[0.15em] rounded-xl transition-all flex items-center justify-center gap-3 shadow-lg shadow-[#5865F2]/20"
+                                                            className="flex-1 md:flex-none px-6 py-4 bg-[#5865F2] hover:bg-[#4752C4] text-white font-black text-[10px] uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-3"
                                                         >
-                                                            <LogOut size={16} className="rotate-180" /> {/* Mimic login icon */}
                                                             Connect Discord
                                                         </button>
-                                                        <p className="mt-3 text-gray-500 text-[10px] leading-relaxed text-center">
-                                                            Link your Discord to automatically receive roles for your purchases.
-                                                        </p>
-                                                    </div>
-                                                )}
-                                            </div>
-
-                                            <div className="pt-8 border-t border-white/5">
-                                                <a href="https://discord.com/invite/fortnitepathtopro" target="_blank" rel="noopener noreferrer" className="text-[10px] text-blue-400 font-black uppercase tracking-[0.2em] hover:text-blue-300 transition-colors flex items-center gap-3">
-                                                    Join Community Server <ExternalLink size={12} />
-                                                </a>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

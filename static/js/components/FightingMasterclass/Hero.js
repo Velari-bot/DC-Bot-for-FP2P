@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import VideoPlayer from "../VideoPlayer";
 import BuyButton from "./BuyButton";
-import { Zap, BoxSelect, Map, Minus, Plus } from "lucide-react";
+import { Zap, Shield, Crown, BoxSelect, Map, Minus, Plus } from "lucide-react";
 import { checkout } from "../../api/coaching";
 import useMiddleware from "../../utils/useMiddleware";
 import { auth } from "../../utils/firebase";
@@ -138,130 +138,150 @@ const Hero = () => {
                 </div>
 
                 {/* Split CTA Section: 1v1 Sessions Left | Masterclass Right */}
-                <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 items-stretch mt-20 md:mt-[350px] text-left" data-aos="fade-up">
+                <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 items-stretch mt-20 md:mt-[350px] text-left">
 
                     {/* LEFT: Box for 1v1 Sessions */}
-                    <motion.div
-                        className="flex-1 bg-black rounded-[2.5rem] border border-white/10 p-6 md:p-8 relative overflow-hidden flex flex-col shadow-2xl"
-                        whileHover={{ y: -8, scale: 1.01 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                    >
-                        <div className="absolute -left-20 -top-20 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl pointer-events-none" />
-
-                        <h3 className="text-2xl font-black mb-6 tracking-tighter italic uppercase text-center border-b border-white/10 pb-4 relative z-10 text-white">
-                            1v1 <span className="text-[#A855F7]">MariusCow</span>
-                        </h3>
-
-                        {/* Gamemode Selection List */}
-                        <div className="space-y-3 mb-6 relative z-10">
-                            {gamemodes.map((mode) => {
-                                const qty = gamemodeQuantities[mode.id];
-                                const isSelected = qty > 0;
-
-                                return (
-                                    <div
-                                        key={mode.id}
-                                        onClick={() => !isSelected && updateQuantity(mode.id, 1)}
-                                        className={`relative flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all duration-300 group ${isSelected
-                                            ? 'bg-white/[0.03] border-[#A855F7] shadow-[0_0_20px_rgba(168,85,247,0.15)]'
-                                            : 'bg-transparent border-white/10 hover:border-white/30'
-                                            }`}
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <div className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300 ${isSelected
-                                                ? 'bg-[#EF4444] text-white shadow-lg scale-110'
-                                                : 'bg-white/5 text-gray-400 group-hover:text-white group-hover:bg-white/10'
-                                                }`}>
-                                                <mode.icon size={18} className={isSelected ? "fill-white" : ""} />
-                                            </div>
-                                            <div className="flex flex-col">
-                                                <span className={`font-bold uppercase tracking-wide transition-colors text-sm ${isSelected ? 'text-white' : 'text-gray-400 group-hover:text-gray-200'
-                                                    }`}>
-                                                    {mode.label}
-                                                </span>
-                                                <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest sm:hidden">
-                                                    {mode.subtitle}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        {isSelected ? (
-                                            /* Quantity Controls for Active Item */
-                                            <div className="flex items-center gap-3 relative z-20" onClick={(e) => e.stopPropagation()}>
-                                                <button
-                                                    onClick={() => updateQuantity(mode.id, -1)}
-                                                    className="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
-                                                >
-                                                    <Minus size={14} />
-                                                </button>
-                                                <span className="text-base font-bold text-white w-4 text-center">{qty}</span>
-                                                <button
-                                                    onClick={() => updateQuantity(mode.id, 1)}
-                                                    className="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
-                                                >
-                                                    <Plus size={14} />
-                                                </button>
-                                            </div>
-                                        ) : (
-                                            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest hidden sm:block">
-                                                {mode.subtitle}
-                                            </span>
-                                        )}
-
-                                        {/* Active Indicator Bar */}
-                                        {isSelected && (
-                                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-[#A855F7] rounded-r-full shadow-[0_0_10px_#A855F7]"></div>
-                                        )}
-                                    </div>
-                                );
-                            })}
-                        </div>
-
-                        {/* 1v1 Buy Button */}
-                        <motion.button
-                            onClick={handleBook}
-                            disabled={bookingLoading}
-                            whileHover={!bookingLoading ? { scale: 1.02 } : {}}
-                            whileTap={!bookingLoading ? { scale: 0.98 } : {}}
-                            className="w-full py-4 bg-white text-black rounded-xl font-black text-sm uppercase tracking-widest hover:bg-gray-100 transition-all shadow-xl mt-auto relative z-10"
+                    <div className="flex-1" data-aos="fade-up">
+                        <motion.div
+                            whileHover={{ y: -8, scale: 1.01 }}
+                            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                            className="h-full bg-black/40 backdrop-blur-xl rounded-[2.5rem] border border-white/10 p-8 relative overflow-hidden flex flex-col shadow-2xl group"
                         >
-                            {bookingLoading ? "Processing..." : `BUY 1V1 - $${currentTotal}`}
-                        </motion.button>
-                    </motion.div>
+                            <div className="absolute -right-20 -top-20 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none transition-opacity duration-500 group-hover:opacity-20" />
+
+                            <div className="relative z-10 flex flex-col h-full">
+                                <div className="flex items-center justify-between mb-6">
+                                    <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
+                                        <Zap size={24} className="text-purple-500" />
+                                    </div>
+                                    <div className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-white/50 uppercase tracking-widest">
+                                        Personal Coaching
+                                    </div>
+                                </div>
+
+                                <div className="mb-6">
+                                    <h3 className="text-white text-2xl font-black italic uppercase tracking-tighter mb-2">
+                                        1v1 <span className="text-[#A855F7]">MariusCow</span>
+                                    </h3>
+                                    <div className="flex items-baseline gap-1">
+                                        <span className="text-5xl font-black tracking-tighter text-purple-500">
+                                            ${currentTotal}
+                                        </span>
+                                        <span className="text-white/40 font-bold uppercase tracking-widest text-[10px]">/ total</span>
+                                    </div>
+                                </div>
+
+                                {/* Gamemode Selection List */}
+                                <div className="space-y-3 mb-8">
+                                    {gamemodes.map((mode) => {
+                                        const qty = gamemodeQuantities[mode.id];
+                                        const isSelected = qty > 0;
+
+                                        return (
+                                            <div
+                                                key={mode.id}
+                                                onClick={() => !isSelected && updateQuantity(mode.id, 1)}
+                                                className={`relative flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all duration-300 group ${isSelected
+                                                    ? 'bg-white/[0.03] border-[#A855F7] shadow-[0_0_20px_rgba(168,85,247,0.15)]'
+                                                    : 'bg-transparent border-white/10 hover:border-white/30'
+                                                    }`}
+                                            >
+                                                <div className="flex items-center gap-3">
+                                                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300 ${isSelected
+                                                        ? 'bg-purple-500 text-white shadow-lg scale-110'
+                                                        : 'bg-white/5 text-gray-400 group-hover:text-white group-hover:bg-white/10'
+                                                        }`}>
+                                                        <mode.icon size={18} className={isSelected ? "fill-white" : ""} />
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <span className={`font-bold uppercase tracking-wide transition-colors text-sm ${isSelected ? 'text-white' : 'text-gray-400 group-hover:text-gray-200'
+                                                            }`}>
+                                                            {mode.label}
+                                                        </span>
+                                                        <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">
+                                                            {mode.subtitle}
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                {isSelected && (
+                                                    <div className="flex items-center gap-3 relative z-20" onClick={(e) => e.stopPropagation()}>
+                                                        <button
+                                                            onClick={() => updateQuantity(mode.id, -1)}
+                                                            className="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
+                                                        >
+                                                            <Minus size={14} />
+                                                        </button>
+                                                        <span className="text-base font-bold text-white w-4 text-center">{qty}</span>
+                                                        <button
+                                                            onClick={() => updateQuantity(mode.id, 1)}
+                                                            className="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
+                                                        >
+                                                            <Plus size={14} />
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* 1v1 Buy Button */}
+                                <motion.button
+                                    onClick={handleBook}
+                                    disabled={bookingLoading}
+                                    whileHover={!bookingLoading ? { scale: 1.02 } : {}}
+                                    whileTap={!bookingLoading ? { scale: 0.98 } : {}}
+                                    className="w-full py-4 bg-white text-black rounded-xl font-black text-sm uppercase tracking-widest hover:bg-gray-100 transition-all shadow-xl mt-auto relative z-10"
+                                >
+                                    {bookingLoading ? "Processing..." : `BUY 1V1 - $${currentTotal} (${Object.values(gamemodeQuantities).reduce((a, b) => a + b, 0)}x FIRST TO 10)`}
+                                </motion.button>
+                            </div>
+                        </motion.div>
+                    </div>
 
                     {/* RIGHT: Masterclass Lifetime Card */}
-                    <motion.div
-                        className="flex-1 bg-black rounded-[2.5rem] border border-white/10 p-6 md:p-8 relative overflow-hidden flex flex-col shadow-2xl justify-between"
-                        whileHover={{ y: -8, scale: 1.01 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                    >
-                        <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
+                    <div className="flex-1" data-aos="fade-up">
+                        <motion.div
+                            whileHover={{ y: -8, scale: 1.01 }}
+                            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                            className="h-full bg-black/40 backdrop-blur-xl rounded-[2.5rem] border border-white/10 p-8 relative overflow-hidden flex flex-col shadow-2xl group justify-between"
+                        >
+                            <div className="absolute -right-20 -top-20 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none transition-opacity duration-500 group-hover:opacity-20" />
 
-                        <div className="relative z-10">
-                            <h3 className="text-2xl font-black mb-4 tracking-tighter italic uppercase text-white">
-                                FIGHTING MASTERCLASS
-                            </h3>
+                            <div className="relative z-10 flex flex-col h-full">
+                                <div className="flex items-center justify-between mb-6">
+                                    <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
+                                        <Crown size={24} className="text-purple-500" />
+                                    </div>
+                                    <div className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-white/50 uppercase tracking-widest">
+                                        Lifetime Access
+                                    </div>
+                                </div>
 
-                            <p className="text-gray-400 font-medium text-sm leading-relaxed">
-                                Unlock every Fighting Strategy in Fortnite and get access to MariusCows Personal Advanced Strategys
-                            </p>
-                        </div>
+                                <div className="mb-6">
+                                    <h3 className="text-white text-2xl font-black italic uppercase tracking-tighter mb-2">
+                                        FIGHTING MASTERCLASS
+                                    </h3>
+                                    <div className="flex items-baseline gap-1">
+                                        <span className="text-5xl font-black tracking-tighter text-purple-500">
+                                            $100
+                                        </span>
+                                        <span className="text-white/40 font-bold uppercase tracking-widest text-[10px]">/ once</span>
+                                    </div>
+                                </div>
 
-                        <div className="flex flex-col items-center py-6 my-auto relative z-10">
-                            <span className="text-[#A855F7] text-6xl font-black tracking-tighter">
-                                $100
-                            </span>
-                            <div className="text-center mt-2">
-                                <span className="block text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-1">One-Time Payment</span>
-                                <span className="block text-[10px] font-bold text-[#A855F7] uppercase tracking-[0.2em] italic opacity-80">Lifetime Access</span>
+                                <p className="text-gray-400 font-medium text-sm leading-relaxed mb-8">
+                                    Unlock every Fighting Strategy in Fortnite and get access to MariusCows Personal Advanced Strategys
+                                </p>
+
+                                <BuyButton
+                                    text="Buy Lifetime Access"
+                                    className="w-full bg-[#A855F7] text-white font-black text-sm uppercase tracking-widest py-4 rounded-xl hover:brightness-110 transition-all shadow-[0_0_30px_rgba(168,85,247,0.3)] mt-auto relative z-10"
+                                />
                             </div>
-                        </div>
-
-                        <BuyButton
-                            text="Buy Lifetime Access"
-                            className="w-full bg-[#A855F7] text-white font-black text-sm uppercase tracking-widest py-4 rounded-xl hover:bg-[#9333ea] transition-all shadow-[0_0_30px_rgba(168,85,247,0.3)] hover:shadow-[0_0_40px_rgba(168,85,247,0.5)] relative z-10"
-                        />
-                    </motion.div>
+                        </motion.div>
+                    </div>
 
                 </div>
             </div>

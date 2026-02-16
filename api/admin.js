@@ -105,6 +105,41 @@ module.exports = async (req, res) => {
                 return res.status(500).json({ error: 'Database write failed' });
             }
         }
+
+        if (action === 'update-metrics') {
+            const { targetEmail, powerRanking, earnings, followers } = req.body;
+
+            if (!targetEmail) {
+                return res.status(400).json({ error: 'Target email is required' });
+            }
+
+            try {
+                const userRecord = await admin.auth().getUserByEmail(targetEmail);
+                const userId = userRecord.uid;
+
+                const updates = {};
+                if (powerRanking !== undefined) updates.powerRanking = parseInt(powerRanking) || 0;
+                if (earnings !== undefined) updates.earnings = parseFloat(earnings) || 0;
+                if (followers !== undefined) updates.followers = parseInt(followers) || 0;
+                updates.updatedAt = admin.firestore.FieldValue.serverTimestamp();
+
+                await db.collection('users').doc(userId).set(updates, { merge: true });
+
+                // Log the action
+                await db.collection('admin_logs').add({
+                    action: 'update_metrics',
+                    adminEmail: email,
+                    targetEmail: targetEmail,
+                    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                    details: updates
+                });
+
+                return res.json({ success: true, message: `Metrics updated for ${targetEmail}` });
+            } catch (e) {
+                console.error("Update Metrics Error", e);
+                return res.status(500).json({ error: e.message || 'Failed to update user metrics' });
+            }
+        }
     }
 
     if (req.method === 'GET') {
@@ -175,6 +210,29 @@ module.exports = async (req, res) => {
             } catch (err) {
                 console.error("Analytics Error:", err);
                 return res.status(500).json({ error: err.message });
+            }
+        }
+
+        if (action === 'get-user') {
+            const { targetEmail } = req.query;
+            if (!targetEmail) return res.status(400).json({ error: 'Target email required' });
+
+            try {
+                const userRecord = await admin.auth().getUserByEmail(targetEmail);
+                const userId = userRecord.uid;
+
+                const userDoc = await db.collection('users').doc(userId).get();
+                const userData = userDoc.exists ? userDoc.data() : {};
+
+                return res.json({
+                    uid: userId,
+                    email: targetEmail,
+                    powerRanking: userData.powerRanking || 0,
+                    earnings: userData.earnings || 0,
+                    followers: userData.followers || 0
+                });
+            } catch (e) {
+                return res.status(404).json({ error: 'User not found in system' });
             }
         }
     }

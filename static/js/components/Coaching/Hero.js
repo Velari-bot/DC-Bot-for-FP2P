@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import VideoPlayer from "../VideoPlayer";
-import { CheckIcon, UserIcon, Trophy, Crown, Video } from "lucide-react"
+import { Zap, Shield, Crown, Play, ChevronRight, CheckIcon, UserIcon, Trophy } from "lucide-react"
 import { checkout } from "../../api/coaching";
 import useMiddleware from "../../utils/useMiddleware";
 import { auth } from "../../utils/firebase";
@@ -90,39 +90,59 @@ const Hero = () => {
                     {/* Unified Coaching Interface */}
                     <div className="max-w-5xl mx-auto mt-20 md:mt-[350px]" data-aos="fade-up">
                         <motion.div
-                            className="bg-black border border-white/10 rounded-[3rem] p-8 md:p-12 relative overflow-hidden group shadow-2xl"
                             whileHover={{ scale: 1.015, y: -4 }}
                             transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                            className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-[3rem] p-8 md:p-12 relative overflow-hidden group shadow-2xl text-left"
                         >
-
-                            {/* Background Elements */}
-                            <div className="absolute top-0 right-0 p-12 opacity-[0.02] group-hover:scale-110 transition-transform duration-1000 pointer-events-none">
-                                <UserIcon size={400} />
-                            </div>
-                            <div className="absolute -left-20 -bottom-20 w-80 h-80 bg-[var(--yellow)]/5 rounded-full blur-3xl pointer-events-none" />
+                            <div className="absolute -right-20 -top-20 w-80 h-80 bg-[var(--yellow)]/10 rounded-full blur-3xl pointer-events-none transition-opacity duration-500 group-hover:opacity-20" />
 
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 relative z-10">
                                 {/* Left Column: Info & Selector */}
                                 <div className="flex flex-col justify-between h-full">
-                                    <div>
-                                        <div className="flex items-center gap-6 mb-10">
-                                            <div className="bg-[var(--yellow)]/10 text-[var(--yellow)] p-5 rounded-2xl shadow-[0_0_30px_rgba(250,204,36,0.1)]">
-                                                <Crown size={32} />
+                                    <div className="flex flex-col h-full">
+                                        <div className="flex items-center justify-between mb-10">
+                                            <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
+                                                <Zap size={32} className="text-[var(--yellow)]" />
                                             </div>
-                                            <div className="text-left">
-                                                <h3 className="text-white text-3xl md:text-4xl font-black tracking-tighter italic uppercase">1:1 Coaching</h3>
-                                                <p className="text-[10px] text-[var(--yellow)] font-black uppercase tracking-[0.2em] mt-2">Personalized Mastery</p>
+                                            <div className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-white/50 uppercase tracking-widest">
+                                                Elite 1:1 Coaching
                                             </div>
                                         </div>
 
-                                        <p className="text-gray-400 text-lg leading-relaxed mb-10 font-medium">
+                                        <div className="mb-8">
+                                            <h3 className="text-white text-3xl md:text-5xl font-black italic uppercase tracking-tighter mb-4">
+                                                1:1 Coaching
+                                            </h3>
+                                            <div className="flex items-baseline gap-2">
+                                                <motion.span
+                                                    key={selectedHours}
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    className="text-7xl font-black text-[var(--yellow)] tracking-tighter"
+                                                >
+                                                    ${selectedHours === 1 ? '150' : (selectedHours === 3 ? '400' : '600')}
+                                                </motion.span>
+                                                <div className="flex flex-col items-start translate-y-[-10px]">
+                                                    {selectedHours > 1 && (
+                                                        <span className="text-[10px] font-black text-red-500/80 bg-red-400/10 px-2.5 py-1 rounded-full mb-2 uppercase tracking-wider">
+                                                            SAVE ${selectedHours === 3 ? '50' : '150'}
+                                                        </span>
+                                                    )}
+                                                    <span className="text-white/40 font-bold uppercase tracking-widest text-[10px]">
+                                                        Total Price
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <p className="text-gray-400 text-lg leading-relaxed mb-10 font-medium min-h-[80px]">
                                             {selectedHours === 1 && "A full hour focused purely on your gameplay. We'll identify bad habits, fix mechanics, and set a clear path for improvement."}
                                             {selectedHours === 3 && "Three intensive hours to deep dive into your mechanics. Includes VOD review, live coaching, and a personalized 2-week training plan."}
                                             {selectedHours === 5 && "The ultimate commitment to pro status. Complete gameplay overhaul, consistent weekly check-ins, and priority support."}
                                         </p>
 
                                         {/* Hour Selector */}
-                                        <div className="bg-white/5 p-2 rounded-[1.5rem] flex items-center mb-10 border border-white/10 backdrop-blur-sm">
+                                        <div className="bg-white/5 p-2 rounded-[1.5rem] flex items-center mb-10 border border-white/10 backdrop-blur-sm mt-auto">
                                             {[1, 3, 5].map((hours) => (
                                                 <motion.button
                                                     key={hours}
@@ -140,32 +160,9 @@ const Hero = () => {
                                                 </motion.button>
                                             ))}
                                         </div>
-                                    </div>
-
-                                    <div>
-                                        <div className="flex items-baseline gap-4 mb-8">
-                                            <motion.span
-                                                key={selectedHours}
-                                                initial={{ opacity: 0, y: 10 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                className="text-7xl font-black text-white tracking-tighter font-italic"
-                                            >
-                                                ${selectedHours === 1 ? '150' : (selectedHours === 3 ? '400' : '600')}
-                                            </motion.span>
-                                            <div className="flex flex-col items-start translate-y-[-10px]">
-                                                {selectedHours > 1 && (
-                                                    <span className="text-[10px] font-black text-red-400 bg-red-400/10 px-2.5 py-1 rounded-full mb-2 uppercase tracking-wider">
-                                                        SAVE ${selectedHours === 3 ? '50' : '150'}
-                                                    </span>
-                                                )}
-                                                <span className="text-gray-500 font-bold uppercase tracking-[0.2em] text-[10px]">
-                                                    Total Price
-                                                </span>
-                                            </div>
-                                        </div>
 
                                         <motion.button
-                                            className="w-full bg-white text-black font-black text-sm md:text-base uppercase tracking-[0.2em] py-5 rounded-2xl hover:bg-gray-100 shadow-[0_20px_40px_-15px_rgba(255,255,255,0.1)] flex items-center justify-center gap-3 italic"
+                                            className="w-full bg-white text-black font-black text-sm md:text-base uppercase tracking-widest py-5 rounded-2xl hover:bg-gray-100 shadow-xl flex items-center justify-center gap-3 backdrop-blur-sm"
                                             onClick={() => handlePurchase(
                                                 selectedHours === 1 ? 'single_coaching' :
                                                     (selectedHours === 3 ? 'coaching_bundle_3h' : 'coaching_bundle_5h')
@@ -174,7 +171,7 @@ const Hero = () => {
                                             whileHover={{ scale: 1.02 }}
                                             whileTap={{ scale: 0.98 }}
                                         >
-                                            {creating ? <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" /> : "Book Now"}
+                                            {creating ? <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" /> : "BUY NOW"}
                                         </motion.button>
                                     </div>
                                 </div>
@@ -234,95 +231,112 @@ const Hero = () => {
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {/* Tier 1 - $500 */}
-                            <motion.div
-                                whileHover={{ y: -8, scale: 1.01 }}
-                                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                                className="bg-black border border-white/10 rounded-[2.5rem] p-6 md:p-8 relative overflow-hidden group shadow-2xl flex flex-col"
-                                data-aos="fade-up"
-                            >
-                                <div className="absolute -left-20 -top-20 w-64 h-64 bg-[var(--yellow)]/5 rounded-full blur-3xl pointer-events-none" />
-
-                                <div className="absolute top-6 right-6 text-[var(--yellow)] opacity-20 group-hover:opacity-40 transition-opacity">
-                                    <Trophy size={32} />
-                                </div>
-
-                                <div className="mb-8 text-left relative z-10">
-                                    <h3 className="text-white text-2xl font-black italic uppercase tracking-tighter mb-2">Basic Season</h3>
-                                    <p className="text-gray-500 text-[10px] font-black uppercase tracking-[0.2em] mb-6">Consistent Guidance</p>
-                                    <div className="flex items-baseline gap-2">
-                                        <span className="text-[var(--yellow)] text-5xl font-black tracking-tighter">$500</span>
-                                        <span className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">/ season</span>
-                                    </div>
-                                </div>
-
-                                <motion.button
-                                    className="w-full py-4 bg-white/5 border border-white/10 text-white font-black text-sm uppercase tracking-widest rounded-xl hover:bg-white/10 mb-8 relative z-10 transition-all"
-                                    onClick={() => handlePurchase("basic_season")}
-                                    disabled={creating}
-                                    whileTap={{ scale: 0.98 }}
+                            <div data-aos="fade-up">
+                                <motion.div
+                                    whileHover={{ y: -8, scale: 1.01 }}
+                                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                                    className="h-full bg-black/40 backdrop-blur-xl rounded-[2.5rem] border border-white/10 p-8 relative overflow-hidden group shadow-2xl flex flex-col text-left"
                                 >
-                                    {creating ? "Processing..." : "Book 1:1 Coaching"}
-                                </motion.button>
+                                    <div className="absolute -right-20 -top-20 w-64 h-64 bg-[var(--yellow)]/10 rounded-full blur-3xl pointer-events-none transition-opacity duration-500 group-hover:opacity-20" />
 
-                                <div className="space-y-4 relative z-10 mt-auto">
-                                    {seasonalTier1Benefits.map((benefit, index) => (
-                                        <div key={index} className="flex items-center gap-3 group/benefit">
-                                            <div className="w-5 h-5 rounded-full bg-[var(--yellow)]/10 flex items-center justify-center shrink-0 group-hover/benefit:bg-[var(--yellow)] transition-colors">
-                                                <CheckIcon className="text-[var(--yellow)] group-hover/benefit:text-black transition-colors" size={10} />
+                                    <div className="relative z-10 flex flex-col h-full">
+                                        <div className="flex items-center justify-between mb-6">
+                                            <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
+                                                <Shield size={24} className="text-[var(--yellow)]" />
                                             </div>
-                                            <span className="text-gray-400 text-[11px] font-bold uppercase tracking-wide">{benefit}</span>
                                         </div>
-                                    ))}
-                                </div>
-                            </motion.div>
+
+                                        <div className="mb-8">
+                                            <h3 className="text-white text-2xl font-black italic uppercase tracking-tighter mb-2">
+                                                Basic Season
+                                            </h3>
+                                            <div className="flex items-baseline gap-1">
+                                                <span className="text-5xl font-black tracking-tighter text-[var(--yellow)]">
+                                                    $500
+                                                </span>
+                                                <span className="text-white/40 font-bold uppercase tracking-widest text-[10px]">/ season</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-4 mb-10">
+                                            {seasonalTier1Benefits.map((benefit, index) => (
+                                                <div key={index} className="flex items-center gap-3 group/benefit">
+                                                    <div className="w-5 h-5 rounded-full bg-[var(--yellow)]/10 flex items-center justify-center shrink-0 group-hover/benefit:bg-[var(--yellow)] transition-colors">
+                                                        <CheckIcon className="text-[var(--yellow)] group-hover/benefit:text-black transition-colors" size={10} />
+                                                    </div>
+                                                    <span className="text-gray-400 text-[11px] font-bold uppercase tracking-wide group-hover:text-white transition-colors">{benefit}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <motion.button
+                                            className="w-full py-4 bg-white text-black font-black text-sm uppercase tracking-widest rounded-xl hover:bg-gray-100 transition-all shadow-xl mt-auto relative z-10"
+                                            onClick={() => handlePurchase("basic_season")}
+                                            disabled={creating}
+                                            whileTap={{ scale: 0.98 }}
+                                        >
+                                            {creating ? "Processing..." : "BOOK SEASONAL COACHING"}
+                                        </motion.button>
+                                    </div>
+                                </motion.div>
+                            </div>
 
                             {/* Tier 2 - $2500 */}
-                            <motion.div
-                                whileHover={{ y: -8, scale: 1.01 }}
-                                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                                className="bg-black border-2 border-[var(--yellow)]/20 rounded-[2.5rem] p-6 md:p-8 relative overflow-hidden group shadow-2xl flex flex-col"
-                                data-aos="fade-up"
-                            >
-                                <div className="absolute -right-20 -top-20 w-64 h-64 bg-[var(--yellow)]/10 rounded-full blur-3xl pointer-events-none" />
-
-                                <div className="absolute top-6 right-6 text-[var(--yellow)] opacity-30 group-hover:opacity-50 transition-opacity">
-                                    <Crown size={36} />
-                                </div>
-
-                                <div className="mb-8 text-left relative z-10">
-                                    <h3 className="text-white text-2xl font-black italic uppercase tracking-tighter mb-2">Advanced Season</h3>
-                                    <p className="text-[var(--yellow)] text-[10px] font-black uppercase tracking-[0.2em] mb-6">Elite Mastery</p>
-                                    <div className="flex items-baseline gap-2">
-                                        <span className="text-[var(--yellow)] text-5xl font-black tracking-tighter">$2,500</span>
-                                        <span className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">/ season</span>
-                                    </div>
-                                </div>
-
-                                <motion.button
-                                    className="w-full py-4 bg-[var(--yellow)] text-black font-black text-sm uppercase tracking-widest rounded-xl hover:brightness-110 mb-8 shadow-lg shadow-[var(--yellow)]/20 relative z-10 transition-all"
-                                    onClick={() => handlePurchase("advanced_season")}
-                                    disabled={creating}
-                                    whileTap={{ scale: 0.98 }}
+                            <div data-aos="fade-up">
+                                <motion.div
+                                    whileHover={{ y: -8, scale: 1.01 }}
+                                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                                    className="h-full bg-black/40 backdrop-blur-xl border-2 border-[var(--yellow)]/20 rounded-[2.5rem] p-8 relative overflow-hidden group shadow-2xl flex flex-col text-left"
                                 >
-                                    {creating ? "Processing..." : "Book 1:1 Coaching"}
-                                </motion.button>
+                                    <div className="absolute -right-20 -top-20 w-64 h-64 bg-[var(--yellow)]/20 rounded-full blur-3xl pointer-events-none transition-opacity duration-500 group-hover:opacity-30" />
 
-                                <div className="space-y-4 relative z-10 mt-auto">
-                                    {seasonalTier2Benefits.map((benefit, index) => (
-                                        <div key={index} className="flex items-center gap-3 group/benefit">
-                                            <div className="w-5 h-5 rounded-full bg-[var(--yellow)]/10 flex items-center justify-center shrink-0 group-hover/benefit:bg-[var(--yellow)] transition-colors">
-                                                <CheckIcon className="text-[var(--yellow)] group-hover/benefit:text-black transition-colors" size={10} />
+                                    <div className="relative z-10 flex flex-col h-full">
+                                        <div className="flex items-center justify-between mb-6">
+                                            <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
+                                                <Crown size={24} className="text-[var(--yellow)]" />
                                             </div>
-                                            <span className="text-gray-300 text-[11px] font-bold uppercase tracking-wide">{benefit}</span>
+                                            <div className="bg-[var(--yellow)] text-black text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest">
+                                                MOST POPULAR
+                                            </div>
                                         </div>
-                                    ))}
-                                </div>
-                            </motion.div>
+
+                                        <div className="mb-8">
+                                            <h3 className="text-white text-2xl font-black italic uppercase tracking-tighter mb-2">
+                                                Advanced Season
+                                            </h3>
+                                            <div className="flex items-baseline gap-1">
+                                                <span className="text-5xl font-black tracking-tighter text-[var(--yellow)]">
+                                                    $2,500
+                                                </span>
+                                                <span className="text-white/40 font-bold uppercase tracking-widest text-[10px]">/ season</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-4 mb-10">
+                                            {seasonalTier2Benefits.map((benefit, index) => (
+                                                <div key={index} className="flex items-center gap-3 group/benefit">
+                                                    <div className="w-5 h-5 rounded-full bg-[var(--yellow)]/10 flex items-center justify-center shrink-0 group-hover/benefit:bg-[var(--yellow)] transition-colors">
+                                                        <CheckIcon className="text-[var(--yellow)] group-hover/benefit:text-black transition-colors" size={10} />
+                                                    </div>
+                                                    <span className="text-gray-400 text-[11px] font-bold uppercase tracking-wide group-hover:text-white transition-colors">{benefit}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <motion.button
+                                            className="w-full bg-[var(--yellow)] text-black font-black text-sm uppercase tracking-widest rounded-xl hover:brightness-110 shadow-lg shadow-[var(--yellow)]/20 relative z-10 transition-all mt-auto py-4"
+                                            onClick={() => handlePurchase("advanced_season")}
+                                            disabled={creating}
+                                            whileTap={{ scale: 0.98 }}
+                                        >
+                                            {creating ? "Processing..." : "BOOK SEASONAL COACHING"}
+                                        </motion.button>
+                                    </div>
+                                </motion.div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-
             </section>
         </>
     )

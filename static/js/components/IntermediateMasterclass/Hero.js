@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import VideoPlayer from "../VideoPlayer";
 import BuyButton from "./BuyButton";
+import { Shield } from "lucide-react";
 
 const Hero = () => {
     return (
@@ -30,69 +31,91 @@ const Hero = () => {
                     {/* Pricing Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mt-20 md:mt-[350px]">
                         {/* Monthly Plan */}
-                        <motion.div
-                            whileHover={{ y: -8, scale: 1.01 }}
-                            transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                            className="bg-black rounded-[2.5rem] border border-white/10 p-6 md:p-8 flex flex-col justify-between shadow-2xl relative overflow-hidden group"
-                            data-aos="fade-up"
-                        >
-                            <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-[var(--orange)]/5 rounded-full blur-3xl pointer-events-none" />
+                        <div data-aos="fade-up">
+                            <motion.div
+                                whileHover={{ y: -8, scale: 1.01 }}
+                                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                                className="bg-black/40 backdrop-blur-xl rounded-[2.5rem] border border-white/10 p-8 flex flex-col justify-between shadow-2xl relative overflow-hidden group h-full text-left"
+                            >
+                                <div className="absolute -right-20 -top-20 w-64 h-64 bg-[var(--orange)]/10 rounded-full blur-3xl pointer-events-none transition-opacity duration-500 group-hover:opacity-20" />
 
-                            <div className="text-center mb-8 relative z-10">
-                                <h3 className="text-white text-2xl font-black italic uppercase tracking-tighter mb-2">
-                                    Monthly Plan
-                                </h3>
-                                <div className="flex items-baseline justify-center gap-2">
-                                    <span className="text-[var(--orange)] text-6xl font-black tracking-tighter">
-                                        $25
-                                    </span>
-                                    <span className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">/ month</span>
+                                <div className="relative z-10 flex flex-col h-full">
+                                    <div className="flex items-center justify-between mb-6">
+                                        <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
+                                            <Shield size={24} className="text-[var(--orange)]" />
+                                        </div>
+                                        <div className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-white/50 uppercase tracking-widest">
+                                            Monthly Plan
+                                        </div>
+                                    </div>
+
+                                    <div className="mb-8">
+                                        <h3 className="text-white text-2xl font-black italic uppercase tracking-tighter mb-2">
+                                            Intermediate Masterclass
+                                        </h3>
+                                        <div className="flex items-baseline gap-1">
+                                            <span className="text-5xl font-black tracking-tighter text-[var(--orange)]">
+                                                $25
+                                            </span>
+                                            <span className="text-white/40 font-bold uppercase tracking-widest text-[10px]">/ month</span>
+                                        </div>
+                                    </div>
+
+                                    <BuyButton
+                                        text="Buy Now"
+                                        billingCycle="month"
+                                        className="w-full py-4 rounded-xl font-black text-sm uppercase tracking-widest transition-all shadow-lg bg-[var(--orange)] text-black hover:brightness-110 flex items-center justify-center gap-2 mt-auto"
+                                    />
                                 </div>
-                            </div>
-
-                            <BuyButton
-                                text="Buy Now"
-                                billingCycle="month"
-                                className="w-full py-4 bg-white text-black rounded-xl font-black text-sm uppercase tracking-widest hover:bg-gray-200 transition-all shadow-xl relative z-10"
-                            />
-                        </motion.div>
+                            </motion.div>
+                        </div>
 
                         {/* Yearly Plan */}
-                        <motion.div
-                            whileHover={{ y: -8, scale: 1.01 }}
-                            transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                            className="bg-black border-2 border-[var(--orange)]/20 rounded-[2.5rem] p-6 md:p-8 relative overflow-hidden flex flex-col justify-between shadow-2xl group"
-                            data-aos="fade-up"
-                        >
-                            <div className="absolute top-6 right-6 bg-[var(--orange)] text-black text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest z-20">
-                                SAVE 17%
-                            </div>
-
-                            <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-[var(--orange)]/10 rounded-full blur-3xl pointer-events-none" />
-
-                            <div className="text-center mb-8 relative z-10">
-                                <h3 className="text-white text-2xl font-black italic uppercase tracking-tighter mb-2">
-                                    Yearly Plan
-                                </h3>
-
-                                <div className="flex items-baseline justify-center gap-2">
-                                    <span className="text-[var(--orange)] text-6xl font-black tracking-tighter">
-                                        $250
-                                    </span>
-                                    <span className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">/ year</span>
+                        <div data-aos="fade-up">
+                            <motion.div
+                                whileHover={{ y: -8, scale: 1.01 }}
+                                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                                className="bg-black/40 backdrop-blur-xl border-2 border-[var(--orange)]/20 rounded-[2.5rem] p-8 relative overflow-hidden flex flex-col justify-between shadow-2xl group h-full text-left"
+                            >
+                                <div className="absolute top-6 right-6 bg-[var(--orange)] text-black text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest z-20">
+                                    SAVE 17%
                                 </div>
 
-                                <p className="text-gray-500 text-[10px] mt-4 font-black uppercase tracking-[0.2em] opacity-60">
-                                    Normal Price $300/year
-                                </p>
-                            </div>
+                                <div className="absolute -right-20 -top-20 w-64 h-64 bg-[var(--orange)]/15 rounded-full blur-3xl pointer-events-none transition-opacity duration-500 group-hover:opacity-25" />
 
-                            <BuyButton
-                                text="Buy Now"
-                                billingCycle="year"
-                                className="w-full py-4 bg-[var(--orange)] text-black font-black text-sm uppercase tracking-widest rounded-xl hover:brightness-110 transition-all shadow-lg shadow-[var(--orange)]/20 relative z-10"
-                            />
-                        </motion.div>
+                                <div className="relative z-10 flex flex-col h-full">
+                                    <div className="flex items-center justify-between mb-6">
+                                        <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
+                                            <Shield size={24} className="text-[var(--orange)]" />
+                                        </div>
+                                        <div className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-white/50 uppercase tracking-widest">
+                                            Yearly Plan
+                                        </div>
+                                    </div>
+
+                                    <div className="mb-8">
+                                        <h3 className="text-white text-2xl font-black italic uppercase tracking-tighter mb-2">
+                                            Intermediate Masterclass
+                                        </h3>
+                                        <div className="flex items-baseline gap-1">
+                                            <span className="text-5xl font-black tracking-tighter text-[var(--orange)]">
+                                                $250
+                                            </span>
+                                            <span className="text-white/40 font-bold uppercase tracking-widest text-[10px]">/ year</span>
+                                        </div>
+                                        <p className="text-gray-500 text-[10px] mt-4 font-black uppercase tracking-[0.2em] opacity-60">
+                                            Normal Price $300/year
+                                        </p>
+                                    </div>
+
+                                    <BuyButton
+                                        text="Buy Now"
+                                        billingCycle="year"
+                                        className="w-full py-4 bg-[var(--orange)] text-black font-black text-sm uppercase tracking-widest rounded-xl hover:brightness-110 transition-all shadow-lg shadow-[var(--orange)]/20 flex items-center justify-center gap-2 mt-auto"
+                                    />
+                                </div>
+                            </motion.div>
+                        </div>
                     </div>
                 </div>
             </section>

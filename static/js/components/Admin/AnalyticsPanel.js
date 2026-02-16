@@ -60,6 +60,11 @@ const AnalyticsPanel = () => {
     const totalRevenue = data.salesByCourse.reduce((acc, curr) => acc + curr.revenue, 0);
     const totalSales = data.salesByCourse.reduce((acc, curr) => acc + curr.sales, 0);
 
+    // Calculate Estimated Net (based on user reported ~16.9% effective fee rate)
+    const effectiveFeeRate = 0.16911;
+    const estimatedFees = totalRevenue * effectiveFeeRate;
+    const netRevenue = totalRevenue - estimatedFees;
+
     // Sort courses by revenue
     const topCourse = [...data.salesByCourse].sort((a, b) => b.revenue - a.revenue)[0];
 
@@ -68,22 +73,23 @@ const AnalyticsPanel = () => {
             {/* Stats Overview */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <StatCard
-                    title="Total Revenue"
-                    value={`$${totalRevenue.toLocaleString()}`}
-                    icon={<DollarSign className="text-green-400" />}
-                    color="green"
+                    title="Gross Revenue"
+                    value={`$${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                    icon={<DollarSign className="text-gray-400" />}
+                    color="gray"
                 />
                 <StatCard
-                    title="Course Sales"
+                    title="Estimated Net"
+                    value={`$${netRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                    icon={<TrendingUp className="text-green-400" />}
+                    color="green"
+                    subtitle="After ~16.9% Fees"
+                />
+                <StatCard
+                    title="Total Sales"
                     value={totalSales.toLocaleString()}
                     icon={<Users className="text-blue-400" />}
                     color="blue"
-                />
-                <StatCard
-                    title="Video Views"
-                    value={Object.values(data.monthlyVideoViews || {}).reduce((a, b) => a + b, 0).toLocaleString()}
-                    icon={<Play className="text-[var(--yellow)]" />}
-                    color="yellow"
                 />
             </div>
 
@@ -104,7 +110,10 @@ const AnalyticsPanel = () => {
                         {data.salesByCourse.map((course, idx) => (
                             <div key={course.id} className="space-y-2">
                                 <div className="flex justify-between text-sm items-end">
-                                    <span className="font-bold text-gray-300 truncate max-w-[200px]">{course.name}</span>
+                                    <div className="flex flex-col">
+                                        <span className="font-bold text-gray-300 truncate max-w-[200px]">{course.name}</span>
+                                        <span className="text-[9px] text-gray-600 font-bold uppercase">Net: ${(course.revenue * (1 - effectiveFeeRate)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                                    </div>
                                     <span className="font-mono text-[var(--yellow)]">${course.revenue.toLocaleString()}</span>
                                 </div>
                                 <div className="h-2 bg-white/5 rounded-full overflow-hidden">
@@ -221,12 +230,13 @@ const AnalyticsPanel = () => {
     );
 };
 
-const StatCard = ({ title, value, icon, trend, color }) => {
+const StatCard = ({ title, value, icon, trend, color, subtitle }) => {
     const colorMap = {
         green: 'bg-green-500/10 border-green-500/20',
         blue: 'bg-blue-500/10 border-blue-500/20',
         yellow: 'bg-[var(--yellow)]/10 border-[var(--yellow)]/20',
-        purple: 'bg-purple-500/10 border-purple-500/20'
+        purple: 'bg-purple-500/10 border-purple-500/20',
+        gray: 'bg-white/5 border-white/10'
     };
 
     return (
@@ -245,6 +255,7 @@ const StatCard = ({ title, value, icon, trend, color }) => {
             <div>
                 <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">{title}</p>
                 <h4 className="text-2xl font-black text-white tracking-tight">{value}</h4>
+                {subtitle && <p className="text-[9px] text-gray-600 font-bold uppercase mt-1 tracking-tighter">{subtitle}</p>}
             </div>
         </div>
     );

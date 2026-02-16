@@ -7,7 +7,8 @@ import CourseEditor from '../components/Admin/CourseEditor';
 import SiteSettings from '../components/Admin/SiteSettings';
 import AccessManager from '../components/Admin/AccessManager';
 import AnalyticsPanel from '../components/Admin/AnalyticsPanel';
-import { ShieldAlert, List, Settings, Key, BarChart3 } from 'lucide-react';
+import MatchmakingManager from '../components/Admin/MatchmakingManager';
+import { ShieldAlert, List, Settings, Key, BarChart3, Trophy } from 'lucide-react';
 
 const AdminDashboard = () => {
     const [view, setView] = useState('list'); // 'list' | 'edit' | 'create' | 'settings'
@@ -113,6 +114,15 @@ const AdminDashboard = () => {
                         >
                             <BarChart3 size={18} /> Analytics
                         </button>
+
+                        <button
+                            onClick={() => setView('matchmaking')}
+                            className={`w-full flex items-center gap-4 px-6 py-4 rounded-[1.25rem] font-black text-[11px] uppercase tracking-widest transition-all duration-300 ${view === 'matchmaking'
+                                ? 'bg-[var(--yellow)] text-black shadow-[0_10px_20px_-5px_rgba(255,193,7,0.3)]'
+                                : 'text-gray-500 hover:bg-white/5 hover:text-white'}`}
+                        >
+                            <Trophy size={18} /> Matchmaking
+                        </button>
                     </div>
 
                     <div className="mt-auto pt-8 border-t border-white/5 text-[9px] text-gray-700 font-black uppercase tracking-[0.4em] px-2 text-center md:text-left">
@@ -153,6 +163,10 @@ const AdminDashboard = () => {
 
                         {view === 'analytics' && (
                             <AnalyticsPanel />
+                        )}
+
+                        {view === 'matchmaking' && (
+                            <MatchmakingManager />
                         )}
                     </div>
                 </div>

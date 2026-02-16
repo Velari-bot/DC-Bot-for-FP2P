@@ -36,7 +36,7 @@ const AboutDeckzee = () => {
                         <img
                             src={`https://assets.fortnitepathtopro.com/fighting/marius.jpg`}
                             alt="Marius"
-                            className="relative rounded-3xl w-full max-w-xs aspect-square object-cover mx-auto shadow-2xl border border-white/10"
+                            className="relative rounded-3xl w-full max-w-md aspect-square object-cover mx-auto shadow-2xl border border-white/10"
                         />
                     </div>
 

@@ -2,8 +2,8 @@ const axios = require('axios');
 const admin = require('./firebaseAdmin');
 const db = admin.firestore();
 
-const rawToken = process.env.DISCORD_TOKEN || '';
-const BOT_TOKEN = rawToken.replace(/"/g, '').trim();
+const { normalizeDiscordToken } = require('./discordEnv');
+const BOT_TOKEN = normalizeDiscordToken(process.env.DISCORD_TOKEN);
 const GUILD_ID = process.env.PUBLIC_SERVER_ID || process.env.DISCORD_GUILD_ID;
 
 const BASE_ROLE_MAPPING = {

@@ -10,18 +10,31 @@ const { memberHandlers, getSiteUrl } = require('./commands/member');
 const { adminHandlers } = require('./commands/admin');
 const { getCommandDefinitions } = require('./commands/definitions');
 const { startScheduler } = require('./scheduler');
+const {
+    normalizeDiscordToken,
+    normalizeDiscordId,
+    validateDiscordToken,
+} = require('../shared/discordEnv');
 
-const TOKEN = (process.env.DISCORD_TOKEN || '').replace(/"/g, '').trim();
-const CLIENT_ID = (process.env.DISCORD_CLIENT_ID || process.env.DISCORD_APPLICATION_ID || '').replace(/"/g, '').trim();
-const GUILD_ID = (process.env.PUBLIC_SERVER_ID || process.env.DISCORD_GUILD_ID || '').replace(/"/g, '').trim();
+const TOKEN = normalizeDiscordToken(process.env.DISCORD_TOKEN);
+const CLIENT_ID = normalizeDiscordId(
+    process.env.DISCORD_CLIENT_ID || process.env.DISCORD_APPLICATION_ID
+);
+const GUILD_ID = normalizeDiscordId(
+    process.env.PUBLIC_SERVER_ID || process.env.DISCORD_GUILD_ID
+);
 
-if (!TOKEN) {
-    console.error('DISCORD_TOKEN is required');
-    process.exit(1);
+const tokenCheck = validateDiscordToken(TOKEN);
+if (!tokenCheck.ok) {
+    console.error(`[Bot] ${tokenCheck.reason}`);
+    console.error(
+        'Railway → Variables → DISCORD_TOKEN: Discord Developer Portal → Your App → Bot → Reset Token → copy token (no quotes).'
+    );
 }
 
-// Server Members Intent must be ON in Developer Portal → Bot, or Discord closes the socket ("Used disallowed intents").
-// Set DISCORD_DISABLE_GUILD_MEMBERS_INTENT=1 only for local smoke tests — welcome DMs (guildMemberAdd) will not run.
+let discordStatus = tokenCheck.ok ? 'connecting' : 'misconfigured';
+let discordLoginError = tokenCheck.ok ? null : tokenCheck.reason;
+
 const useGuildMembersIntent = process.env.DISCORD_DISABLE_GUILD_MEMBERS_INTENT !== '1';
 const gatewayIntents = [GatewayIntentBits.Guilds];
 if (useGuildMembersIntent) {
@@ -39,21 +52,47 @@ const client = new Client({
 function startHealthServer() {
     const port = process.env.PORT || 8080;
     http.createServer((req, res) => {
-        const discordReady = client.isReady();
-        // Railway healthcheck: process is up once HTTP listens (Discord may still be connecting)
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({
             ok: true,
-            discord: discordReady ? 'ready' : 'connecting',
+            discord: client.isReady() ? 'ready' : discordStatus,
             service: 'discord-bot',
+            ...(discordLoginError ? { error: String(discordLoginError).slice(0, 200) } : {}),
         }));
     }).listen(port, () => {
         console.log(`Health check listening on :${port}`);
     });
 }
 
-client.once('ready', () => {
+async function registerGuildCommands() {
+    if (!CLIENT_ID || !GUILD_ID) {
+        console.warn('Skip command registration: set DISCORD_CLIENT_ID and PUBLIC_SERVER_ID');
+        return;
+    }
+    const rest = new REST({ version: '10' }).setToken(TOKEN);
+    await rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), {
+        body: getCommandDefinitions(),
+    });
+    console.log('Guild slash commands registered');
+}
+
+client.once('ready', async () => {
+    discordStatus = 'ready';
+    discordLoginError = null;
     console.log(`Discord bot logged in as ${client.user.tag}`);
+
+    if (process.env.DISCORD_SKIP_GUILD_COMMAND_REGISTER_ON_START !== '1') {
+        try {
+            await registerGuildCommands();
+        } catch (err) {
+            const code = err.code != null ? ` (Discord code ${err.code})` : '';
+            console.warn(`Guild command registration failed on startup:${code}`, err.message);
+            console.warn(
+                'Fix: invite the bot to the server in PUBLIC_SERVER_ID (npm run discord:invite), or register commands globally: npm run discord:register-global'
+            );
+        }
+    }
+
     startScheduler(client);
 });
 
@@ -99,29 +138,25 @@ client.on('interactionCreate', async (interaction) => {
     }
 });
 
-async function registerGuildCommands() {
-    if (!CLIENT_ID || !GUILD_ID) {
-        console.warn('Skip command registration: set DISCORD_CLIENT_ID and PUBLIC_SERVER_ID');
-        return;
-    }
-    const rest = new REST({ version: '10' }).setToken(TOKEN);
-    await rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), {
-        body: getCommandDefinitions(),
-    });
-    console.log('Guild slash commands registered');
-}
-
 if (process.env.DISCORD_SKIP_GUILD_COMMAND_REGISTER_ON_START === '1') {
-    console.info('Skipping guild slash command registration on startup (DISCORD_SKIP_GUILD_COMMAND_REGISTER_ON_START=1). Use npm run discord:register or discord:register-global if needed.');
-} else {
-    registerGuildCommands().catch((err) => {
-        const code = err.code != null ? ` (Discord code ${err.code})` : '';
-        console.warn(`Guild command registration failed on startup:${code}`, err.message);
-        console.warn(
-            'Fix: invite the bot to the server in PUBLIC_SERVER_ID (npm run discord:invite), or register commands globally: npm run discord:register-global'
-        );
-    });
+    console.info(
+        'Skipping guild slash command registration on startup (DISCORD_SKIP_GUILD_COMMAND_REGISTER_ON_START=1).'
+    );
 }
 
 startHealthServer();
-client.login(TOKEN);
+
+if (tokenCheck.ok) {
+    client.login(TOKEN).catch((err) => {
+        discordStatus = 'login_failed';
+        discordLoginError = err.message;
+        console.error('[Bot] Discord login failed:', err.message);
+        if (err.code === 'TokenInvalid') {
+            console.error(
+                'DISCORD_TOKEN is invalid or was reset. Railway → Variables → paste a fresh Bot token from Developer Portal (Bot tab, not Client Secret). No quotes.'
+            );
+        }
+    });
+} else {
+    console.error('[Bot] Skipping client.login() until DISCORD_TOKEN is fixed.');
+}

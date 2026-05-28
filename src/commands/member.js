@@ -1,0 +1,140 @@
+const { reconcileUserByUid } = require('../../shared/discordBot');
+const {
+    maskEmail,
+    getActiveEntitlements,
+    getActiveRoleLabels,
+} = require('../../shared/discordMemberHelpers');
+const { getUserContext, findUidByDiscordId } = require('../lib/userContext');
+
+function getSiteUrl() {
+    const url = (process.env.SITE_URL || '').trim();
+    if (url) return url.replace(/\/$/, '');
+    if (process.env.NODE_ENV !== 'production') return 'http://localhost:3000';
+    return 'https://fortnitepathtopro.com';
+}
+
+async function handleSync(interaction) {
+    await interaction.deferReply({ ephemeral: true });
+    const uid = await findUidByDiscordId(interaction.user.id);
+    if (!uid) {
+        return interaction.editReply(
+            `Not linked. Connect your account at ${getSiteUrl()}/claim then run /sync again.`
+        );
+    }
+    const result = await reconcileUserByUid(uid);
+    if (result.skipped) {
+        return interaction.editReply('Could not sync roles. Try linking again on the website.');
+    }
+    return interaction.editReply(`Roles synced. Added: ${result.added}, removed: ${result.removed}.`);
+}
+
+async function handleStatus(interaction) {
+    await interaction.deferReply({ ephemeral: true });
+    const ctx = await getUserContext(interaction.user.id);
+    if (!ctx) {
+        return interaction.editReply(`Not linked. Use ${getSiteUrl()}/claim to connect Discord.`);
+    }
+
+    const { userData, payments } = ctx;
+    const active = getActiveEntitlements(payments);
+    const roles = getActiveRoleLabels(payments);
+    const lines = [
+        `**Account:** ${maskEmail(userData.email)}`,
+        `**Linked:** ${userData.discordLinkedAt ? new Date(userData.discordLinkedAt).toLocaleDateString() : 'Unknown'}`,
+        `**Coaching credits:** ${userData.credits ?? 0} hour(s)`,
+    ];
+
+    if (userData.securityStrikes) {
+        lines.push(`**Security strikes:** ${userData.securityStrikes}/3`);
+    }
+    if (userData.accessRevoked) {
+        lines.push('**Access:** Revoked (security violations)');
+    }
+    if (userData.banned) {
+        lines.push('**Account:** Banned on website');
+    }
+
+    lines.push(`**Discord roles (from active subs):** ${roles.length ? roles.join(', ') : 'None'}`);
+    lines.push(`**Active entitlements:** ${active.length}`);
+
+    return interaction.editReply(lines.join('\n'));
+}
+
+async function handleSubscriptions(interaction) {
+    await interaction.deferReply({ ephemeral: true });
+    const ctx = await getUserContext(interaction.user.id);
+    if (!ctx) {
+        return interaction.editReply(`Not linked. Use ${getSiteUrl()}/claim first.`);
+    }
+
+    const active = getActiveEntitlements(ctx.payments);
+    if (!active.length) {
+        return interaction.editReply('No active subscriptions or purchases on your account.');
+    }
+
+    const lines = active.map((e, i) => `${i + 1}. **${e.label}** — expires: ${e.expires}`);
+    return interaction.editReply(`**Your active access:**\n${lines.join('\n')}`);
+}
+
+async function handleCredits(interaction) {
+    await interaction.deferReply({ ephemeral: true });
+    const ctx = await getUserContext(interaction.user.id);
+    if (!ctx) {
+        return interaction.editReply(`Not linked. Use ${getSiteUrl()}/claim first.`);
+    }
+    const credits = ctx.userData.credits ?? 0;
+    return interaction.editReply(
+        `You have **${credits}** coaching credit(s) (1 credit = 1 hour of 1:1 coaching).\nBook or manage access at ${getSiteUrl()}/claim`
+    );
+}
+
+async function handleLink(interaction) {
+    return interaction.reply({
+        ephemeral: true,
+        content: `Link your Discord to your website account:\n${getSiteUrl()}/claim\n\nAfter linking, run **/sync** to apply your roles.`,
+    });
+}
+
+async function handleSupport(interaction) {
+    await interaction.deferReply({ ephemeral: true });
+    const ctx = await getUserContext(interaction.user.id);
+    const lines = [
+        `**Claim / Dashboard:** ${getSiteUrl()}/claim`,
+        '**Link Discord:** Connect on the claim page, then `/sync`',
+        '**Roles wrong?** Run `/sync` or re-link on the website',
+        '**Billing / cancel sub:** Use the billing portal on the claim page (Stripe)',
+        '**Courses:** Open your masterclass from the website after purchase',
+    ];
+    if (!ctx) {
+        lines.unshift('You are not linked yet — start at the claim page.');
+    }
+    return interaction.editReply(lines.join('\n'));
+}
+
+async function handleLive(interaction) {
+    await interaction.deferReply({ ephemeral: true });
+    try {
+        const admin = require('../../shared/firebaseAdmin');
+        const doc = await admin.firestore().collection('site_settings').doc('live').get();
+        const data = doc.exists ? doc.data() : { isLive: false };
+        if (!data.isLive) {
+            return interaction.editReply(`Deckzee is not live right now. Check ${getSiteUrl()} for updates.`);
+        }
+        const url = data.streamUrl ? `\n**Watch:** ${data.streamUrl}` : '';
+        return interaction.editReply(`**${data.title || 'Deckzee is live'}** (${data.platform || 'stream'})${url}`);
+    } catch (e) {
+        return interaction.editReply('Could not fetch live status.');
+    }
+}
+
+const memberHandlers = {
+    sync: handleSync,
+    status: handleStatus,
+    subscriptions: handleSubscriptions,
+    credits: handleCredits,
+    link: handleLink,
+    support: handleSupport,
+    live: handleLive,
+};
+
+module.exports = { memberHandlers, getSiteUrl };

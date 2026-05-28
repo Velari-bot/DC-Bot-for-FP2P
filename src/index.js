@@ -39,9 +39,14 @@ const client = new Client({
 function startHealthServer() {
     const port = process.env.PORT || 8080;
     http.createServer((req, res) => {
-        const ready = client.isReady();
-        res.writeHead(ready ? 200 : 503, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ ok: ready, service: 'discord-bot' }));
+        const discordReady = client.isReady();
+        // Railway healthcheck: process is up once HTTP listens (Discord may still be connecting)
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+            ok: true,
+            discord: discordReady ? 'ready' : 'connecting',
+            service: 'discord-bot',
+        }));
     }).listen(port, () => {
         console.log(`Health check listening on :${port}`);
     });

@@ -25,8 +25,32 @@ npm run register-commands-global
 | `DISCORD_TOKEN` | Bot token |
 | `DISCORD_CLIENT_ID` | Application client ID |
 | `PUBLIC_SERVER_ID` | Discord server (guild) ID |
-| `FIREBASE_SERVICE_ACCOUNT_B64` | Base64 service account JSON |
+| `FIREBASE_SERVICE_ACCOUNT_B64` | Base64 service account JSON (see below) |
 | `SITE_URL` | `https://www.fortnitepathtopro.com` |
+
+### Firebase on Railway (fixes `DECODER routines::unsupported`)
+
+**Do not** wrap the value in quotes in Railway. **Do not** base64-encode pretty-printed JSON by hand — the private key often gets corrupted.
+
+From your machine (with the downloaded `service-account.json` from Firebase Console):
+
+```bash
+cd discord-bot
+node scripts/encode-service-account.js ../fp2p-bcd48-firebase-adminsdk-fbsvc-e1b437bed5.json
+```
+
+Copy the **single line** of output into Railway → Variables → `FIREBASE_SERVICE_ACCOUNT_B64` (no `"` quotes).
+
+Verify locally:
+
+```bash
+# PowerShell
+$env:FIREBASE_SERVICE_ACCOUNT_B64 = "paste-line-here"
+node scripts/test-firebase-b64.js
+# Should print: OK: credential.cert accepted
+```
+
+If an old key was leaked or corrupted, Firebase Console → Project settings → Service accounts → **Generate new private key**, then run the encode script again.
 
 ## Commands
 

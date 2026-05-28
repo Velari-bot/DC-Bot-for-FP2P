@@ -9,6 +9,8 @@
   },
   "scripts": {
     "start": "node src/index.js",
+    "firebase:encode": "node scripts/encode-service-account.js",
+    "firebase:test-b64": "node scripts/test-firebase-b64.js",
     "register-commands": "node scripts/register-commands.js",
     "register-commands-global": "node scripts/register-commands.js --global"
   },

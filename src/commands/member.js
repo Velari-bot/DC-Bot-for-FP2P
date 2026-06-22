@@ -11,7 +11,13 @@ function getSiteUrl() {
     const url = (process.env.SITE_URL || '').trim();
     if (url) return url.replace(/\/$/, '');
     if (process.env.NODE_ENV !== 'production') return 'http://localhost:3000';
-    return 'https://fortnitepathtopro.com';
+    return 'https://www.fortnitepathtopro.com';
+}
+
+function getClaimUrl(connectTarget = '') {
+    const base = `${getSiteUrl()}/claim`;
+    if (!connectTarget) return base;
+    return `${base}?connect=${encodeURIComponent(connectTarget)}`;
 }
 
 async function handleSync(interaction) {
@@ -19,7 +25,7 @@ async function handleSync(interaction) {
     const uid = await findUidByDiscordId(interaction.user.id);
     if (!uid) {
         return interaction.editReply(
-            `Not linked. Connect your account at ${getSiteUrl()}/claim then run /sync again.`
+            `Not linked. Connect your Discord account here: ${getClaimUrl('discord')}\nThen run /sync again.`
         );
     }
     const result = await reconcileUserByUid(uid);
@@ -33,7 +39,7 @@ async function handleStatus(interaction) {
     await interaction.deferReply({ ephemeral: true });
     const ctx = await getUserContext(interaction.user.id);
     if (!ctx) {
-        return interaction.editReply(`Not linked. Use ${getSiteUrl()}/claim to connect Discord.`);
+        return interaction.editReply(`Not linked. Connect Discord here: ${getClaimUrl('discord')}`);
     }
 
     const { userData, payments } = ctx;
@@ -65,7 +71,7 @@ async function handleSubscriptions(interaction) {
     await interaction.deferReply({ ephemeral: true });
     const ctx = await getUserContext(interaction.user.id);
     if (!ctx) {
-        return interaction.editReply(`Not linked. Use ${getSiteUrl()}/claim first.`);
+        return interaction.editReply(`Not linked. Connect Discord here first: ${getClaimUrl('discord')}`);
     }
 
     const active = getActiveEntitlements(ctx.payments);
@@ -81,11 +87,11 @@ async function handleCredits(interaction) {
     await interaction.deferReply({ ephemeral: true });
     const ctx = await getUserContext(interaction.user.id);
     if (!ctx) {
-        return interaction.editReply(`Not linked. Use ${getSiteUrl()}/claim first.`);
+        return interaction.editReply(`Not linked. Connect Discord here first: ${getClaimUrl('discord')}`);
     }
     const credits = ctx.userData.credits ?? 0;
     return interaction.editReply(
-        `You have **${credits}** coaching credit(s) (1 credit = 1 hour of 1:1 coaching).\nBook or manage access at ${getSiteUrl()}/claim`
+        `You have **${credits}** coaching credit(s) (1 credit = 1 hour of 1:1 coaching).\nBook or manage access at ${getClaimUrl()}`
     );
 }
 
@@ -95,10 +101,9 @@ async function handleLink(interaction) {
 
 async function handleConnections(interaction) {
     const ctx = await getUserContext(interaction.user.id);
-    const claimUrl = `${getSiteUrl()}/claim`;
     const row = new ActionRowBuilder().addComponents(
-        new ButtonBuilder().setLabel('Connect Discord').setStyle(ButtonStyle.Link).setURL(`${claimUrl}?connect=discord`),
-        new ButtonBuilder().setLabel('Connect Epic Games').setStyle(ButtonStyle.Link).setURL(`${claimUrl}?connect=epic`)
+        new ButtonBuilder().setLabel('Connect Discord').setStyle(ButtonStyle.Link).setURL(getClaimUrl('discord')),
+        new ButtonBuilder().setLabel('Connect Epic Games').setStyle(ButtonStyle.Link).setURL(getClaimUrl('epic'))
     );
     const status = ctx ? [
         '**Website account:** Connected',
@@ -110,7 +115,7 @@ async function handleConnections(interaction) {
     ];
     return interaction.reply({
         ephemeral: true,
-        content: `**Account Connections**\n${status.join('\n')}\n\nAfter connecting Discord, run **/sync** to apply your roles.`,
+        content: `**Account Connections**\n${status.join('\n')}\n\nDiscord link: ${getClaimUrl('discord')}\nEpic Games link: ${getClaimUrl('epic')}\n\nAfter connecting Discord, run **/sync** to apply your roles.`,
         components: [row],
     });
 }
@@ -119,8 +124,9 @@ async function handleSupport(interaction) {
     await interaction.deferReply({ ephemeral: true });
     const ctx = await getUserContext(interaction.user.id);
     const lines = [
-        `**Claim / Dashboard:** ${getSiteUrl()}/claim`,
-        '**Link Discord:** Connect on the claim page, then `/sync`',
+        `**Claim / Dashboard:** ${getClaimUrl()}`,
+        `**Link Discord:** ${getClaimUrl('discord')}`,
+        `**Link Epic Games:** ${getClaimUrl('epic')}`,
         '**Roles wrong?** Run `/sync` or re-link on the website',
         '**Billing / cancel sub:** Use the billing portal on the claim page (Stripe)',
         '**Courses:** Open your masterclass from the website after purchase',

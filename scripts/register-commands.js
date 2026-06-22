@@ -13,6 +13,8 @@ const useGlobal =
     process.argv.includes('--global') ||
     process.env.DISCORD_REGISTER_GLOBAL === '1' ||
     process.env.DISCORD_REGISTER_GLOBAL === 'true';
+const clearGlobal = process.argv.includes('--clear-global');
+const clearGuild = process.argv.includes('--clear-guild');
 
 const API = 'https://discord.com/api/v10';
 
@@ -70,7 +72,7 @@ async function main() {
         console.error('Required: DISCORD_TOKEN, DISCORD_CLIENT_ID');
         process.exit(1);
     }
-    if (!useGlobal && !GUILD_ID) {
+    if ((clearGuild || (!useGlobal && !clearGlobal)) && !GUILD_ID) {
         console.error('Required for guild commands: PUBLIC_SERVER_ID (or DISCORD_GUILD_ID)');
         console.error('Or use: npm run discord:register -- --global');
         process.exit(1);
@@ -94,7 +96,7 @@ async function main() {
         process.exit(1);
     }
 
-    if (!useGlobal) {
+    if (!useGlobal && !clearGlobal) {
         try {
             const guild = await discordApi('GET', `/guilds/${GUILD_ID}`);
             console.log(`Guild OK — bot sees server "${guild.name}" (${guild.id})`);
@@ -112,7 +114,13 @@ async function main() {
     const body = getCommandDefinitions();
 
     try {
-        if (useGlobal) {
+        if (clearGlobal) {
+            await rest.put(Routes.applicationCommands(CLIENT_ID), { body: [] });
+            console.log('Cleared GLOBAL commands.');
+        } else if (clearGuild) {
+            await rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), { body: [] });
+            console.log(`Cleared GUILD commands for ${GUILD_ID}.`);
+        } else if (useGlobal) {
             await rest.put(Routes.applicationCommands(CLIENT_ID), { body });
             console.log('Successfully registered GLOBAL commands (may take up to ~1 hour to appear in all servers).');
         } else {

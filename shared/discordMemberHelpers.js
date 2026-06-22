@@ -1,4 +1,4 @@
-const { isPaymentActive, paymentToRoleId, ROLE_MAPPING, MANAGED_ROLE_IDS } = require('./discordBot');
+const { isPaymentActive, paymentToRoleId, paymentToRoleIds, ROLE_MAPPING, MANAGED_ROLE_IDS } = require('./discordBot');
 
 const ROLE_ID_TO_LABEL = {};
 for (const [key, roleId] of Object.entries(ROLE_MAPPING)) {
@@ -23,6 +23,16 @@ const PRODUCT_LABELS = {
     fighting_1v1_double: 'Fighting 1v1 Session',
     fighting_1v1_all: 'Fighting 1v1 Session',
 };
+
+const ROLE_LABELS = {
+    subscriber: 'Subscriber',
+    masterclass: 'Masterclass',
+    seasonal_coaching: 'Seasonal Coaching',
+};
+
+for (const [key, roleId] of Object.entries(ROLE_MAPPING)) {
+    if (ROLE_LABELS[key]) ROLE_ID_TO_LABEL[roleId] = ROLE_LABELS[key];
+}
 
 function maskEmail(email) {
     if (!email || !email.includes('@')) return '—';
@@ -58,8 +68,9 @@ function getActiveEntitlements(payments) {
 function getActiveRoleLabels(payments) {
     const labels = new Set();
     for (const p of payments) {
-        const roleId = paymentToRoleId(p);
-        if (roleId) labels.add(ROLE_ID_TO_LABEL[roleId] || 'Subscription');
+        for (const roleId of paymentToRoleIds(p)) {
+            labels.add(ROLE_ID_TO_LABEL[roleId] || 'Subscription');
+        }
     }
     return [...labels];
 }

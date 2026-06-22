@@ -24,9 +24,28 @@ const BASE_ROLE_MAPPING = {
     P2HYKXsPngTDxPyidPzs: '1444829551984378027',
 };
 
-const ROLE_MAPPING = { ...BASE_ROLE_MAPPING };
+const BROAD_ROLE_MAPPING = {
+    subscriber: (process.env.DISCORD_SUBSCRIBER_ROLE_ID || '').replace(/"/g, '').trim(),
+    masterclass: (process.env.DISCORD_MASTERCLASS_ROLE_ID || '').replace(/"/g, '').trim(),
+    seasonal_coaching: (process.env.DISCORD_SEASONAL_COACHING_ROLE_ID || '').replace(/"/g, '').trim(),
+};
+
+const ROLE_MAPPING = {
+    ...BASE_ROLE_MAPPING,
+    ...Object.fromEntries(Object.entries(BROAD_ROLE_MAPPING).filter(([, roleId]) => roleId)),
+};
 
 const MANAGED_ROLE_IDS = [...new Set(Object.values(ROLE_MAPPING))];
+const MASTERCLASS_PRODUCT_IDS = new Set([
+    'beginner_masterclass',
+    'intermediate_masterclass',
+    'advanced_masterclass',
+    'tO4MriPtFjmoksUbpXdQ',
+    'bs64jytqsop75zzV5FKr',
+    'YptLrG7dRXf5As19GEks',
+    'P2HYKXsPngTDxPyidPzs',
+]);
+const SEASONAL_PRODUCT_IDS = new Set(['basic_season', 'advanced_season']);
 
 function isPaymentActive(payment) {
     if (!payment) return false;
@@ -64,11 +83,54 @@ function paymentToRoleId(payment) {
     return null;
 }
 
+function isRecurringSubscription(payment) {
+    if (!payment || !isPaymentActive(payment)) return false;
+    const productId = String(payment.productId || '').toLowerCase();
+    const itemName = String(payment.item || '').toLowerCase();
+    return Boolean(
+        payment.stripeSubscriptionId
+        || productId === 'vod_review'
+        || productId === 'basic_season'
+        || productId === 'advanced_season'
+        || itemName.includes('subscription')
+        || itemName.includes('seasonal')
+    );
+}
+
+function isMasterclassAccess(payment) {
+    if (!payment || !isPaymentActive(payment)) return false;
+    const productId = String(payment.productId || '');
+    const itemName = String(payment.item || '').toLowerCase();
+    if (productId.toLowerCase().startsWith('fighting_1v1')) return false;
+    return MASTERCLASS_PRODUCT_IDS.has(productId)
+        || itemName.includes('masterclass')
+        || itemName.includes('beginner')
+        || itemName.includes('intermediate')
+        || (itemName.includes('advanced') && !itemName.includes('season'))
+        || itemName.includes('fighting');
+}
+
+function isSeasonalCoaching(payment) {
+    if (!payment || !isPaymentActive(payment)) return false;
+    const productId = String(payment.productId || '').toLowerCase();
+    const itemName = String(payment.item || '').toLowerCase();
+    return SEASONAL_PRODUCT_IDS.has(productId) || itemName.includes('seasonal coaching');
+}
+
+function paymentToRoleIds(payment) {
+    const roles = new Set();
+    const specificRole = paymentToRoleId(payment);
+    if (specificRole) roles.add(specificRole);
+    if (BROAD_ROLE_MAPPING.subscriber && isRecurringSubscription(payment)) roles.add(BROAD_ROLE_MAPPING.subscriber);
+    if (BROAD_ROLE_MAPPING.masterclass && isMasterclassAccess(payment)) roles.add(BROAD_ROLE_MAPPING.masterclass);
+    if (BROAD_ROLE_MAPPING.seasonal_coaching && isSeasonalCoaching(payment)) roles.add(BROAD_ROLE_MAPPING.seasonal_coaching);
+    return [...roles];
+}
+
 function computeDesiredRoles(payments) {
     const desired = new Set();
     for (const payment of payments) {
-        const roleId = paymentToRoleId(payment);
-        if (roleId) desired.add(roleId);
+        for (const roleId of paymentToRoleIds(payment)) desired.add(roleId);
     }
     return desired;
 }
@@ -117,6 +179,9 @@ async function removeRole(discordUserId, roleId) {
 }
 
 async function reconcileDiscordRoles(discordUserId, desiredRoleIds) {
+    if (!BOT_TOKEN || !GUILD_ID || !discordUserId) {
+        return { added: 0, removed: 0, skipped: true, reason: 'missing_config' };
+    }
     const desired = new Set(desiredRoleIds || []);
 
     let memberRoleIds = [];
@@ -129,7 +194,7 @@ async function reconcileDiscordRoles(discordUserId, desiredRoleIds) {
     } catch (error) {
         if (error.response?.status === 404) {
             console.warn(`Cannot reconcile: member ${discordUserId} not in guild`);
-            return { added: 0, removed: 0, skipped: true };
+            return { added: 0, removed: 0, skipped: true, reason: 'not_in_guild' };
         }
         throw error;
     }
@@ -154,6 +219,21 @@ async function reconcileDiscordRoles(discordUserId, desiredRoleIds) {
     return { added, removed, skipped: false };
 }
 
+async function recordSyncResult(uid, result, error = null) {
+    if (!uid) return;
+    const payload = {
+        discordLastSyncAt: new Date().toISOString(),
+        discordLastSyncResult: result || null,
+    };
+    if (error) payload.discordSyncError = String(error.message || error).slice(0, 500);
+    else payload.discordSyncError = admin.firestore.FieldValue.delete();
+    try {
+        await db.collection('users').doc(uid).set(payload, { merge: true });
+    } catch (e) {
+        console.warn('Failed to record Discord sync result:', e.message);
+    }
+}
+
 async function reconcileUserByUid(uid, options = {}) {
     const userSnap = await db.collection('users').doc(uid).get();
     if (!userSnap.exists) return { skipped: true, reason: 'user_not_found' };
@@ -169,9 +249,16 @@ async function reconcileUserByUid(uid, options = {}) {
     }
 
     const desired = computeDesiredRoles(payments);
-    const result = await reconcileDiscordRoles(discordUserId, [...desired]);
-    console.log(`[SYNC] uid=${uid} discord=${discordUserId} desired=${desired.size} added=${result.added} removed=${result.removed}`);
-    return result;
+    try {
+        const result = await reconcileDiscordRoles(discordUserId, [...desired]);
+        const fullResult = { ...result, desired: desired.size };
+        await recordSyncResult(uid, fullResult);
+        console.log(`[SYNC] uid=${uid} discord=${discordUserId} desired=${desired.size} added=${result.added} removed=${result.removed}`);
+        return fullResult;
+    } catch (error) {
+        await recordSyncResult(uid, null, error);
+        throw error;
+    }
 }
 
 async function syncUserRoles(uid, discordUserId) {
@@ -181,7 +268,8 @@ async function syncUserRoles(uid, discordUserId) {
         const paymentsSnap = await db.collection('users').doc(uid).collection('payments').get();
         const payments = paymentsSnap.docs.map((doc) => doc.data());
         const desired = computeDesiredRoles(payments);
-        await reconcileDiscordRoles(discordUserId, [...desired]);
+        const result = await reconcileDiscordRoles(discordUserId, [...desired]);
+        await recordSyncResult(uid, { ...result, desired: desired.size });
         return true;
     } catch (error) {
         console.error('Role Sync Error:', error);
@@ -197,8 +285,13 @@ module.exports = {
     reconcileDiscordRoles,
     computeDesiredRoles,
     paymentToRoleId,
+    paymentToRoleIds,
     isPaymentActive,
+    isRecurringSubscription,
+    isMasterclassAccess,
+    isSeasonalCoaching,
     ROLE_MAPPING,
+    BROAD_ROLE_MAPPING,
     MANAGED_ROLE_IDS,
     BOT_TOKEN,
     GUILD_ID,

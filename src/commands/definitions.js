@@ -1,5 +1,10 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { PermissionFlagsBits, SlashCommandBuilder } = require('discord.js');
 const { COURSE_CHOICES } = require('./courseChoices');
+
+function adminCommand() {
+    return new SlashCommandBuilder()
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
+}
 
 function getCommandDefinitions() {
     return [
@@ -27,15 +32,15 @@ function getCommandDefinitions() {
         new SlashCommandBuilder()
             .setName('live')
             .setDescription('Check if Deckzee is streaming now'),
-        new SlashCommandBuilder()
+        adminCommand()
             .setName('admin-lookup')
             .setDescription('[Admin] Look up a user by email')
             .addStringOption((o) => o.setName('email').setDescription('User email').setRequired(true)),
-        new SlashCommandBuilder()
+        adminCommand()
             .setName('admin-sync')
             .setDescription('[Admin] Re-sync Discord roles for a user')
             .addStringOption((o) => o.setName('email').setDescription('User email').setRequired(true)),
-        new SlashCommandBuilder()
+        adminCommand()
             .setName('admin-grant')
             .setDescription('[Admin] Grant course access')
             .addStringOption((o) => o.setName('email').setDescription('User email').setRequired(true))
@@ -56,12 +61,12 @@ function getCommandDefinitions() {
                     )
             )
             .addStringOption((o) => o.setName('reason').setDescription('Reason for grant')),
-        new SlashCommandBuilder()
+        adminCommand()
             .setName('admin-ban')
             .setDescription('[Admin] Ban user and revoke access')
             .addStringOption((o) => o.setName('email').setDescription('User email').setRequired(true))
             .addStringOption((o) => o.setName('reason').setDescription('Ban reason')),
-        new SlashCommandBuilder()
+        adminCommand()
             .setName('admin-unban')
             .setDescription('[Admin] Unban user and restore payments')
             .addStringOption((o) => o.setName('email').setDescription('User email').setRequired(true)),

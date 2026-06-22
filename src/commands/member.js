@@ -5,6 +5,7 @@ const {
     getActiveRoleLabels,
 } = require('../../shared/discordMemberHelpers');
 const { getUserContext, findUidByDiscordId } = require('../lib/userContext');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 function getSiteUrl() {
     const url = (process.env.SITE_URL || '').trim();
@@ -89,9 +90,28 @@ async function handleCredits(interaction) {
 }
 
 async function handleLink(interaction) {
+    return handleConnections(interaction);
+}
+
+async function handleConnections(interaction) {
+    const ctx = await getUserContext(interaction.user.id);
+    const claimUrl = `${getSiteUrl()}/claim`;
+    const row = new ActionRowBuilder().addComponents(
+        new ButtonBuilder().setLabel('Connect Discord').setStyle(ButtonStyle.Link).setURL(`${claimUrl}?connect=discord`),
+        new ButtonBuilder().setLabel('Connect Epic Games').setStyle(ButtonStyle.Link).setURL(`${claimUrl}?connect=epic`)
+    );
+    const status = ctx ? [
+        '**Website account:** Connected',
+        '**Discord:** Connected',
+        `**Epic Games:** ${ctx.userData.epicDisplayName ? `Connected as ${ctx.userData.epicDisplayName}` : 'Not connected'}`,
+    ] : [
+        '**Website account:** Not connected',
+        'Sign in on the website, then use the buttons below.',
+    ];
     return interaction.reply({
         ephemeral: true,
-        content: `Link your Discord to your website account:\n${getSiteUrl()}/claim\n\nAfter linking, run **/sync** to apply your roles.`,
+        content: `**Account Connections**\n${status.join('\n')}\n\nAfter connecting Discord, run **/sync** to apply your roles.`,
+        components: [row],
     });
 }
 
@@ -133,6 +153,7 @@ const memberHandlers = {
     subscriptions: handleSubscriptions,
     credits: handleCredits,
     link: handleLink,
+    connections: handleConnections,
     support: handleSupport,
     live: handleLive,
 };

@@ -17,7 +17,10 @@ function getCommandDefinitions() {
             .setDescription('Show your 1:1 coaching credits'),
         new SlashCommandBuilder()
             .setName('link')
-            .setDescription('Get the link to connect Discord to your website account'),
+            .setDescription('Connect your Discord and Epic Games accounts'),
+        new SlashCommandBuilder()
+            .setName('connections')
+            .setDescription('View and manage your connected game accounts'),
         new SlashCommandBuilder()
             .setName('support')
             .setDescription('Help links for billing, courses, and Discord roles'),

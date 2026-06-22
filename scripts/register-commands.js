@@ -19,6 +19,7 @@ const API = 'https://discord.com/api/v10';
 async function discordApi(method, route, body) {
     const opts = {
         method,
+        signal: AbortSignal.timeout(15000),
         headers: {
             Authorization: `Bot ${TOKEN}`,
             'Content-Type': 'application/json',
